@@ -1,0 +1,49 @@
+.default-node {
+    background-color: red;
+    border: 1px solid #e8e8e8;
+    color: red;
+}
+
+.default-node.selected {
+    border: 1px solid #6e9fd4;
+}
+
+.default-node.selected .diagram-port {
+    border: 1px solid #6e9fd4;
+}
+
+.default-node .diagram-port, .default.diagram-group .diagram-port {
+    background-color: #f5f5f5;
+}
+
+.default-node .diagram-port:hover, .default-node .diagram-port.has-links, .default.diagram-group .diagram-port.has-links {
+    background-color: #000;
+}
+
+.diagram-navigator.default {
+    border: 3px solid #9ba8b0;
+    background-color: red;
+}
+
+div.diagram-group.default {
+    outline: 2px solid #000;
+    background: red;
+}
+
+div.diagram-group.default.selected {
+    outline: 2px solid #6e9fd4;
+}
+
+g.diagram-group.default rect {
+    outline: 2px solid #000;
+    fill: #c6c632;
+}
+
+g.diagram-group.default.selected > rect {
+    outline: 2px solid #008000;
+}
+
+.diagram-link div.default-link-label {
+    color: #fff;
+    background-color: red;
+}
