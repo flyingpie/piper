@@ -1,7 +1,7 @@
-using Blazor.Diagrams.Core.Geometry;
-using Blazor.Diagrams.Core.Models;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Blazor.Diagrams.Core.Geometry;
+using Blazor.Diagrams.Core.Models;
 
 namespace Piper.UI.Components.Nodes;
 
@@ -32,16 +32,17 @@ public class ListFilesNodeModel : NodeModel
 
 	public PiperDataFrame StdInData { get; set; }
 
-	public PiperDataFrame StdOutData { get; set; } = new()
-	{
-		Records =
-		[
-			new PiperRecord() { Fields = [new PiperField() { Value = "PF1", },], },
-			new PiperRecord() { Fields = [new PiperField() { Value = "PF2", },], },
-			new PiperRecord() { Fields = [new PiperField() { Value = "PF3", },], },
-			new PiperRecord() { Fields = [new PiperField() { Value = "PF4", },], },
-		],
-	};
+	public PiperDataFrame StdOutData { get; set; } =
+		new()
+		{
+			Records =
+			[
+				new PiperRecord() { Fields = [new PiperField() { Value = "PF1" }] },
+				new PiperRecord() { Fields = [new PiperField() { Value = "PF2" }] },
+				new PiperRecord() { Fields = [new PiperField() { Value = "PF3" }] },
+				new PiperRecord() { Fields = [new PiperField() { Value = "PF4" }] },
+			],
+		};
 
 	public PiperDataFrame StdErrData { get; set; }
 
@@ -61,7 +62,10 @@ public class ListFilesNodeModel : NodeModel
 		{
 			Console.WriteLine($"CMD:{Command} ARGS:{Args}");
 
-			var srcData = ((StdIn.Links.FirstOrDefault()?.Source?.Model as PortModel)?.Parent as ListFilesNodeModel)?.StdOutData;
+			var srcData = (
+				(StdIn.Links.FirstOrDefault()?.Source?.Model as PortModel)?.Parent
+				as ListFilesNodeModel
+			)?.StdOutData;
 
 			var fr = new PiperDataFrame();
 			var err = new List<string>();
@@ -75,7 +79,10 @@ public class ListFilesNodeModel : NodeModel
 			p.StartInfo.RedirectStandardInput = true;
 			p.StartInfo.RedirectStandardOutput = true;
 
-			p.OutputDataReceived += (s, a) => fr.Records.Add(new PiperRecord() { Fields = [new PiperField() { Value = a.Data }] });
+			p.OutputDataReceived += (s, a) =>
+				fr.Records.Add(
+					new PiperRecord() { Fields = [new PiperField() { Value = a.Data }] }
+				);
 			p.ErrorDataReceived += (s, a) => err.Add($"ERR:{a.Data}");
 
 			// p.RedirectStandardError = true;
@@ -102,15 +109,15 @@ public class ListFilesNodeModel : NodeModel
 
 			foreach (var line in srcData?.Records ?? [])
 			{
-				await p.StandardInput.WriteLineAsync(line.Fields?.FirstOrDefault()?.Value?.ToString() ?? "");
+				await p.StandardInput.WriteLineAsync(
+					line.Fields?.FirstOrDefault()?.Value?.ToString() ?? ""
+				);
 			}
 
 			await p.StandardInput.FlushAsync();
 			p.StandardInput.Close();
 
 			await p.WaitForExitAsync();
-
-
 
 			StdOutData = fr;
 			SelectedThingy.Node = fr;
@@ -130,11 +137,20 @@ public class ListFilesNodeModel : NodeModel
 
 public class PiperPortModel : PortModel
 {
-	public PiperPortModel(NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, Size? size = null) : base(parent, alignment, position, size)
-	{
-	}
+	public PiperPortModel(
+		NodeModel parent,
+		PortAlignment alignment = PortAlignment.Bottom,
+		Point? position = null,
+		Size? size = null
+	)
+		: base(parent, alignment, position, size) { }
 
-	public PiperPortModel(string id, NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, Size? size = null) : base(id, parent, alignment, position, size)
-	{
-	}
+	public PiperPortModel(
+		string id,
+		NodeModel parent,
+		PortAlignment alignment = PortAlignment.Bottom,
+		Point? position = null,
+		Size? size = null
+	)
+		: base(id, parent, alignment, position, size) { }
 }

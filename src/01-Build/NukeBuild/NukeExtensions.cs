@@ -1,6 +1,3 @@
-using Nuke.Common.IO;
-using Octokit;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -8,8 +5,15 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Nuke.Common.IO;
+using Octokit;
+using Serilog;
 
-[SuppressMessage("Major Bug", "S3903:Types should be defined in named namespaces", Justification = "MvdO: Build script.")]
+[SuppressMessage(
+	"Major Bug",
+	"S3903:Types should be defined in named namespaces",
+	Justification = "MvdO: Build script."
+)]
 public static partial class NukeExtensions
 {
 	private static readonly string ApplicationOctetStream = "application/octet-stream";
@@ -39,10 +43,7 @@ public static partial class NukeExtensions
 	public static void DeleteUnnecessaryFiles(this AbsolutePath st)
 	{
 		// TODO: Add more patterns.
-		var patterns = new string[]
-		{
-			"wtq.jsonc",
-		};
+		var patterns = new string[] { "wtq.jsonc" };
 
 		foreach (var p in patterns)
 		{
@@ -53,9 +54,7 @@ public static partial class NukeExtensions
 		}
 	}
 
-	public static async Task<string> GetChangeLogEntryAsync(
-		string path,
-		string ver)
+	public static async Task<string> GetChangeLogEntryAsync(string path, string ver)
 	{
 		var inCurr = false;
 		var headerRegex = ChangeLogVersionHeaderRegex();
@@ -96,7 +95,8 @@ public static partial class NukeExtensions
 		this GitHubClient client,
 		string owner,
 		string name,
-		string version)
+		string version
+	)
 	{
 		var tagName = $"v{version}";
 
@@ -120,15 +120,9 @@ public static partial class NukeExtensions
 		// Create release if none exists yet.
 		Log.Information("Creating GitHub release '{TagName}'", tagName);
 
-		var newRelease = new NewRelease(tagName)
-		{
-			Name = tagName,
-			Prerelease = true,
-		};
+		var newRelease = new NewRelease(tagName) { Name = tagName, Prerelease = true };
 
-		return await client
-			.Repository
-			.Release.Create(owner, name, newRelease);
+		return await client.Repository.Release.Create(owner, name, newRelease);
 	}
 
 	public static void MoveWtqUI(this AbsolutePath root)
@@ -141,7 +135,8 @@ public static partial class NukeExtensions
 	public static async Task UploadReleaseAssetToGithub(
 		this GitHubClient client,
 		Release release,
-		string asset)
+		string asset
+	)
 	{
 		Log.Information("Uploading asset '{AssetName}'", asset);
 

@@ -25,10 +25,7 @@ public static class BlazorDiagramConfiguration
 		var options = new BlazorDiagramOptions
 		{
 			AllowMultiSelection = true,
-			Zoom =
-			{
-				Enabled = false,
-			},
+			Zoom = { Enabled = false },
 			Links =
 			{
 				DefaultRouter = new NormalRouter(),
@@ -39,29 +36,35 @@ public static class BlazorDiagramConfiguration
 		var diagram = new BlazorDiagram(options);
 		diagram.RegisterComponent<ListFilesNodeModel, ListFilesNode>();
 
-		var firstNode = diagram.Nodes.Add(new NodeModel(position: new Point(50, 50)) { Title = "Node 1", });
+		var firstNode = diagram.Nodes.Add(
+			new NodeModel(position: new Point(50, 50)) { Title = "Node 1" }
+		);
 
-		var secondNode = diagram.Nodes.Add(new NodeModel(position: new Point(200, 100)) { Title = "Node 2", });
+		var secondNode = diagram.Nodes.Add(
+			new NodeModel(position: new Point(200, 100)) { Title = "Node 2" }
+		);
 
-		var catNode = diagram.Nodes.Add(new ListFilesNodeModel(sel, position: new Point(50, 200))
-		{
-			Title = "Node 3",
-			Command = "cat",
-			Args = "/home/marco/Downloads/jsonnd.txt",
-		});
+		var catNode = diagram.Nodes.Add(
+			new ListFilesNodeModel(sel, position: new Point(50, 200))
+			{
+				Title = "Node 3",
+				Command = "cat",
+				Args = "/home/marco/Downloads/jsonnd.txt",
+			}
+		);
 
-		var jqNode = diagram.Nodes.Add(new ListFilesNodeModel(sel, position: new Point(400, 200))
-		{
-			Title = "Node 3",
-			Command = "jq",
-			Args = "-c",
-		});
+		var jqNode = diagram.Nodes.Add(
+			new ListFilesNodeModel(sel, position: new Point(400, 200))
+			{
+				Title = "Node 3",
+				Command = "jq",
+				Args = "-c",
+			}
+		);
 
 		var src = new SinglePortAnchor(catNode.StdOut);
 		var dst = new SinglePortAnchor(jqNode.StdIn);
 		var link1 = diagram.Links.Add(new LinkModel(src, dst));
-
-
 
 		var p1 = firstNode.AddPort(PortAlignment.Right);
 		var p2 = firstNode.AddPort(PortAlignment.Right);

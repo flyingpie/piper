@@ -36,7 +36,7 @@ public static class Os
 	{
 		// Guard.Against.NullOrWhiteSpace(path);
 
-		Process.Start(new ProcessStartInfo() { FileName = path, UseShellExecute = true, });
+		Process.Start(new ProcessStartInfo() { FileName = path, UseShellExecute = true });
 	}
 
 	public static void OpenUrl(Uri url)
@@ -53,7 +53,7 @@ public static class Os
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
 			{
 				var urlstr = url.ToString().Replace("&", "^&", StringComparison.Ordinal);
-				Process.Start(new ProcessStartInfo(urlstr) { UseShellExecute = true, });
+				Process.Start(new ProcessStartInfo(urlstr) { UseShellExecute = true });
 			}
 			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
 			{

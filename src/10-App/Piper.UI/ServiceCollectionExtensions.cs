@@ -9,8 +9,6 @@ public static class ServiceCollectionExtensions
 	{
 		Guard.Against.Null(services);
 
-		return services
-			.AddRadzenComponents()
-			.AddBlazorDiagram();
+		return services.AddRadzenComponents().AddBlazorDiagram();
 	}
 }

@@ -34,9 +34,7 @@ public class MyCustomTransform
 {
 	public PiperDataFrame Execute(PiperDataFrame frame)
 	{
-		foreach (var rec in frame.Records)
-		{
-		}
+		foreach (var rec in frame.Records) { }
 
 		return frame;
 	}

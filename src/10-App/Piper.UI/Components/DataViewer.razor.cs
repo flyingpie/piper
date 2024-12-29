@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Components;
 
 namespace Piper.UI.Components;
 
@@ -9,6 +9,7 @@ public partial class DataViewer : ComponentBase
 	public SelectedThingyService SelectedThingy { get; set; }
 
 	public List<PiperRecord> Records => SelectedThingy?.Node?.Records ?? [];
+
 	// [
 	// 	new PiperRecord() { Fields = [new PiperField() { Value = "R1", }] },
 	// 	new PiperRecord() { Fields = [new PiperField() { Value = "R2", }] },
