@@ -1,0 +1,37 @@
+<RadzenDataGrid
+	AllowFiltering="true"
+	AllowColumnResize="true"
+	AllowAlternatingRows="false"
+	FilterMode="FilterMode.Advanced"
+	AllowSorting="true"
+	PageSize="15"
+	AllowPaging="true"
+	PagerHorizontalAlign="HorizontalAlign.Left"
+	ShowPagingSummary="true"
+	Data="@Records"
+	ColumnWidth="300px"
+	LogicalFilterOperator="LogicalFilterOperator.Or"
+	SelectionMode="DataGridSelectionMode.Single"
+>
+	<Columns>
+		@* <RadzenDataGridColumn *@
+		@* 	Filterable="false" *@
+		@* 	Title="ID" *@
+		@* 	Frozen="true" *@
+		@* 	Width="80px" *@
+		@* 	TextAlign="TextAlign.Left" *@
+		@* /> *@
+		<RadzenDataGridColumn
+			Title="Photo"
+			Frozen="true"
+			Sortable="false"
+			Filterable="false"
+			Width="80px"
+			TextAlign="TextAlign.Left"
+		>
+			<Template Context="data">
+				@(data.Fields?.FirstOrDefault()?.Value)
+			</Template>
+		</RadzenDataGridColumn>
+	</Columns>
+</RadzenDataGrid>

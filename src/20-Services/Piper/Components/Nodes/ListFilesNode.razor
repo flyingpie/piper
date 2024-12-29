@@ -1,0 +1,66 @@
+@using Blazor.Diagrams.Components.Renderers
+@using Blazor.Diagrams.Core.Models
+
+<div class="diagram-node" style="background-color: var(--rz-base-800); border-radius: .3em;">
+
+	<RadzenStack Orientation="Orientation.Vertical">
+		<RadzenStack
+			Orientation="Orientation.Horizontal"
+			AlignItems="AlignItems.Center"
+			JustifyContent="JustifyContent.SpaceBetween"
+			Style="background-color: var(--rz-secondary); margin: -20px -20px 0 -20px; padding: .6em;"
+		>
+			<h3 style="margin: 0;">Command</h3>
+
+			<RadzenStack Orientation="Orientation.Horizontal">
+				<RadzenProgressBarCircular
+					ProgressBarStyle="ProgressBarStyle.Primary"
+					Value="100"
+					ShowValue="false"
+					Visible="@Node.IsExecuting"
+					Mode="ProgressBarMode.Indeterminate"
+					Size="ProgressBarCircularSize.ExtraSmall"
+				/>
+				<RadzenButton
+					Click="async () => await Node.ExecuteAsync()"
+					Size="ButtonSize.ExtraSmall"
+					Icon="play_arrow"
+					Disabled="@Node.IsExecuting"
+				/>
+			</RadzenStack>
+		</RadzenStack>
+
+		<div class="piper-field">
+			<RadzenTextBox Placeholder="cmd" Style="width: 100%;" @bind-Value="Node.Command" />
+		</div>
+
+		<div class="piper-field">
+			<RadzenTextBox Placeholder="args" Style="width: 100%;" @bind-Value="Node.Args" />
+		</div>
+
+		@foreach (var port in Node.Ports)
+		{
+			<div class="piper-field">
+				<PortRenderer @key="port" Port="port"/>
+				@* <RadzenTextBox Disabled="@(port.Links.Count > 0)" Style="width: 100%;"/> *@
+
+				<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
+					<RadzenButton
+						Visible="@(port.Alignment == PortAlignment.Left)"
+						Icon="preview"
+						Size="ButtonSize.ExtraSmall"
+						Click="@(() => SelectedThingy.Node = Node.StdOutData)"
+					/>
+					<RadzenLabel Text="@port.Id" />
+					<RadzenButton
+						Visible="@(port.Alignment == PortAlignment.Right)"
+						Icon="preview"
+						Size="ButtonSize.ExtraSmall"
+					/>
+				</RadzenStack>
+			</div>
+		}
+	</RadzenStack>
+
+
+</div>

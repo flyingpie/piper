@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<AssemblyName>Piper</AssemblyName>
+		<RootNamespace>Piper</RootNamespace>
+
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+
+		<OutputType>WinExe</OutputType>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<RunAnalyzers>false</RunAnalyzers>
+		<RunCodeAnalysis>false</RunCodeAnalysis>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BlazorMonaco" />
+		<PackageReference Include="Photino.Blazor" />
+		<PackageReference Include="Radzen.Blazor" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="wwwroot\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\vendor\Blazor.Diagrams\src\Blazor.Diagrams\Blazor.Diagrams.csproj" />
+		<ProjectReference Include="..\..\10-Core\Wtq\Wtq.csproj" />
+	</ItemGroup>
+</Project>
