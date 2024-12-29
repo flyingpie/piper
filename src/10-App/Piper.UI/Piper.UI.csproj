@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<AssemblyName>Piper.UI</AssemblyName>
+		<RootNamespace>Piper.UI</RootNamespace>
+
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BlazorMonaco" />
+		<PackageReference Include="Radzen.Blazor" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="wwwroot\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\vendor\Blazor.Diagrams\src\Blazor.Diagrams\Blazor.Diagrams.csproj" />
+		<ProjectReference Include="..\Piper.Core\Piper.Core.csproj" />
+	</ItemGroup>
+</Project>

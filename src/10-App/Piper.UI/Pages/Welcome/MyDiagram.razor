@@ -1,0 +1,122 @@
+@using Blazor.Diagrams.Components
+@using Blazor.Diagrams.Components.Widgets
+@using Piper.UI.Components
+@using Piper.UI.Components.Nodes
+@using Point = Blazor.Diagrams.Core.Geometry.Point
+@inject ContextMenuService ContextMenuService
+@inject SelectedThingyService SelectedThingy
+
+@code {
+
+	void ShowContextMenuWithContent(MouseEventArgs args) => ContextMenuService.Open(
+		args,
+		ds =>
+			@<RadzenMenu Click="a => OnMenuItemClick(a, args.OffsetX, args.OffsetY)">
+				<RadzenMenuItem Text="@($"Item 1: ({args.OffsetX}, {args.OffsetY})")" Value="1"></RadzenMenuItem>
+				<RadzenMenuItem Text="Item2" Value="2"></RadzenMenuItem>
+				<RadzenMenuItem Text="More items" Value="3">
+					<RadzenMenuItem Text="More sub items" Value="4">
+						<RadzenMenuItem Text="Item1" Value="5"></RadzenMenuItem>
+						<RadzenMenuItem Text="Item2" Value="6"></RadzenMenuItem>
+					</RadzenMenuItem>
+				</RadzenMenuItem>
+			</RadzenMenu>);
+
+	void OnMenuItemClick(MenuItemEventArgs args, double x, double y)
+	{
+		// console.Log($"Menu item with Value={args.Value} clicked");
+		if (!args.Value.Equals(3) && !args.Value.Equals(4))
+		{
+
+
+			// var firstNode = Diagram.Nodes.Add(new NodeModel(position: new Blazor.Diagrams.Core.Geometry.Point(x, y))
+			// {
+			// 	Title = $"Node {args.Value} ({x},{y})",
+			// });
+
+			var thirdNode = Diagram.Nodes.Add(new ListFilesNodeModel(SelectedThingy, position: new Point(x, y))
+			{
+				Title = "Node 3",
+			});
+
+			// var p1 = firstNode.AddPort(PortAlignment.Left);
+			// var p2 = firstNode.AddPort(PortAlignment.Left);
+			//
+			// var p3 = firstNode.AddPort(PortAlignment.Right);
+			// var p4 = firstNode.AddPort(PortAlignment.Right);
+			//
+			// firstNode.Size = new Size(140, 200);
+
+			ContextMenuService.Close();
+		}
+	}
+
+}
+
+<RadzenSplitter Orientation="Orientation.Vertical" style="border: 1px solid rgba(0,0,0,.08); position: absolute; top: 0; right: 0; bottom: 0; left: 0;">
+	<RadzenSplitterPane Size="80%">
+		<RadzenSplitter>
+			<RadzenSplitterPane Size="80%" Min="30px">
+
+
+				<div class="diagram-container" @oncontextmenu=@(args => ShowContextMenuWithContent(args)) @oncontextmenu:preventDefault="true">
+					<CascadingValue Value="Diagram" IsFixed="true">
+						<DiagramCanvas>
+							<Widgets>
+								<GridWidget Mode="GridMode.Point" BackgroundColor="var(--rz-base-900)"></GridWidget>
+								@* <NavigatorWidget *@
+								@* 	Width="200" *@
+								@* 	Height="120" *@
+								@* 	Class="border border-black bg-white absolute" *@
+								@* 	Style="bottom: 15px; right: 15px;"/> *@
+							</Widgets>
+						</DiagramCanvas>
+					</CascadingValue>
+				</div>
+
+
+			</RadzenSplitterPane>
+			<RadzenSplitterPane>
+
+				<DataViewer />
+
+			</RadzenSplitterPane>
+		</RadzenSplitter>
+	</RadzenSplitterPane>
+	<RadzenSplitterPane>
+		<RadzenSplitter>
+			<RadzenSplitterPane>
+				Pane C1
+			</RadzenSplitterPane>
+			<RadzenSplitterPane>
+				Pane C2
+			</RadzenSplitterPane>
+		</RadzenSplitter>
+	</RadzenSplitterPane>
+</RadzenSplitter>
+
+
+<style>
+	.diagram-container {
+		width: 100%;
+		height: 100%;
+		border: 1px solid black; /* Just visual */
+	}
+
+	.default-node {
+		background-color: var(--rz-secondary-darker);
+		border: 1px solid var(--rz-base-600);
+		border-radius: 0.25em;
+		color: var(--rz-base-50);
+	}
+
+	.default-node.selected {
+		border: 1px solid var(--rz-base-400);
+	}
+
+	.default-node .diagram-port {
+		width: 12px;
+		height: 12px;
+		margin: -6px;
+	}
+</style>

@@ -12,10 +12,15 @@
 		<DebugSymbols>true</DebugSymbols>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<RunAnalyzers>false</RunAnalyzers>
+		<RunCodeAnalysis>false</RunCodeAnalysis>
+	</PropertyGroup>
+
 	<!-- Stylecop -->
-	<ItemGroup>
-		<AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" Link="stylecop.json" />
-	</ItemGroup>
+<!--	<ItemGroup>-->
+<!--		<AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" Link="stylecop.json" />-->
+<!--	</ItemGroup>-->
 
 	<!-- Regular Projects -->
 	<PropertyGroup Condition="!$(MSBuildProjectName.EndsWith('Test'))">

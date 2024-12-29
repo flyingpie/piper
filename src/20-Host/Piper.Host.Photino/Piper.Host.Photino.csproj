@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<AssemblyName>Piper.Host.Photino</AssemblyName>
+		<RootNamespace>@(AssemblyName)</RootNamespace>
+
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+
+		<OutputType>WinExe</OutputType>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Photino.Blazor" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\10-App\Piper.Core\Piper.Core.csproj" />
+		<ProjectReference Include="..\..\10-App\Piper.UI\Piper.UI.csproj" />
+	</ItemGroup>
+</Project>
