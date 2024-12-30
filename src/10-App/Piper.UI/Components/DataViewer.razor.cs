@@ -18,9 +18,6 @@ public partial class DataViewer : ComponentBase
 
 	protected override async Task OnInitializedAsync()
 	{
-		SelectedThingy.OnChanged = () =>
-		{
-			InvokeAsync(() => StateHasChanged());
-		};
+		SelectedThingy.OnChanged(() => InvokeAsync(() => StateHasChanged()));
 	}
 }

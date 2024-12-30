@@ -16,6 +16,13 @@ public partial class ListFilesNode : ComponentBase
 
 	bool _init;
 
+	protected override Task OnInitializedAsync()
+	{
+		SelectedThingy.OnChanged(() => InvokeAsync(() => StateHasChanged()));
+
+		return Task.CompletedTask;
+	}
+
 	protected override Task OnParametersSetAsync()
 	{
 		// if (!_init && Node != null)

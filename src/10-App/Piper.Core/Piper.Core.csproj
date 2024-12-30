@@ -9,10 +9,15 @@
 	<ItemGroup>
 		<PackageReference Include="Ardalis.GuardClauses" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
+		<PackageReference Include="Newtonsoft.Json" />
 		<PackageReference Include="Serilog" />
 		<PackageReference Include="Serilog.Extensions.Hosting" />
 		<PackageReference Include="Serilog.Extensions.Logging" />
 		<PackageReference Include="Serilog.Sinks.Console" />
 		<PackageReference Include="Serilog.Sinks.File" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\vendor\Blazor.Diagrams\src\Blazor.Diagrams\Blazor.Diagrams.csproj" />
 	</ItemGroup>
 </Project>

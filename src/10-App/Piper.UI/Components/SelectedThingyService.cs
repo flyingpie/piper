@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Piper.UI.Components;
 
 public class SelectedThingyService
@@ -10,9 +12,25 @@ public class SelectedThingyService
 		set
 		{
 			_node = value;
-			OnChanged?.Invoke();
+			// OnChanged?.Invoke();
+			Changed();
 		}
 	}
 
-	public Action OnChanged { get; set; }
+	// public Action OnChanged { get; set; }
+
+	private readonly List<Action> _onChanged = [];
+
+	public void Changed()
+	{
+		foreach (var c in _onChanged)
+		{
+			c.Invoke();
+		}
+	}
+
+	public void OnChanged(Action onChanged)
+	{
+		_onChanged.Add(onChanged);
+	}
 }

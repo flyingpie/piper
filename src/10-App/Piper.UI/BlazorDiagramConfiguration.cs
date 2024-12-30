@@ -49,7 +49,7 @@ public static class BlazorDiagramConfiguration
 			{
 				Title = "Node 3",
 				Command = "cat",
-				Args = "/home/marco/Downloads/jsonnd.txt",
+				Args = [ new ListFilesNodeModel.CmdArgument() { Arg = "/home/marco/Downloads/jsonnd.txt" }],
 			}
 		);
 
@@ -58,7 +58,7 @@ public static class BlazorDiagramConfiguration
 			{
 				Title = "Node 3",
 				Command = "jq",
-				Args = "-c",
+				Args = [ new ListFilesNodeModel.CmdArgument() { Arg = "-c" }],
 			}
 		);
 

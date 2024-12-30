@@ -1,0 +1,30 @@
+@using Blazor.Diagrams.Core.Models
+@using Blazor.Diagrams.Components.Renderers
+
+<div class="piper-field">
+	<PortRenderer @key="Port" Port="Port"/>
+
+	<RadzenStack
+		Orientation="Orientation.Horizontal"
+		JustifyContent="JustifyContent.SpaceBetween"
+		AlignItems="AlignItems.Center"
+	>
+		<RadzenButton
+			ButtonStyle="@(SelectedThingy.Node != null && SelectedThingy.Node == SelectDataFrame?.Invoke() ? ButtonStyle.Info : ButtonStyle.Secondary)"
+			Click="@(() => SelectedThingy.Node = SelectDataFrame?.Invoke())"
+			Icon="list"
+			Size="ButtonSize.ExtraSmall"
+			Visible="@(Port.Alignment == PortAlignment.Left)"
+		/>
+
+		<RadzenLabel Text="@Port.Id"/>
+
+		<RadzenButton
+			ButtonStyle="@(SelectedThingy.Node != null && SelectedThingy.Node == SelectDataFrame?.Invoke() ? ButtonStyle.Info : ButtonStyle.Secondary)"
+			Click="@(() => SelectedThingy.Node = SelectDataFrame?.Invoke())"
+			Icon="list"
+			Size="ButtonSize.ExtraSmall"
+			Visible="@(Port.Alignment == PortAlignment.Right)"
+		/>
+	</RadzenStack>
+</div>

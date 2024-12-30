@@ -1,6 +1,3 @@
-@using Blazor.Diagrams.Components.Renderers
-@using Blazor.Diagrams.Core.Models
-
 <div class="diagram-node" style="background-color: var(--rz-base-800); border-radius: .3em;">
 
 	<RadzenStack Orientation="Orientation.Vertical">
@@ -31,36 +28,47 @@
 		</RadzenStack>
 
 		<div class="piper-field">
-			<RadzenTextBox Placeholder="cmd" Style="width: 100%;" @bind-Value="Node.Command" />
+			Command
+			<RadzenTextBox Placeholder="cmd" Style="width: 100%;" @bind-Value="Node.Command"/>
 		</div>
 
-		<div class="piper-field">
-			<RadzenTextBox Placeholder="args" Style="width: 100%;" @bind-Value="Node.Args" />
-		</div>
-
-		@foreach (var port in Node.Ports)
+		@foreach (var arg in Node.Args)
 		{
 			<div class="piper-field">
-				<PortRenderer @key="port" Port="port"/>
-				@* <RadzenTextBox Disabled="@(port.Links.Count > 0)" Style="width: 100%;"/> *@
-
-				<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center">
-					<RadzenButton
-						Visible="@(port.Alignment == PortAlignment.Left)"
-						Icon="preview"
-						Size="ButtonSize.ExtraSmall"
-						Click="@(() => SelectedThingy.Node = Node.StdOutData)"
-					/>
-					<RadzenLabel Text="@port.Id" />
-					<RadzenButton
-						Visible="@(port.Alignment == PortAlignment.Right)"
-						Icon="preview"
-						Size="ButtonSize.ExtraSmall"
-					/>
+				Argument
+				<RadzenStack Orientation="Orientation.Horizontal">
+					<RadzenTextBox Placeholder="args" Style="width: 100%;" @bind-Value="arg.Arg"/>
+					<RadzenButton Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@(() => Node.Args.Remove(arg))" />
 				</RadzenStack>
 			</div>
 		}
+
+		<div class="piper-field">
+			<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+				<RadzenButton
+					Icon="add"
+					Size="ButtonSize.ExtraSmall"
+					ButtonStyle="ButtonStyle.Primary"
+					Click="@(() => Node.Args.Add(new ListFilesNodeModel.CmdArgument()))"
+				/>
+			</RadzenStack>
+		</div>
+
+		<span class="piper-node-separator"></span>
+
+		<PiperNodePort Port="Node.StdIn" SelectDataFrame="() => Node.StdInData" />
+		<PiperNodePort Port="Node.StdOut" SelectDataFrame="() => Node.StdOutData" />
+		<PiperNodePort Port="Node.StdErr" SelectDataFrame="() => Node.StdErrData" />
 	</RadzenStack>
 
-
 </div>
+
+<style>
+.piper-node-separator {
+	border-bottom: 1px var(--rz-base-600) solid;
+}
+
+.piper-field {
+	position: relative;
+}
+</style>

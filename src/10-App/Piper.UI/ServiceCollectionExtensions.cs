@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Piper.Core;
 using Radzen;
 
 namespace Piper.UI;
@@ -9,6 +10,9 @@ public static class ServiceCollectionExtensions
 	{
 		Guard.Against.Null(services);
 
-		return services.AddRadzenComponents().AddBlazorDiagram();
+		return services
+			.AddBlazorDiagram()
+			.AddRadzenComponents()
+			.AddSingleton<SaveLoadService>();
 	}
 }

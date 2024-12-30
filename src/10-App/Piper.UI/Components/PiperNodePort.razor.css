@@ -1,0 +1,26 @@
+::deep .diagram-port {
+	position: absolute;
+	width: 12px;
+	height: 12px;
+	top: 50%;
+	background-color: var(--rz-black);
+	border-radius: 6px;
+	border: 1px var(--rz-primary) solid;
+	transform: translate(0, -50%);
+}
+
+::deep .diagram-port.top {
+	top: -8px;
+}
+
+::deep .diagram-port.bottom {
+	bottom: -8px;
+}
+
+::deep .diagram-port.left {
+	left: -26px;
+}
+
+::deep .diagram-port.right {
+	right: -26px;
+}

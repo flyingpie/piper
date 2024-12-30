@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Newtonsoft.Json;
 
 namespace Piper.UI.Components.Nodes;
 
@@ -26,9 +27,16 @@ public class ListFilesNodeModel : NodeModel
 
 	public SelectedThingyService SelectedThingy { get; set; }
 
+	[JsonProperty]
 	public string Command { get; set; }
 
-	public string Args { get; set; }
+	[JsonProperty]
+	public List<CmdArgument> Args { get; set; } = [];
+
+	public class CmdArgument
+	{
+		public string? Arg { get; set; }
+	}
 
 	public PiperDataFrame StdInData { get; set; }
 
@@ -71,8 +79,14 @@ public class ListFilesNodeModel : NodeModel
 			var err = new List<string>();
 
 			var p = new Process();
+
 			p.StartInfo.FileName = Command;
-			p.StartInfo.Arguments = Args;
+			// p.StartInfo.Arguments = Args;
+			foreach (var arg in Args)
+			{
+				p.StartInfo.ArgumentList.Add(arg.Arg);
+			}
+
 			p.StartInfo.UseShellExecute = false;
 
 			p.StartInfo.RedirectStandardError = true;
