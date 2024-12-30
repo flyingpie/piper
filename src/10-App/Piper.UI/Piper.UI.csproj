@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="BlazorMonaco" />
+		<PackageReference Include="Newtonsoft.Json" />
 		<PackageReference Include="Radzen.Blazor" />
 	</ItemGroup>
 

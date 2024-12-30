@@ -9,6 +9,11 @@
 	transform: translate(0, -50%);
 }
 
+::deep .diagram-port.has-links {
+	background-color: var(--rz-primary);
+	border: 1px var(--rz-primary) solid;
+}
+
 ::deep .diagram-port.top {
 	top: -8px;
 }
