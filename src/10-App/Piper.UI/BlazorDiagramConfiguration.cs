@@ -45,7 +45,7 @@ public static class BlazorDiagramConfiguration
 		);
 
 		var catNode = diagram.Nodes.Add(
-			new ListFilesNodeModel(sel, position: new Point(50, 200))
+			new ListFilesNodeModel(position: new Point(50, 200))
 			{
 				Title = "Node 3",
 				Command = "cat",
@@ -54,7 +54,7 @@ public static class BlazorDiagramConfiguration
 		);
 
 		var jqNode = diagram.Nodes.Add(
-			new ListFilesNodeModel(sel, position: new Point(400, 200))
+			new ListFilesNodeModel(position: new Point(400, 200))
 			{
 				Title = "Node 3",
 				Command = "jq",

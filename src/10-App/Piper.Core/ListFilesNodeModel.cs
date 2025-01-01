@@ -1,17 +1,21 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-using Newtonsoft.Json;
 
 namespace Piper.UI.Components.Nodes;
 
 public class ListFilesNodeModel : NodeModel
 {
-	public ListFilesNodeModel(SelectedThingyService selected, Point position)
+	[JsonConstructor]
+	public ListFilesNodeModel(Point position)
 		: base(position)
 	{
-		SelectedThingy = selected;
+		// SelectedThingy = selected;
 
 		StdIn = this.AddPort(new PortModel(id: "stdin", parent: this, PortAlignment.Left));
 
@@ -25,12 +29,12 @@ public class ListFilesNodeModel : NodeModel
 	//
 	// public double SecondNumber { get; set; }
 
-	public SelectedThingyService SelectedThingy { get; set; }
+	// public SelectedThingyService SelectedThingy { get; set; }
 
-	[JsonProperty]
+	[JsonInclude]
 	public string Command { get; set; }
 
-	[JsonProperty]
+	[JsonInclude]
 	public List<CmdArgument> Args { get; set; } = [];
 
 	public class CmdArgument
@@ -134,7 +138,7 @@ public class ListFilesNodeModel : NodeModel
 			await p.WaitForExitAsync();
 
 			StdOutData = fr;
-			SelectedThingy.Node = fr;
+			// SelectedThingy.Node = fr;
 
 			// await Task.Delay(TimeSpan.FromSeconds(2));
 		}
