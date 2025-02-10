@@ -4,7 +4,7 @@ namespace Piper.UI.Components;
 
 public class SelectedThingyService
 {
-	private PiperDataFrame _node;
+	private PiperDataFrame? _node;
 
 	public PiperDataFrame? Node
 	{

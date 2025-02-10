@@ -10,9 +10,6 @@ public static class ServiceCollectionExtensions
 	{
 		Guard.Against.Null(services);
 
-		return services
-			.AddBlazorDiagram()
-			.AddRadzenComponents()
-			.AddSingleton<SaveLoadService>();
+		return services.AddBlazorDiagram().AddRadzenComponents().AddSingleton<SaveLoadService>();
 	}
 }

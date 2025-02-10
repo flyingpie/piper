@@ -127,15 +127,17 @@ public class ListFilesNodeModel : NodeModel
 
 			foreach (var line in srcData?.Records ?? [])
 			{
-				await p.StandardInput.WriteLineAsync(
-					line.Fields?.FirstOrDefault()?.Value?.ToString() ?? ""
-				);
+				await p
+					.StandardInput.WriteLineAsync(
+						line.Fields?.FirstOrDefault()?.Value?.ToString() ?? ""
+					)
+					.ConfigureAwait(false);
 			}
 
-			await p.StandardInput.FlushAsync();
+			await p.StandardInput.FlushAsync().ConfigureAwait(false);
 			p.StandardInput.Close();
 
-			await p.WaitForExitAsync();
+			await p.WaitForExitAsync().ConfigureAwait(false);
 
 			StdOutData = fr;
 			// SelectedThingy.Node = fr;

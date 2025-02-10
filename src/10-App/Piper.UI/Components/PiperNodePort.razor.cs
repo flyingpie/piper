@@ -12,7 +12,7 @@ public partial class PiperNodePort : ComponentBase
 	public PortModel? Port { get; set; }
 
 	[Inject]
-	public SelectedThingyService SelectedThingy { get; set; }
+	public SelectedThingyService? SelectedThingy { get; set; }
 
 	[Parameter]
 	public Func<PiperDataFrame>? SelectDataFrame { get; set; }

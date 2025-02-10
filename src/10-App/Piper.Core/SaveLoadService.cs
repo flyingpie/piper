@@ -16,35 +16,35 @@ namespace Piper.Core;
 
 public class PolymorphicTypeResolver : DefaultJsonTypeInfoResolver
 {
-    public override JsonTypeInfo GetTypeInfo(Type type, JsonSerializerOptions options)
-    {
-        JsonTypeInfo jsonTypeInfo = base.GetTypeInfo(type, options);
+	public override JsonTypeInfo GetTypeInfo(Type type, JsonSerializerOptions options)
+	{
+		JsonTypeInfo jsonTypeInfo = base.GetTypeInfo(type, options);
 
-        Type basePointType = typeof(NodeModel);
-        if (jsonTypeInfo.Type == basePointType)
-        {
-            jsonTypeInfo.PolymorphismOptions = new JsonPolymorphismOptions
-            {
-                TypeDiscriminatorPropertyName = "$point-type",
-                IgnoreUnrecognizedTypeDiscriminators = true,
-                UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization,
-                DerivedTypes =
-                {
-                    new JsonDerivedType(typeof(ListFilesNodeModel), "3d"),
-                    // new JsonDerivedType(typeof(FourDimensionalPoint), "4d")
-                }
-            };
-        }
+		Type basePointType = typeof(NodeModel);
+		if (jsonTypeInfo.Type == basePointType)
+		{
+			jsonTypeInfo.PolymorphismOptions = new JsonPolymorphismOptions
+			{
+				TypeDiscriminatorPropertyName = "$point-type",
+				IgnoreUnrecognizedTypeDiscriminators = true,
+				UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization,
+				DerivedTypes =
+				{
+					new JsonDerivedType(typeof(ListFilesNodeModel), "3d"),
+					// new JsonDerivedType(typeof(FourDimensionalPoint), "4d")
+				},
+			};
+		}
 
-        return jsonTypeInfo;
-    }
+		return jsonTypeInfo;
+	}
 }
 
 public class SaveLoadService
 {
 	private static readonly JsonSerializerOptions _options = new JsonSerializerOptions()
 	{
-		Converters = { new OptInJsonConverterFactory() },
+		// Converters = { new OptInJsonConverterFactory() },
 		// Converters = { new ObjectHandleJsonConverterFactory() },
 		ReferenceHandler = ReferenceHandler.Preserve,
 		// TypeInfoResolver = new PolymorphicTypeResolver(),
@@ -65,12 +65,12 @@ public class SaveLoadService
 						DerivedTypes =
 						{
 							// new JsonDerivedType(typeof(NodeModel), nameof(NodeModel)),
-							new JsonDerivedType(typeof(ListFilesNodeModel), "p1")
-						}
+							new JsonDerivedType(typeof(ListFilesNodeModel), "p1"),
+						},
 					};
 				},
 				// Add other modifiers as required.
-			}
+			},
 		},
 		WriteIndented = true,
 	};
@@ -132,17 +132,17 @@ public class SaveLoadService
 			return null;
 		}
 
-		return new PiperSaveLink() { Src = srcPort.Parent, Dst = dstPort.Parent, };
+		return new PiperSaveLink() { Src = srcPort.Parent, Dst = dstPort.Parent };
 	}
 }
 
 public class PiperSave
 {
 	[JsonInclude]
-	public List<NodeModel> Nodes { get; set; }
+	public List<NodeModel>? Nodes { get; set; }
 
 	[JsonInclude]
-	public List<PiperSaveLink> Links { get; set; }
+	public List<PiperSaveLink>? Links { get; set; }
 
 	public void ApplyTo(BlazorDiagram diagram)
 	{
@@ -156,15 +156,15 @@ public class PiperSave
 public class PiperSaveLink
 {
 	[JsonInclude]
-	public NodeModel Src { get; set; }
+	public NodeModel? Src { get; set; }
 
 	[JsonInclude]
-	public NodeModel Dst { get; set; }
+	public NodeModel? Dst { get; set; }
 }
 
 public class ObjectHandle
 {
-	public string ObjType { get; set; }
+	public string? ObjType { get; set; }
 
-	public object Obj { get; set; }
+	public object? Obj { get; set; }
 }

@@ -2,7 +2,7 @@ using Piper.UI;
 
 namespace Piper.Host.BlazorServer;
 
-public static class Program
+internal static class Program
 {
 	public static async Task Main(string[] args)
 	{
@@ -15,8 +15,6 @@ public static class Program
 
 		var app = builder.Build();
 
-
-
 		app.UseStaticFiles();
 
 		app.UseRouting();
@@ -24,6 +22,6 @@ public static class Program
 		app.MapBlazorHub();
 		app.MapFallbackToPage("/_Host");
 
-		app.Run();
+		await app.RunAsync();
 	}
 }

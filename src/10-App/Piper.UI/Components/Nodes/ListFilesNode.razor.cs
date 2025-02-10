@@ -8,13 +8,7 @@ public partial class ListFilesNode : ComponentBase
 	public ListFilesNodeModel Node { get; set; } = null!;
 
 	[Inject]
-	public SelectedThingyService SelectedThingy { get; set; }
-
-	// public PortModel Port1 { get; set; }
-	//
-	// public PortModel Port2 { get; set; }
-
-	bool _init;
+	public SelectedThingyService? SelectedThingy { get; set; }
 
 	protected override Task OnInitializedAsync()
 	{

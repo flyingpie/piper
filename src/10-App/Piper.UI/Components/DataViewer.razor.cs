@@ -6,7 +6,7 @@ namespace Piper.UI.Components;
 public partial class DataViewer : ComponentBase
 {
 	[Inject]
-	public SelectedThingyService SelectedThingy { get; set; }
+	public SelectedThingyService? SelectedThingy { get; set; }
 
 	public List<PiperRecord> Records => SelectedThingy?.Node?.Records ?? [];
 
@@ -16,8 +16,9 @@ public partial class DataViewer : ComponentBase
 	// 	new PiperRecord() { Fields = [new PiperField() { Value = "R3", }] },
 	// ];
 
-	protected override async Task OnInitializedAsync()
+	protected override Task OnInitializedAsync()
 	{
 		SelectedThingy.OnChanged(() => InvokeAsync(() => StateHasChanged()));
+		return Task.CompletedTask;
 	}
 }

@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piper.Host.BlazorServer", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piper.Host.Photino", "20-Host\Piper.Host.Photino\Piper.Host.Photino.csproj", "{BF006BE7-B2B8-4E62-862C-521B1C483243}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piper.Core.UnitTest", "10-App\Piper.Core.UnitTest\Piper.Core.UnitTest.csproj", "{C90EDAC5-6D51-41BC-9BD9-78D2A86449C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,10 @@ Global
 		{BF006BE7-B2B8-4E62-862C-521B1C483243}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF006BE7-B2B8-4E62-862C-521B1C483243}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF006BE7-B2B8-4E62-862C-521B1C483243}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C90EDAC5-6D51-41BC-9BD9-78D2A86449C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C90EDAC5-6D51-41BC-9BD9-78D2A86449C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C90EDAC5-6D51-41BC-9BD9-78D2A86449C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C90EDAC5-6D51-41BC-9BD9-78D2A86449C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +99,7 @@ Global
 		{83C017C6-47D7-4CE9-9286-ED83DE2F71AF} = {7C336600-4B71-46E7-ABE0-D72F7A61B9BB}
 		{4A064534-59E1-4B9F-915C-44AD6EDA8A09} = {36F6F95D-4E67-431A-8F81-F92062F585F4}
 		{BF006BE7-B2B8-4E62-862C-521B1C483243} = {36F6F95D-4E67-431A-8F81-F92062F585F4}
+		{C90EDAC5-6D51-41BC-9BD9-78D2A86449C6} = {7C336600-4B71-46E7-ABE0-D72F7A61B9BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {65349C7B-F6B3-49A8-9935-4ABF9B6D3D70}
