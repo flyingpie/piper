@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
+using Piper.Core;
+using Piper.Core.Data;
 
 namespace Piper.UI.Components;
 

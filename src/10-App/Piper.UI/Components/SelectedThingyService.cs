@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Piper.Core;
+using Piper.Core.Data;
 
 namespace Piper.UI.Components;
 

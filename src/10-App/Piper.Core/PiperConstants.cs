@@ -1,5 +1,3 @@
-using System;
-
 namespace Piper.Core;
 
 public static class PiperConstants

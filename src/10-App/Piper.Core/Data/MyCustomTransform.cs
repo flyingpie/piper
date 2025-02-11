@@ -1,11 +1,4 @@
-using System.Collections.Generic;
-
-namespace Piper.UI;
-
-public class PiperDataFrame
-{
-	public List<PiperRecord> Records { get; set; } = [];
-}
+namespace Piper.Core.Data;
 
 public class PiperRecord
 {

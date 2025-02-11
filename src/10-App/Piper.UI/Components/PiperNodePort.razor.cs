@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
+using Piper.Core;
+using Piper.Core.Data;
 
 namespace Piper.UI.Components;
 

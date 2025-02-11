@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Numerics;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Ardalis.GuardClauses;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-using Piper.UI;
+using Piper.Core.Data;
 
 namespace Piper.Core;
 
@@ -24,21 +20,23 @@ public class PiperLinkModel : LinkModel
 {
 	public PiperLinkModel()
 		: base((NodeModel)null, (NodeModel)null) { }
+
+	public void Save() { }
 }
 
 public class PiperNodeModel : NodeModel
 {
 	public Guid Id { get; set; } = Guid.NewGuid();
 
-	public virtual void Save(PiperSaveNode node)
-	{
-		Guard.Against.Null(node);
-
-		node.Set(nameof(Id), Id);
-		node.Set(nameof(Position), Position);
-	}
-
-	public virtual void Load(PiperSaveNode node) { }
+	// public virtual void Save(PiperSaveNode node)
+	// {
+	// 	Guard.Against.Null(node);
+	//
+	// 	node.Set(nameof(Id), Id);
+	// 	node.Set(nameof(Position), Position);
+	// }
+	//
+	// public virtual void Load(PiperSaveNode node) { }
 }
 
 public class ListFilesNodeModel : PiperNodeModel
@@ -56,15 +54,15 @@ public class ListFilesNodeModel : PiperNodeModel
 		StdErr = this.AddPort(new PortModel(id: "stderr", parent: this, PortAlignment.Right));
 	}
 
-	public void Save(PiperSaveNode node)
-	{
-		base.Save(node);
-	}
-
-	public void Load(PiperSaveNode node)
-	{
-		base.Load(node);
-	}
+	// public void Save(PiperSaveNode node)
+	// {
+	// 	base.Save(node);
+	// }
+	//
+	// public void Load(PiperSaveNode node)
+	// {
+	// 	base.Load(node);
+	// }
 
 	// public double FirstNumber { get; set; }
 	//
