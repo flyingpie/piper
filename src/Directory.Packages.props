@@ -5,6 +5,7 @@
 	<ItemGroup>
 		<PackageVersion Include="Ardalis.GuardClauses" Version="5.0.0"/>
 		<PackageVersion Include="BlazorMonaco" Version="3.3.0"/>
+		<PackageVersion Include="coverlet.collector" Version="6.0.0"/>
 		<PackageVersion Include="CSharpier.MsBuild" Version="0.30.6"/>
 		<PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.1"/>
 		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>

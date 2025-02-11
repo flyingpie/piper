@@ -25,19 +25,8 @@
       "type": "string",
       "enum": [
         "Clean",
-        "CreateGitHubRelease",
-        "CreateScoopManifest",
-        "CreateWinGetManifest",
         "PublishDebug",
-        "PublishLinux64",
-        "PublishLinux64Aot",
         "PublishLinux64FrameworkDependent",
-        "PublishLinux64SelfContained",
-        "PublishRelease",
-        "PublishWin64",
-        "PublishWin64Aot",
-        "PublishWin64FrameworkDependent",
-        "PublishWin64SelfContained",
         "ReportInfo"
       ]
     },
@@ -119,10 +108,6 @@
             "Debug",
             "Release"
           ]
-        },
-        "GitHubToken": {
-          "type": "string",
-          "description": "GitHub Token"
         },
         "Solution": {
           "type": "string",

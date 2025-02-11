@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
-using Piper.UI.Components.Nodes;
 //using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -89,12 +89,17 @@ public class SaveLoadService
 		model.ApplyTo(diagram);
 	}
 
-	public void Save(BlazorDiagram diagram)
+	public string Write(BlazorDiagram diagram)
 	{
 		var model = new PiperSave()
 		{
-			Nodes = diagram.Nodes.ToList(),
-			Links = diagram.Links.Select(l => ToLink(l)).Where(l => l != null).ToList(),
+			Nodes = diagram.Nodes.OfType<PiperNodeModel>().ToList(),
+			Links = diagram
+				.Links
+				// .Select(l => ToLink(l))
+				.OfType<PiperLinkModel>()
+				.Where(l => l != null)
+				.ToList(),
 		};
 
 		// var json = JsonConvert.SerializeObject(model, new JsonSerializerSettings()
@@ -112,37 +117,44 @@ public class SaveLoadService
 		//
 		// });
 
+		return json;
+	}
+
+	public void Save(BlazorDiagram diagram)
+	{
+		var json = Write(diagram);
+
 		File.WriteAllText("/home/marco/Downloads/piper1.json", json);
 
 		var dbg = 2;
 	}
 
-	public static PiperSaveLink? ToLink(BaseLinkModel link)
-	{
-		var srcPort = link.Source.Model as PortModel;
-		var dstPort = link.Target.Model as PortModel;
-
-		if (srcPort == null || dstPort == null)
-		{
-			return null;
-		}
-
-		if (srcPort.Parent == null || dstPort.Parent == null)
-		{
-			return null;
-		}
-
-		return new PiperSaveLink() { Src = srcPort.Parent, Dst = dstPort.Parent };
-	}
+	// public static PiperSaveLink? ToLink(BaseLinkModel link)
+	// {
+	// 	var srcPort = link.Source.Model as PortModel;
+	// 	var dstPort = link.Target.Model as PortModel;
+	//
+	// 	if (srcPort == null || dstPort == null)
+	// 	{
+	// 		return null;
+	// 	}
+	//
+	// 	if (srcPort.Parent == null || dstPort.Parent == null)
+	// 	{
+	// 		return null;
+	// 	}
+	//
+	// 	return new PiperSaveLink() { SrcId = srcPort.Parent, DstId = dstPort.Parent };
+	// }
 }
 
 public class PiperSave
 {
 	[JsonInclude]
-	public List<NodeModel>? Nodes { get; set; }
+	public List<PiperNodeModel>? Nodes { get; set; }
 
 	[JsonInclude]
-	public List<PiperSaveLink>? Links { get; set; }
+	public List<PiperLinkModel>? Links { get; set; }
 
 	public void ApplyTo(BlazorDiagram diagram)
 	{
@@ -155,16 +167,52 @@ public class PiperSave
 
 public class PiperSaveLink
 {
-	[JsonInclude]
-	public NodeModel? Src { get; set; }
+	public Guid Id { get; set; }
 
 	[JsonInclude]
-	public NodeModel? Dst { get; set; }
+	public Guid? SrcId { get; set; }
+
+	[JsonInclude]
+	public Guid? DstId { get; set; }
 }
 
-public class ObjectHandle
+public class PiperSaveNode : Dictionary<string, object>
 {
-	public string? ObjType { get; set; }
+	public PiperSaveNode()
+		: base(StringComparer.OrdinalIgnoreCase) { }
 
-	public object? Obj { get; set; }
+	// public Guid Id { get; set; }
+
+	// public Vector2 Position { get; set; }
+
+	// public Guid Id
+	// {
+	// 	get => GetAs<Guid>(nameof(Id));
+	// 	set => Set(nameof(Id), value);
+	// }
+
+	// public Guid SomeOtherId
+	// {
+	// 	get => GetAs<Guid>(nameof(SomeOtherId));
+	// 	set => Set(nameof(SomeOtherId), value);
+	// }
+
+	public T? GetAs<T>(string key)
+	{
+		var val = this[key];
+
+		return (T)val;
+	}
+
+	public void Set(string key, object val)
+	{
+		this[key] = val;
+	}
 }
+//
+// public class ObjectHandle
+// {
+// 	public string? ObjType { get; set; }
+//
+// 	public object? Obj { get; set; }
+// }

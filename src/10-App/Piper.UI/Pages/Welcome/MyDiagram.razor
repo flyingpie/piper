@@ -1,5 +1,6 @@
 @using Blazor.Diagrams.Components
 @using Blazor.Diagrams.Components.Widgets
+@using Piper.Core
 @using Piper.UI.Components
 @using Piper.UI.Components.Nodes
 @using Point = Blazor.Diagrams.Core.Geometry.Point
@@ -34,8 +35,9 @@
 			// 	Title = $"Node {args.Value} ({x},{y})",
 			// });
 
-			var thirdNode = Diagram.Nodes.Add(new ListFilesNodeModel(position: new Point(x, y))
+			var thirdNode = Diagram.Nodes.Add(new ListFilesNodeModel()
 			{
+				Position = new Point(x, y),
 				Title = "Node 3",
 			});
 

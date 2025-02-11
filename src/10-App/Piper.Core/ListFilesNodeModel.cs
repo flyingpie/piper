@@ -2,18 +2,49 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Piper.UI;
 
-namespace Piper.UI.Components.Nodes;
+namespace Piper.Core;
 
-public class ListFilesNodeModel : NodeModel
+public static class Ext2
+{
+	public static Vector2 ToVec2(this Point p)
+	{
+		return new Vector2((float)p.X, (float)p.Y);
+	}
+}
+
+public class PiperLinkModel : LinkModel
+{
+	public PiperLinkModel()
+		: base((NodeModel)null, (NodeModel)null) { }
+}
+
+public class PiperNodeModel : NodeModel
+{
+	public Guid Id { get; set; } = Guid.NewGuid();
+
+	public virtual void Save(PiperSaveNode node)
+	{
+		Guard.Against.Null(node);
+
+		node.Set(nameof(Id), Id);
+		node.Set(nameof(Position), Position);
+	}
+
+	public virtual void Load(PiperSaveNode node) { }
+}
+
+public class ListFilesNodeModel : PiperNodeModel
 {
 	[JsonConstructor]
-	public ListFilesNodeModel(Point position)
-		: base(position)
+	public ListFilesNodeModel()
 	{
 		// SelectedThingy = selected;
 
@@ -23,6 +54,16 @@ public class ListFilesNodeModel : NodeModel
 
 		StdOut = this.AddPort(new PortModel(id: "stdout", parent: this, PortAlignment.Right));
 		StdErr = this.AddPort(new PortModel(id: "stderr", parent: this, PortAlignment.Right));
+	}
+
+	public void Save(PiperSaveNode node)
+	{
+		base.Save(node);
+	}
+
+	public void Load(PiperSaveNode node)
+	{
+		base.Load(node);
 	}
 
 	// public double FirstNumber { get; set; }

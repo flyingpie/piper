@@ -5,36 +5,30 @@ using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.PathGenerators;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
-using Microsoft.Extensions.DependencyInjection;
-using Piper.Core;
-using Piper.UI.Components;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Piper.UI.Components.Nodes;
 
-namespace Piper.UI;
+namespace Piper.Core.UnitTest;
 
-public static class BlazorDiagramConfiguration
+[TestClass]
+public class SaveLoadServiceTest
 {
-	public static IServiceCollection AddBlazorDiagram(this IServiceCollection services)
+	[TestMethod]
+	public void TestMethod1()
 	{
-		return services
-			.AddSingleton<SelectedThingyService>()
-			.AddSingleton(p => CreateDiagram(p.GetRequiredService<SelectedThingyService>()));
+		var d = CreateDiagram();
+
+		var svc = new SaveLoadService();
+
+		svc.Save(d);
+
+		var dbg = 2;
 	}
 
-	public static BlazorDiagram CreateDiagram(SelectedThingyService sel)
+	public BlazorDiagram CreateDiagram()
 	{
-		var options = new BlazorDiagramOptions
-		{
-			AllowMultiSelection = true,
-			Zoom = { Enabled = false },
-			Links =
-			{
-				DefaultRouter = new NormalRouter(),
-				DefaultPathGenerator = new SmoothPathGenerator(),
-			},
-		};
+		var diagram = new BlazorDiagram(new BlazorDiagramOptions());
 
-		var diagram = new BlazorDiagram(options);
 		diagram.RegisterComponent<ListFilesNodeModel, ListFilesNode>();
 
 		var firstNode = diagram.Nodes.Add(
@@ -82,12 +76,8 @@ public static class BlazorDiagramConfiguration
 		var leftPort = secondNode.AddPort(PortAlignment.Left);
 		var rightPort = secondNode.AddPort(PortAlignment.Right);
 
-		// The connection point will be the intersection of
-		// a line going from the target to the center of the source
-		// var sourceAnchor = new ShapeIntersectionAnchor(firstNode);
 		var sourceAnchor = new SinglePortAnchor(p1);
 
-		// The connection point will be the port's position
 		var targetAnchor = new SinglePortAnchor(leftPort);
 		var link = diagram.Links.Add(new LinkModel(sourceAnchor, targetAnchor));
 
@@ -95,8 +85,6 @@ public static class BlazorDiagramConfiguration
 		link.PathGenerator = new StraightPathGenerator();
 		link.Router = new OrthogonalRouter();
 		link.Width = 2;
-
-		// link.Segmentable = true;
 
 		return diagram;
 	}
