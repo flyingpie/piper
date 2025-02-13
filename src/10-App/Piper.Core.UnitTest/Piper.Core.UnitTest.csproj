@@ -15,10 +15,11 @@
 		<PackageReference Include="Microsoft.NET.Test.Sdk"/>
 		<PackageReference Include="MSTest.TestAdapter"/>
 		<PackageReference Include="MSTest.TestFramework"/>
+		<PackageReference Include="Samboy063.Tomlet"/>
+		<PackageReference Include="Tomlyn"/>
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Piper.Core\Piper.Core.csproj"/>
-		<ProjectReference Include="..\Piper.UI\Piper.UI.csproj" />
 	</ItemGroup>
 </Project>

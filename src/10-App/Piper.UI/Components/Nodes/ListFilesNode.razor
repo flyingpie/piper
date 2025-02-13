@@ -15,31 +15,31 @@
 					ProgressBarStyle="ProgressBarStyle.Primary"
 					Value="100"
 					ShowValue="false"
-					Visible="@Node.IsExecuting"
+					Visible="@NodeModel.IsExecuting"
 					Mode="ProgressBarMode.Indeterminate"
 					Size="ProgressBarCircularSize.ExtraSmall"
 				/>
 				<RadzenButton
-					Click="async () => await Node.ExecuteAsync()"
+					Click="async () => await NodeModel.ExecuteAsync()"
 					Size="ButtonSize.ExtraSmall"
 					Icon="play_arrow"
-					Disabled="@Node.IsExecuting"
+					Disabled="@NodeModel.IsExecuting"
 				/>
 			</RadzenStack>
 		</RadzenStack>
 
 		<div class="piper-field">
 			Command
-			<RadzenTextBox Placeholder="cmd" Style="width: 100%;" @bind-Value="Node.Command"/>
+			<RadzenTextBox Placeholder="cmd" Style="width: 100%;" @bind-Value="NodeModel.Command"/>
 		</div>
 
-		@foreach (var arg in Node.Args)
+		@foreach (var arg in NodeModel.Args)
 		{
 			<div class="piper-field">
 				Argument
 				<RadzenStack Orientation="Orientation.Horizontal">
 					<RadzenTextBox Placeholder="args" Style="width: 100%;" @bind-Value="arg.Arg"/>
-					<RadzenButton Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@(() => Node.Args.Remove(arg))" />
+					<RadzenButton Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@(() => NodeModel.Args.Remove(arg))" />
 				</RadzenStack>
 			</div>
 		}
@@ -50,16 +50,16 @@
 					Icon="add"
 					Size="ButtonSize.ExtraSmall"
 					ButtonStyle="ButtonStyle.Primary"
-					Click="@(() => Node.Args.Add(new ListFilesNodeModel.CmdArgument()))"
+					Click="@(() => NodeModel.Args.Add(new Core.ListFilesNodeModel.CmdArgument()))"
 				/>
 			</RadzenStack>
 		</div>
 
 		<span class="piper-node-separator"></span>
 
-		<PiperNodePort Port="Node.StdIn" SelectDataFrame="() => Node.StdInData" />
-		<PiperNodePort Port="Node.StdOut" SelectDataFrame="() => Node.StdOutData" />
-		<PiperNodePort Port="Node.StdErr" SelectDataFrame="() => Node.StdErrData" />
+		<PiperNodePort Port="NodeModel.StdIn" SelectDataFrame="() => NodeModel.StdInData" />
+		<PiperNodePort Port="NodeModel.StdOut" SelectDataFrame="() => NodeModel.StdOutData" />
+		<PiperNodePort Port="NodeModel.StdErr" SelectDataFrame="() => NodeModel.StdErrData" />
 	</RadzenStack>
 
 </div>

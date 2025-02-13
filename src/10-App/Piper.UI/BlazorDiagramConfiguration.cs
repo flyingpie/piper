@@ -35,7 +35,7 @@ public static class BlazorDiagramConfiguration
 		};
 
 		var diagram = new BlazorDiagram(options);
-		diagram.RegisterComponent<ListFilesNodeModel, ListFilesNode>();
+		diagram.RegisterComponent<ListFilesNodeModel, Components.Nodes.ListFilesNode>();
 
 		var firstNode = diagram.Nodes.Add(
 			new NodeModel(position: new Point(50, 50)) { Title = "Node 1" }

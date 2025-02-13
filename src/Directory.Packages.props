@@ -19,6 +19,7 @@
 		<PackageVersion Include="Nuke.Common" Version="9.0.4"/>
 		<PackageVersion Include="Photino.Blazor" Version="4.0.13"/>
 		<PackageVersion Include="Radzen.Blazor" Version="5.9.8"/>
+		<PackageVersion Include="Samboy063.Tomlet" Version="6.0.0"/>
 		<PackageVersion Include="Serilog" Version="4.2.0"/>
 		<PackageVersion Include="Serilog.Extensions.Hosting" Version="9.0.0"/>
 		<PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.0"/>
@@ -30,5 +31,6 @@
 		<PackageVersion Include="System.Resources.Extensions" Version="9.0.0"/>
 		<PackageVersion Include="Tmds.DBus" Version="0.21.2"/>
 		<PackageVersion Include="Tmds.DBus.Protocol" Version="0.21.2"/>
+		<PackageVersion Include="Tomlyn" Version="0.18.0"/>
 	</ItemGroup>
 </Project>
