@@ -1,19 +1,20 @@
 using System.Text.Json.Serialization;
 using Blazor.Diagrams;
 using Piper.Core.Model;
+using shortid;
 using Tomlet.Attributes;
 
 namespace Piper.Core;
 
 public class PiperGraph
 {
-	[JsonIgnore]
-	[TomlNonSerialized]
+	[TomlPrecedingComment("\nNodes\n")]
+	[TomlProperty("node")]
 	public List<PiperNodeModel> Nodes { get; set; } =
 		[
-			new PiperNodeModel() { Name = "Node 1" },
-			new PiperNodeModel() { Name = "Node 2" },
-			new PiperNodeModel() { Name = "Node 3" },
+			new RunProcessPiperNodeModel() { Name = "Node 1" },
+			new() { Name = "Node 2" },
+			new() { Name = "Node 3" },
 		];
 
 	// public HashSet<PiperNodeModel> Nodes { get; set; } = new HashSet<PiperNodeModel>();
@@ -26,8 +27,13 @@ public class PiperGraph
 	// 		{ Guid.NewGuid().ToString(), new() },
 	// 	};
 
-	//	[Tomlet.Attributes.TomlNonSerialized]
-	public Dictionary<string, PiperNodeModel> Nodes1 => Nodes.ToDictionary(n => n.Name, n => n);
+	// [TomlNonSerialized]
+	// public Dictionary<string, PiperNodeModel> Nodes1 => Nodes.ToDictionary(n => n.Name, n => n);
+
+	[TomlPrecedingComment("\nLinks\n")]
+	[TomlProperty("link")]
+	public List<PiperLinkModel> Links { get; set; } =
+		[new() { Id = ShortId.Generate() }, new() { }, new() { }];
 
 	public string Save()
 	{
