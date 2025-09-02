@@ -3,6 +3,7 @@
 @using Piper.Core
 @using Piper.UI.Components
 @using Piper.UI.Components.Nodes
+@using ListFilesNode = Piper.Core.ListFilesNodeModel
 @using Point = Blazor.Diagrams.Core.Geometry.Point
 @inject ContextMenuService ContextMenuService
 @inject SelectedThingyService SelectedThingy
@@ -35,7 +36,7 @@
 			// 	Title = $"Node {args.Value} ({x},{y})",
 			// });
 
-			var thirdNode = Diagram.Nodes.Add(new ListFilesNodeModel()
+			var thirdNode = Diagram.Nodes.Add(new ListFilesNode()
 			{
 				Position = new Point(x, y),
 				Title = "Node 3",
