@@ -36,10 +36,7 @@ public class SaveLoadService
 		// 	Links = diagram.Links.OfType<PiperLinkModel>().Where(l => l != null).ToList(),
 		// };
 
-		return JsonConvert.SerializeObject(diagram, new JsonSerializerSettings()
-		{
-
-		});
+		return JsonConvert.SerializeObject(diagram, new JsonSerializerSettings() { });
 
 		// return JsonSerializer.Serialize(diagram, JsonOptions);
 	}

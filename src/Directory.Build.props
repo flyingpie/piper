@@ -1,7 +1,5 @@
 <Project>
 	<PropertyGroup>
-<!--		<LangVersion>12.0</LangVersion>-->
-
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
 		<BaseOutputPath>$(MSBuildThisFileDirectory)\..\_output\build</BaseOutputPath>
@@ -12,15 +10,10 @@
 		<DebugSymbols>true</DebugSymbols>
 	</PropertyGroup>
 
-	<PropertyGroup>
-<!--		<RunAnalyzers>false</RunAnalyzers>-->
-<!--		<RunCodeAnalysis>false</RunCodeAnalysis>-->
-	</PropertyGroup>
-
 	<!-- Stylecop -->
-	<!--	<ItemGroup>-->
-	<!--		<AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" Link="stylecop.json" />-->
-	<!--	</ItemGroup>-->
+	<ItemGroup>
+		<AdditionalFiles Include="$(MSBuildThisFileDirectory)\stylecop.json" Link="stylecop.json"/>
+	</ItemGroup>
 
 	<!-- Regular Projects -->
 	<PropertyGroup Condition="!$(MSBuildProjectName.EndsWith('Test'))">
@@ -35,13 +28,6 @@
 		<RunAnalyzersDuringLiveAnalysis>true</RunAnalyzersDuringLiveAnalysis>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="CSharpier.MsBuild">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
-
 	<!-- Unit Test Projects -->
 	<PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Test'))">
 		<EnableNETAnalyzers>false</EnableNETAnalyzers>
@@ -50,19 +36,8 @@
 
 	<!-- Analyzers (non-test projects only -->
 	<ItemGroup Condition="!$(MSBuildProjectName.EndsWith('Test'))">
-		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="SonarAnalyzer.CSharp">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<!--
-		<PackageReference Include="StyleCop.Analyzers.Unstable">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		-->
+		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all"/>
+		<PackageReference Include="SonarAnalyzer.CSharp" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all"/>
+		<PackageReference Include="StyleCop.Analyzers.Unstable" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all"/>
 	</ItemGroup>
 </Project>

@@ -10,14 +10,9 @@ public class PiperGraph : BlazorDiagram
 	}
 }
 
-
-
 public class PgNode
 {
-
+	public string? Name { get; set; }
 }
 
-public class PgEdge
-{
-
-}
+public class PgEdge { }
