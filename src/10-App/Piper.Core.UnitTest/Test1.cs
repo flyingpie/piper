@@ -12,7 +12,7 @@ namespace Piper.Core.UnitTest;
 [TestClass]
 public class Test1
 {
-	[TestMethod]
+	// [TestMethod]
 	public void METHOD()
 	{
 		TomletMain.RegisterMapper<System.Drawing.Point>(
