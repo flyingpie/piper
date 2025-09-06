@@ -2,6 +2,7 @@
 @using Blazor.Diagrams.Components.Widgets
 @using Piper.Core
 @using Piper.UI.Components
+@using Piper.UI.Components.CodeEditor
 @using Piper.UI.Components.Nodes
 @using ListFilesNode = Piper.Core.ListFilesNodeModel
 @using Point = Blazor.Diagrams.Core.Geometry.Point
@@ -94,7 +95,7 @@
 				@* <RadzenButton Text="Load" Click="() => SaveLoad.Load(Diagram)" /> *@
 			</RadzenSplitterPane>
 			<RadzenSplitterPane>
-				Pane C2
+				<PpCodeEditor  />
 			</RadzenSplitterPane>
 		</RadzenSplitter>
 	</RadzenSplitterPane>

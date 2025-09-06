@@ -1,0 +1,105 @@
+@inject IJSRuntime Js
+
+@code {
+
+	private StandaloneDiffEditorConstructionOptions MonacoOptions(StandaloneDiffEditor editor) =>
+		new()
+		{
+			AutomaticLayout = true,
+			Minimap = new EditorMinimapOptions()
+			{
+				Autohide = true,
+				Enabled = true,
+			},
+			OriginalEditable = true,
+			Theme = "vs-dark",
+		};
+
+	private StandaloneDiffEditor? _monaco;
+	private string? _textOriginal;
+	private string? _textModified;
+
+	[Parameter]
+	public string? TextModified { get; set; }
+
+	[Parameter]
+	public EventCallback<string?> TextModifiedChanged { get; set; }
+
+	[Parameter]
+	public string? TextOriginal { get; set; }
+
+	[Parameter]
+	public EventCallback<string?> TextOriginalChanged { get; set; }
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (_monaco == null)
+		{
+			return;
+		}
+
+		if (TextModified != _textModified)
+		{
+			await _monaco.ModifiedEditor.SetValue(TextModified ?? string.Empty);
+		}
+
+		if (TextOriginal != _textOriginal)
+		{
+			await _monaco.OriginalEditor.SetValue(TextOriginal ?? string.Empty);
+		}
+	}
+
+	private async Task EditorOnDidInit()
+	{
+		await _monaco!.SetModel(
+			new DiffEditorModel
+			{
+				Original =
+					await BlazorMonaco.Editor.Global.GetModel(Js, "sample-diff-editor-originalModel") ??
+					await BlazorMonaco.Editor.Global.CreateModel(Js, "", "html", "sample-diff-editor-originalModel"),
+
+				Modified =
+					await BlazorMonaco.Editor.Global.GetModel(Js, "sample-diff-editor-modifiedModel") ??
+					await BlazorMonaco.Editor.Global.CreateModel(Js, "", "html", "sample-diff-editor-modifiedModel"),
+			});
+	}
+
+	private async Task OnChangeModelContentModified()
+	{
+		_textModified = (await _monaco!.ModifiedEditor.GetValue()) ?? string.Empty;
+
+		if (_textModified == TextModified)
+		{
+			return;
+		}
+
+		await TextModifiedChanged.InvokeAsync(_textModified);
+	}
+
+	private async Task OnChangeModelContentOriginal()
+	{
+		_textOriginal = (await _monaco!.OriginalEditor.GetValue()) ?? string.Empty;
+
+		if (_textOriginal == TextOriginal)
+		{
+			return;
+		}
+
+		await TextOriginalChanged.InvokeAsync(_textOriginal);
+	}
+
+}
+
+<StandaloneDiffEditor
+	@ref="_monaco"
+	ConstructionOptions="MonacoOptions"
+	OnDidInit="EditorOnDidInit"
+	OnDidChangeModelContentModified="() => OnChangeModelContentModified()"
+	OnDidChangeModelContentOriginal="() => OnChangeModelContentOriginal()"
+/>
+
+<style>
+	.monaco-editor-container {
+		height: 100%;
+	}
+</style>

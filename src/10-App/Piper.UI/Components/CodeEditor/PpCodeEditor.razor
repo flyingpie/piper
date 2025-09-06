@@ -1,0 +1,72 @@
+@code {
+
+	private StandaloneEditorConstructionOptions MonacoOptions(StandaloneCodeEditor editor) =>
+		new()
+		{
+			AutomaticLayout = true,
+			Minimap = new EditorMinimapOptions()
+			{
+				Autohide = true,
+				Enabled = false,
+			},
+			Theme = "vs-dark",
+			Language = Language,
+			RenderWhitespace = "boundary",
+			Value = _text,
+		};
+
+	private StandaloneCodeEditor? _monaco;
+	private string _text = string.Empty;
+
+	[Parameter]
+	public string? Text { get; set; }
+
+	[Parameter]
+	public EventCallback<string?> TextChanged { get; set; }
+
+	[Parameter]
+	public string Language { get; set; } = "html";
+
+	private async Task OnDidInitAsync()
+	{
+		await _monaco.SetValue(Text ?? string.Empty);
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (_monaco == null)
+		{
+			return;
+		}
+
+		if (Text != _text)
+		{
+			await _monaco.SetValue(Text ?? string.Empty);
+		}
+	}
+
+	private async Task OnChangeModelContentAsync(ModelContentChangedEvent ev)
+	{
+		_text = (await _monaco!.GetValue()) ?? string.Empty;
+
+		if (_text == Text)
+		{
+			return;
+		}
+
+		await TextChanged.InvokeAsync(_text);
+	}
+
+}
+
+<StandaloneCodeEditor
+	@ref="_monaco"
+	OnDidInit="OnDidInitAsync"
+	ConstructionOptions="MonacoOptions"
+	OnDidChangeModelContent="OnChangeModelContentAsync"/>
+
+<style>
+	.monaco-editor-container {
+		height: 100%;
+	}
+</style>
