@@ -1,0 +1,10 @@
+{
+	"profiles": {
+		"Run": {
+			"commandName": "Project",
+			"environmentVariables": {
+				"WEBKIT_DISABLE_DMABUF_RENDERER": "1"
+			}
+		}
+	}
+}

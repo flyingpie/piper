@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Piper.Core;
 using Piper.UI.Components;
 using Piper.UI.Components.Nodes;
+using BD = Blazor.Diagrams.Core.Geometry;
 
 namespace Piper.UI;
 
@@ -35,7 +36,7 @@ public static class BlazorDiagramConfiguration
 		};
 
 		var diagram = new BlazorDiagram(options);
-		diagram.RegisterComponent<ListFilesNodeModel, Components.Nodes.ListFilesNode>();
+		diagram.RegisterComponent<ListFilesNodeModel, ListFilesNode>();
 
 		var firstNode = diagram.Nodes.Add(
 			new NodeModel(position: new Point(50, 50)) { Title = "Node 1" }
@@ -45,32 +46,32 @@ public static class BlazorDiagramConfiguration
 			new NodeModel(position: new Point(200, 100)) { Title = "Node 2" }
 		);
 
-		// var catNode = diagram.Nodes.Add(
-		// 	new ListFilesNodeModel()
-		// 	{
-		// 		Position = new System.Drawing.Point(50, 200),
-		// 		Name = "Node 3",
-		// 		Command = "cat",
-		// 		Args =
-		// 		[
-		// 			new ListFilesNodeModel.CmdArgument()
-		// 			{
-		// 				Arg = "/home/marco/Downloads/jsonnd.txt",
-		// 			},
-		// 		],
-		// 	}
-		// );
-		//
-		// var jqNode = diagram.Nodes.Add(
-		// 	new ListFilesNodeModel()
-		// 	{
-		// 		Position = new System.Drawing.Point(400, 200),
-		// 		Name = "Node 3",
-		// 		Command = "jq",
-		// 		Args = [new ListFilesNodeModel.CmdArgument() { Arg = "-c" }],
-		// 	}
-		// );
-		//
+		var catNode = diagram.Nodes.Add(
+			new ListFilesNodeModel()
+			{
+				Position = new BD.Point(50, 200),
+				Name = "Node 3",
+				Command = "cat",
+				Args =
+				[
+					new ListFilesNodeModel.CmdArgument()
+					{
+						Arg = "/home/marco/Downloads/jsonnd.txt",
+					},
+				],
+			}
+		);
+
+		var jqNode = diagram.Nodes.Add(
+			new ListFilesNodeModel()
+			{
+				Position = new BD.Point(400, 200),
+				Name = "Node 3",
+				Command = "jq",
+				Args = [new ListFilesNodeModel.CmdArgument() { Arg = "-c" }],
+			}
+		);
+
 		// var src = new SinglePortAnchor(catNode.StdOut);
 		// var dst = new SinglePortAnchor(jqNode.StdIn);
 		// var link1 = diagram.Links.Add(new LinkModel(src, dst));

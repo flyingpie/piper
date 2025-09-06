@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Blazor.Diagrams.Core.Models;
 using Piper.Core.Data;
 using Piper.Core.Model;
 
@@ -21,11 +22,16 @@ public class ListFilesNodeModel : PiperNodeModel
 		// SelectedThingy = selected;
 
 		// StdIn = this.AddPort(new PortModel(id: "stdin", parent: this, PortAlignment.Left));
+		StdIn = (PiperPortModel)this.AddPort(new PiperPortModel("stdin", this, PortAlignment.Left));
 
 		// var p2 = this.AddPort(new PortModel(id: "", parent: this, PortAlignment.Left));
 
 		// StdOut = this.AddPort(new PortModel(id: "stdout", parent: this, PortAlignment.Right));
-		// StdErr = this.AddPort(new PortModel(id: "stderr", parent: this, PortAlignment.Right));
+		StdOut = (PiperPortModel)this.AddPort(new PiperPortModel("stdout", parent: this, PortAlignment.Right));
+		StdErr = (PiperPortModel)this.AddPort(new PiperPortModel("stderr", parent: this, PortAlignment.Right));
+		// Port1 = new(this, PortAlignment.Left);
+		// Port2 = new(this, PortAlignment.Right);
+		// Port3 = new(this, PortAlignment.Right);
 	}
 
 	// public void Save(PiperSaveNode node)
@@ -68,6 +74,12 @@ public class ListFilesNodeModel : PiperNodeModel
 		};
 
 	public PiperDataFrame StdErrData { get; set; }
+
+	// public PortModel Port1 { get; set; }
+	//
+	// public PortModel Port2 { get; set; }
+	//
+	// public PortModel Port3 { get; set; }
 
 	public PiperPortModel StdIn { get; set; }
 

@@ -1,12 +1,13 @@
 using System.Drawing;
 using System.Numerics;
+using Blazor.Diagrams.Core.Models;
 using shortid;
 using Tomlet.Attributes;
 
 namespace Piper.Core.Model;
 
 [TomlDoNotInlineObject]
-public class PiperNodeModel
+public class PiperNodeModel : NodeModel
 {
 	[TomlProperty("type")]
 	public string? NodeType { get; set; } = "run_process";
@@ -20,50 +21,50 @@ public class PiperNodeModel
 	[TomlProperty("descr")]
 	public string? Description { get; set; } = "";
 
-	[TomlProperty("pos")]
-	public Point Position { get; set; }
+	// [TomlProperty("pos")]
+	// public Point Position { get; set; }
 
-	[TomlNonSerialized]
-	public List<PiperPortModel> Ports { get; set; } =
-		[
-			new PiperPortModel() { Direction = PiperPortDirection.In, Name = "stdin" },
-			new PiperPortModel() { Direction = PiperPortDirection.In, Name = "include" },
-			new PiperIntPortModel()
-			{
-				Direction = PiperPortDirection.In,
-				Name = "limit",
-				Max = 42,
-			},
-			new PiperPortModel() { Direction = PiperPortDirection.Out, Name = "stdout" },
-			new PiperStringPortModel()
-			{
-				Direction = PiperPortDirection.Out,
-				Name = "stderr",
-				Delimiter = "0",
-			},
-			new PiperPortModel() { Direction = PiperPortDirection.Out, Name = "errors" },
-		];
-
-	[TomlProperty("in")]
-	public Dictionary<string, PiperPortModel> TomlPortsIn
-	// public List<PiperPortModel> TomlPortsIn
-	{
-		get =>
-			Ports
-				.Where(p => p.Direction == PiperPortDirection.In)
-				.ToDictionary(p => p.Name, p => p);
-		// set;
-	}
-
-	[TomlProperty("out")]
-	public Dictionary<string, PiperPortModel> TomlPortsOut
-	{
-		get =>
-			Ports
-				.Where(p => p.Direction == PiperPortDirection.Out)
-				.ToDictionary(p => p.Name, p => p);
-		// set;
-	}
+	// [TomlNonSerialized]
+	// public List<PiperPortModel> Ports { get; set; } =
+	// 	[
+	// 		new PiperPortModel(this) { Direction = PiperPortDirection.In, Name = "stdin" },
+	// 		new PiperPortModel(this) { Direction = PiperPortDirection.In, Name = "include" },
+	// 		new PiperIntPortModel(this)
+	// 		{
+	// 			Direction = PiperPortDirection.In,
+	// 			Name = "limit",
+	// 			Max = 42,
+	// 		},
+	// 		new PiperPortModel() { Direction = PiperPortDirection.Out, Name = "stdout" },
+	// 		new PiperStringPortModel()
+	// 		{
+	// 			Direction = PiperPortDirection.Out,
+	// 			Name = "stderr",
+	// 			Delimiter = "0",
+	// 		},
+	// 		new PiperPortModel() { Direction = PiperPortDirection.Out, Name = "errors" },
+	// 	];
+	//
+	// [TomlProperty("in")]
+	// public Dictionary<string, PiperPortModel> TomlPortsIn
+	// // public List<PiperPortModel> TomlPortsIn
+	// {
+	// 	get =>
+	// 		Ports
+	// 			.Where(p => p.Direction == PiperPortDirection.In)
+	// 			.ToDictionary(p => p.Name, p => p);
+	// 	// set;
+	// }
+	//
+	// [TomlProperty("out")]
+	// public Dictionary<string, PiperPortModel> TomlPortsOut
+	// {
+	// 	get =>
+	// 		Ports
+	// 			.Where(p => p.Direction == PiperPortDirection.Out)
+	// 			.ToDictionary(p => p.Name, p => p);
+	// 	// set;
+	// }
 
 	// public Dictionary<string, string> InPorts2 { get; set; } =
 	// 	new()

@@ -6,7 +6,7 @@ namespace Piper.UI.Components.Nodes;
 public partial class ListFilesNode : ComponentBase
 {
 	[Parameter]
-	public Core.ListFilesNodeModel NodeModel { get; set; } = null!;
+	public Core.ListFilesNodeModel Node { get; set; } = null!;
 
 	[Inject]
 	public SelectedThingyService? SelectedThingy { get; set; }
