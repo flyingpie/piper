@@ -32,6 +32,8 @@ public static class BlazorDiagramConfiguration
 			{
 				DefaultRouter = new NormalRouter(),
 				DefaultPathGenerator = new SmoothPathGenerator(),
+				DefaultColor = "#ffffff",
+				SnappingRadius = 25,
 			},
 		};
 

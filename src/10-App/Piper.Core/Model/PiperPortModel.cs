@@ -14,24 +14,18 @@ public enum PiperPortDirection
 //[TomlDoNotInlineObject]
 public class PiperPortModel : PortModel
 {
-	public PiperPortModel(string? name, NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, Size? size = null) : base(parent, alignment, position, size)
+	public PiperPortModel(string name, NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, Size? size = null)
+		: base(id: name, parent, alignment, position, size)
 	{
 		// Direction = direction;
-		Name = name;
-	}
-
-	public PiperPortModel(string? name, string id, NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, Size? size = null) : base(id, parent, alignment, position, size)
-	{
-		// Direction = direction;
-		Name = name;
 	}
 
 	// [TomlNonSerialized]
 	// public PiperPortDirection Direction { get; set; }
 
 	// [TomlProperty("name")]
-	[TomlNonSerialized]
-	public string? Name { get; set; }
+	// [TomlNonSerialized]
+	// public string? Name { get; set; }
 
 	// TODO: Can we keep the pointers out of the model, and just fetch them when necessary?
 	// TODO: Would make (de)serialization a lot easier, and keep the state simpler.
