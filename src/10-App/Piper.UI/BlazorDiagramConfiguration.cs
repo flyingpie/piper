@@ -26,14 +26,19 @@ public static class BlazorDiagramConfiguration
 	{
 		var options = new BlazorDiagramOptions
 		{
+			AllowPanning = true,
 			AllowMultiSelection = true,
-			Zoom = { Enabled = false },
 			Links =
 			{
-				DefaultRouter = new NormalRouter(),
-				DefaultPathGenerator = new SmoothPathGenerator(),
 				DefaultColor = "#ffffff",
-				SnappingRadius = 25,
+				DefaultPathGenerator = new SmoothPathGenerator(),
+				DefaultRouter = new NormalRouter(),
+				EnableSnapping = true,
+				SnappingRadius = 15,
+			},
+			Zoom =
+			{
+				Enabled = true,
 			},
 		};
 
