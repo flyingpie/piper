@@ -45,13 +45,13 @@ public static class BlazorDiagramConfiguration
 		var diagram = new BlazorDiagram(options);
 		diagram.RegisterComponent<ListFilesNodeModel, ListFilesNode>();
 
-		var firstNode = diagram.Nodes.Add(
-			new NodeModel(position: new Point(50, 50)) { Title = "Node 1" }
-		);
+		// var firstNode = diagram.Nodes.Add(
+		// 	new NodeModel(position: new Point(50, 50)) { Title = "Node 1" }
+		// );
 
-		var secondNode = diagram.Nodes.Add(
-			new NodeModel(position: new Point(200, 100)) { Title = "Node 2" }
-		);
+		// var secondNode = diagram.Nodes.Add(
+		// 	new NodeModel(position: new Point(200, 100)) { Title = "Node 2" }
+		// );
 
 		var catNode = diagram.Nodes.Add(
 			new ListFilesNodeModel()
@@ -83,26 +83,26 @@ public static class BlazorDiagramConfiguration
 		// var dst = new SinglePortAnchor(jqNode.StdIn);
 		// var link1 = diagram.Links.Add(new LinkModel(src, dst));
 
-		var p1 = firstNode.AddPort(PortAlignment.Right);
-		var p2 = firstNode.AddPort(PortAlignment.Right);
+		// var p1 = firstNode.AddPort(PortAlignment.Right);
+		// var p2 = firstNode.AddPort(PortAlignment.Right);
 		// p2.Position = new Point(0, 40);
 
-		var leftPort = secondNode.AddPort(PortAlignment.Left);
-		var rightPort = secondNode.AddPort(PortAlignment.Right);
+		// var leftPort = secondNode.AddPort(PortAlignment.Left);
+		// var rightPort = secondNode.AddPort(PortAlignment.Right);
 
 		// The connection point will be the intersection of
 		// a line going from the target to the center of the source
 		// var sourceAnchor = new ShapeIntersectionAnchor(firstNode);
-		var sourceAnchor = new SinglePortAnchor(p1);
+		// var sourceAnchor = new SinglePortAnchor(p1);
 
 		// The connection point will be the port's position
-		var targetAnchor = new SinglePortAnchor(leftPort);
-		var link = diagram.Links.Add(new LinkModel(sourceAnchor, targetAnchor));
+		// var targetAnchor = new SinglePortAnchor(leftPort);
+		// var link = diagram.Links.Add(new LinkModel(sourceAnchor, targetAnchor));
 
-		link.Color = "#aaaaaa";
-		link.PathGenerator = new StraightPathGenerator();
-		link.Router = new OrthogonalRouter();
-		link.Width = 2;
+		// link.Color = "#aaaaaa";
+		// link.PathGenerator = new StraightPathGenerator();
+		// link.Router = new OrthogonalRouter();
+		// link.Width = 2;
 
 		// link.Segmentable = true;
 
