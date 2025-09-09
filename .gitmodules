@@ -1,3 +1,0 @@
-[submodule "vendor/Blazor.Diagrams"]
-	path = vendor/Blazor.Diagrams
-	url = git@github.com:flyingpie/Blazor.Diagrams.git
