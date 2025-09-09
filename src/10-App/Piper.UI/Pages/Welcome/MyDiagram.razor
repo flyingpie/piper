@@ -58,46 +58,37 @@
 }
 
 <RadzenSplitter Orientation="Orientation.Vertical" style="border: 1px solid rgba(0,0,0,.08); position: absolute; top: 0; right: 0; bottom: 0; left: 0;">
-	<RadzenSplitterPane Size="80%">
-		<RadzenSplitter>
-			<RadzenSplitterPane Size="80%" Min="30px">
+	<RadzenSplitterPane Size="70%">
 
+		<div class="diagram-container" @oncontextmenu=@(args => ShowContextMenuWithContent(args)) @oncontextmenu:preventDefault="true">
+			<CascadingValue Value="Diagram" IsFixed="true">
+				<DiagramCanvas>
+					<Widgets>
+						<GridWidget Mode="GridMode.Point" BackgroundColor="var(--rz-base-900)"></GridWidget>
+						@* <NavigatorWidget *@
+						@* 	Width="200" *@
+						@* 	Height="120" *@
+						@* 	Class="border border-black bg-white absolute" *@
+						@* 	Style="bottom: 15px; right: 15px;"/> *@
+					</Widgets>
+				</DiagramCanvas>
+			</CascadingValue>
+		</div>
 
-				<div class="diagram-container" @oncontextmenu=@(args => ShowContextMenuWithContent(args)) @oncontextmenu:preventDefault="true">
-					<CascadingValue Value="Diagram" IsFixed="true">
-						<DiagramCanvas>
-							<Widgets>
-								<GridWidget Mode="GridMode.Point" BackgroundColor="var(--rz-base-900)"></GridWidget>
-								@* <NavigatorWidget *@
-								@* 	Width="200" *@
-								@* 	Height="120" *@
-								@* 	Class="border border-black bg-white absolute" *@
-								@* 	Style="bottom: 15px; right: 15px;"/> *@
-							</Widgets>
-						</DiagramCanvas>
-					</CascadingValue>
-				</div>
-
-
-			</RadzenSplitterPane>
-			<RadzenSplitterPane>
-
-				<DataViewer />
-
-			</RadzenSplitterPane>
-		</RadzenSplitter>
 	</RadzenSplitterPane>
 	<RadzenSplitterPane>
-		<RadzenSplitter>
-			<RadzenSplitterPane>
-				Pane C1
-				@* <RadzenButton Text="Save" Click="() => SaveLoad.Save(Diagram)" /> *@
-				@* <RadzenButton Text="Load" Click="() => SaveLoad.Load(Diagram)" /> *@
-			</RadzenSplitterPane>
-			<RadzenSplitterPane>
-				<PpCodeEditor  />
-			</RadzenSplitterPane>
-		</RadzenSplitter>
+
+		<RadzenTabs TabPosition="TabPosition.Top" Style="height: 100%;">
+			<Tabs>
+				<RadzenTabsItem Text="Data">
+					<DataViewer />
+				</RadzenTabsItem>
+				<RadzenTabsItem Text="Code">
+					<PpCodeEditor />
+				</RadzenTabsItem>
+			</Tabs>
+		</RadzenTabs>
+
 	</RadzenSplitterPane>
 </RadzenSplitter>
 

@@ -10,6 +10,21 @@
 	<link href="_content/Z.Blazor.Diagrams/style.min.css" rel="stylesheet" />
 	<link href="_content/Z.Blazor.Diagrams/default.styles.min.css" rel="stylesheet" />
 	<link href="Piper.Host.Photino.styles.css" rel="stylesheet" />
+	<style>
+		.rz-tabview-panel {
+			height: 100%;
+			padding: .25em;
+		}
+
+		.rz-tabview-nav li a, .rz-tabview-nav li a:not([href]):not([class]) {
+			padding: .25em 1em;
+		}
+
+		/* Splitter panes usually hide scroll, but in some cases we want to scroll, like with data grids */
+		.rz-splitter-pane.scroll {
+			overflow-y: scroll;
+		}
+	</style>
 </head>
 <body>
 	<app>Loading...</app>
