@@ -3,9 +3,6 @@
 		<AssemblyName>Piper.Host.Photino</AssemblyName>
 		<RootNamespace>@(AssemblyName)</RootNamespace>
 
-		<TargetFramework>net9.0</TargetFramework>
-		<Nullable>enable</Nullable>
-
 		<OutputType>WinExe</OutputType>
 	</PropertyGroup>
 

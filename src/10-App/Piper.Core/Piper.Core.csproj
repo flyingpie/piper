@@ -2,8 +2,6 @@
 	<PropertyGroup>
 		<AssemblyName>Piper.Core</AssemblyName>
 		<RootNamespace>Piper.Core</RootNamespace>
-
-		<TargetFramework>net9.0</TargetFramework>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -22,9 +20,5 @@
 		<PackageReference Include="Z.Blazor.Diagrams"/>
 		<PackageReference Include="Z.Blazor.Diagrams.Algorithms"/>
 		<PackageReference Include="Z.Blazor.Diagrams.Core"/>
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\vendor\Blazor.Diagrams\src\Blazor.Diagrams\Blazor.Diagrams.csproj"/>
 	</ItemGroup>
 </Project>

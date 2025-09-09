@@ -2,9 +2,6 @@
 	<PropertyGroup>
 		<AssemblyName>Piper.UI</AssemblyName>
 		<RootNamespace>Piper.UI</RootNamespace>
-
-		<TargetFramework>net9.0</TargetFramework>
-		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
