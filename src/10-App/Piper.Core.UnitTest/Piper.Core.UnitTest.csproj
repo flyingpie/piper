@@ -8,9 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="morelinq"/>
 		<PackageReference Include="Dapper"/>
 		<PackageReference Include="DuckDB.NET.Data.Full"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" />
+		<PackageReference Include="morelinq"/>
 		<PackageReference Include="Samboy063.Tomlet"/>
 		<PackageReference Include="Tomlyn"/>
 	</ItemGroup>

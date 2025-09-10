@@ -62,6 +62,10 @@ public class PpField
 
 	public object? Value => ValueAsInt?.ToString() ?? ValueAsString;
 
+	public static implicit operator PpField(int? valueAsInt) => new(valueAsInt);
+
+	public static implicit operator PpField(string str) => new(str);
+
 	public override string ToString() => Value?.ToString() ?? "(empty)";
 }
 

@@ -1,4 +1,3 @@
-using Blazor.Diagrams;
 using Newtonsoft.Json;
 
 namespace Piper.Core;
@@ -46,8 +45,6 @@ public class SaveLoadService
 		var json = Write(diagram);
 
 		File.WriteAllText("/home/marco/Downloads/piper1.json", json);
-
-		var dbg = 2;
 	}
 
 	// public static PiperSaveLink? ToLink(BaseLinkModel link)

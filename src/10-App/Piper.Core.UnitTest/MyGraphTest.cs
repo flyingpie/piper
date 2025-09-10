@@ -47,18 +47,31 @@ public class MyGraphTest
 			Formatter = rec => $"{rec.Fields["m1"].ValueAsString?.PadRight(50, '.')}{rec.Fields["m2"].ValueAsString?.PadRight(50, '.')}",
 		};
 
+		var node6 = new PpCSharpNode
+		{
+			In = node4.OutIncl,
+			Script =
+				"""
+				Rec["m1a"] = Rec["m1"]?.ToString()?.ToUpperInvariant();
+				""",
+		};
+
 		await node1.ExecuteAsync();
 		await node2.ExecuteAsync();
 		// await node3.ExecuteAsync();
 		await node3b.ExecuteAsync();
 		await node4.ExecuteAsync();
 		await node5.ExecuteAsync();
+		await node6.ExecuteAsync();
 
 		var m1 = node3b.OutMatch.DataFrame();
 		var m2 = node3b.OutNoMatch.DataFrame();
 		var m3 = node5.Out.DataFrame();
 
 		sw.Stop();
+
+		var res = node5.Out.DataFrame();
+		var res6 = node6.Out.DataFrame();
 
 		var dbg = 2;
 	}
