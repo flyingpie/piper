@@ -1,15 +1,16 @@
 @using Blazor.Diagrams.Components
 @using Blazor.Diagrams.Components.Widgets
-@using Piper.Core
+@using Microsoft.AspNetCore.Components.Rendering
 @using Piper.UI.Components
 @using Piper.UI.Components.CodeEditor
-@using Piper.UI.Components.Nodes
-@using ListFilesNode = Piper.Core.ListFilesNodeModel
-@using Point = Blazor.Diagrams.Core.Geometry.Point
 @inject ContextMenuService ContextMenuService
 @inject SelectedThingyService SelectedThingy
 
 @code {
+
+	void ShowContextMenuWithContent(RenderTreeBuilder args)
+	{
+	}
 
 	void ShowContextMenuWithContent(MouseEventArgs args) => ContextMenuService.Open(
 		args,
@@ -27,11 +28,8 @@
 
 	void OnMenuItemClick(MenuItemEventArgs args, double x, double y)
 	{
-		// console.Log($"Menu item with Value={args.Value} clicked");
 		if (!args.Value.Equals(3) && !args.Value.Equals(4))
 		{
-
-
 			// var firstNode = Diagram.Nodes.Add(new NodeModel(position: new Blazor.Diagrams.Core.Geometry.Point(x, y))
 			// {
 			// 	Title = $"Node {args.Value} ({x},{y})",
@@ -65,11 +63,15 @@
 				<DiagramCanvas>
 					<Widgets>
 						<GridWidget Mode="GridMode.Point" BackgroundColor="var(--rz-base-900)"></GridWidget>
-						@* <NavigatorWidget *@
-						@* 	Width="200" *@
-						@* 	Height="120" *@
-						@* 	Class="border border-black bg-white absolute" *@
-						@* 	Style="bottom: 15px; right: 15px;"/> *@
+
+						@*
+						<NavigatorWidget
+							Width="200"
+							Height="120"
+							Class="border border-black bg-white absolute"
+							Style="bottom: 15px; right: 15px;"/>
+						*@
+
 					</Widgets>
 				</DiagramCanvas>
 			</CascadingValue>

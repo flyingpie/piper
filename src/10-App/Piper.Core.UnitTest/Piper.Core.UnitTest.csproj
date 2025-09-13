@@ -8,15 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Dapper"/>
-		<PackageReference Include="DuckDB.NET.Data.Full"/>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" />
-		<PackageReference Include="morelinq"/>
-		<PackageReference Include="Samboy063.Tomlet"/>
-		<PackageReference Include="Tomlyn"/>
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Piper.Core\Piper.Core.csproj"/>
+		<ProjectReference Include="..\Piper.Core\Piper.Core.csproj" />
 	</ItemGroup>
 </Project>

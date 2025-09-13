@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
-
-namespace Piper.Core.UnitTest.Db;
+namespace Piper.Core.Db;
 
 public interface IPpDb
 {

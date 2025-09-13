@@ -1,8 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using Piper.Core;
-using Piper.Core.Data;
 
 namespace Piper.UI.Components;
 
@@ -17,5 +15,13 @@ public partial class PiperNodePort : ComponentBase
 	public SelectedThingyService? SelectedThingy { get; set; }
 
 	[Parameter]
-	public Func<PiperDataFrame>? SelectDataFrame { get; set; }
+	public Func<PpDataFrame>? SelectDataFrame { get; set; }
+
+	public void OnClickShowData()
+	{
+		var res = SelectDataFrame?.Invoke();
+
+		SelectedThingy.Node = res;
+		// SelectedThingy.Node = ["Sup!"];
+	}
 }

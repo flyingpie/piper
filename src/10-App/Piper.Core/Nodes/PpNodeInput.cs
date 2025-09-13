@@ -1,11 +1,7 @@
-using System;
-
-namespace Piper.Core.UnitTest;
+namespace Piper.Core.Nodes;
 
 public class PpNodeInput
 {
-	// public string Name { get; set; }
-
 	public string? AttributeName { get; set; }
 
 	public Func<PpDataFrame> DataFrame { get; set; }

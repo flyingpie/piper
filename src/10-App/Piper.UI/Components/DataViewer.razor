@@ -1,37 +1,28 @@
 <RadzenDataGrid
-	AllowFiltering="true"
+
+	@ref="_grid"
+
+	AllowAlternatingRows="true"
 	AllowColumnResize="true"
-	AllowAlternatingRows="false"
-	FilterMode="FilterMode.Advanced"
-	AllowSorting="true"
-	PageSize="15"
+	AllowFiltering="true"
 	AllowPaging="true"
-	PagerHorizontalAlign="HorizontalAlign.Left"
-	ShowPagingSummary="true"
-	Data="@Records"
-	ColumnWidth="300px"
+	AllowSorting="true"
+	FilterMode="FilterMode.SimpleWithMenu"
 	LogicalFilterOperator="LogicalFilterOperator.Or"
+	PagerHorizontalAlign="HorizontalAlign.Left"
+	PageSize="15"
 	SelectionMode="DataGridSelectionMode.Single"
+	ShowPagingSummary="true"
+
+	Data="@Reptiles"
+	Count="@ReptileCount"
+	LoadData="@LoadDataAsync"
+
 >
 	<Columns>
-		@* <RadzenDataGridColumn *@
-		@* 	Filterable="false" *@
-		@* 	Title="ID" *@
-		@* 	Frozen="true" *@
-		@* 	Width="80px" *@
-		@* 	TextAlign="TextAlign.Left" *@
-		@* /> *@
 		<RadzenDataGridColumn
-			Title="Photo"
-			Frozen="true"
-			Sortable="false"
-			Filterable="false"
-			Width="80px"
-			TextAlign="TextAlign.Left"
-		>
-			<Template Context="data">
-				@(data.Fields?.FirstOrDefault()?.Value)
-			</Template>
-		</RadzenDataGridColumn>
+			Title="ID"
+			Property="@nameof(Reptile.ganzh)"
+		/>
 	</Columns>
 </RadzenDataGrid>

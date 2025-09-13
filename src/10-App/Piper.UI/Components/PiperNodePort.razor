@@ -1,27 +1,34 @@
 @using Blazor.Diagrams.Core.Models
 @using Blazor.Diagrams.Components.Renderers
 
-<div class="piper-field">
+<div class="pp-field">
 	<PortRenderer @key="Port" Port="Port"/>
 
 	<RadzenStack
 		Orientation="Orientation.Horizontal"
 		JustifyContent="JustifyContent.SpaceBetween"
 		AlignItems="AlignItems.Center"
+		Gap="1em"
 	>
 		<RadzenButton
-			ButtonStyle="@(SelectedThingy.Node != null && SelectedThingy.Node == SelectDataFrame?.Invoke() ? ButtonStyle.Info : ButtonStyle.Secondary)"
-			Click="@(() => SelectedThingy.Node = SelectDataFrame?.Invoke())"
+			ButtonStyle="@(SelectedThingy.Node != null ? ButtonStyle.Info : ButtonStyle.Secondary)"
+			Click="() => OnClickShowData()"
 			Icon="list"
 			Size="ButtonSize.ExtraSmall"
 			Visible="@(Port.Alignment == PortAlignment.Left)"
 		/>
 
+		@*
 		<RadzenLabel Text="@Port.Id"/>
+		*@
+
+		<RadzenFormField Text="Path" Style="width: 100%;">
+			<RadzenTextBox />
+		</RadzenFormField>
 
 		<RadzenButton
-			ButtonStyle="@(SelectedThingy.Node != null && SelectedThingy.Node == SelectDataFrame?.Invoke() ? ButtonStyle.Info : ButtonStyle.Secondary)"
-			Click="@(() => SelectedThingy.Node = SelectDataFrame?.Invoke())"
+			ButtonStyle="@(SelectedThingy.Node != null ? ButtonStyle.Info : ButtonStyle.Secondary)"
+			Click="() => OnClickShowData()"
 			Icon="list"
 			Size="ButtonSize.ExtraSmall"
 			Visible="@(Port.Alignment == PortAlignment.Right)"

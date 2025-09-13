@@ -21,6 +21,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\vendor\Blazor.Diagrams\src\Blazor.Diagrams\Blazor.Diagrams.csproj"/>
-		<ProjectReference Include="..\Piper.Core\Piper.Core.csproj"/>
+		<ProjectReference Include="..\Piper.Core\Piper.Core.csproj" />
 	</ItemGroup>
 </Project>

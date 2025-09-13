@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Components;
-using Piper.Core;
+using Piper.Core.Nodes;
 
 namespace Piper.UI.Components.Nodes;
 
-public partial class ListFilesNode : ComponentBase
+public partial class ListFilesNodeView : ComponentBase
 {
+	private bool _isSelected;
+
 	[Parameter]
-	public Core.ListFilesNodeModel Node { get; set; } = null!;
+	public PpListFilesNode Node { get; set; } = null!;
 
 	[Inject]
 	public SelectedThingyService? SelectedThingy { get; set; }

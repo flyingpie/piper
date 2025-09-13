@@ -1,25 +1,31 @@
-using System.Collections.Generic;
 using Piper.Core;
-using Piper.Core.Data;
 
 namespace Piper.UI.Components;
 
 public class SelectedThingyService
 {
-	private PiperDataFrame? _node;
+	private PpDataFrame? _node;
+	// private List<string> _node;
 
-	public PiperDataFrame? Node
+	public PpDataFrame? Node
 	{
 		get => _node;
 		set
 		{
 			_node = value;
-			// OnChanged?.Invoke();
 			Changed();
 		}
 	}
 
-	// public Action OnChanged { get; set; }
+	// public List<string>? Node
+	// {
+	// 	get => _node;
+	// 	set
+	// 	{
+	// 		_node = value;
+	// 		Changed();
+	// 	}
+	// }
 
 	private readonly List<Action> _onChanged = [];
 

@@ -332,3 +332,5 @@ _artifacts
 _output
 
 .vscode
+
+core.*

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Piper.Core.Nodes;
 
 namespace Piper.Core.UnitTest;
 

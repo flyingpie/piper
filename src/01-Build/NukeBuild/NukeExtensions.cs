@@ -128,7 +128,7 @@ public static partial class NukeExtensions
 	public static void MoveWtqUI(this AbsolutePath root)
 	{
 		var wwwroot = root / "wwwroot";
-		var wtqUI = wwwroot / "_content/Piper";
+		var wtqUI = wwwroot / "_content/Piper.Core";
 		wtqUI.Move(wwwroot, ExistsPolicy.DirectoryMerge);
 	}
 

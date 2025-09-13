@@ -1,11 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dapper;
 using DuckDB.NET.Data;
+using System.Text;
 
-namespace Piper.Core.UnitTest.Db;
+namespace Piper.Core.Db;
 
 public class DuckDbPpDb : IPpDb
 {

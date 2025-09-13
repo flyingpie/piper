@@ -23,9 +23,13 @@
 }
 
 ::deep .diagram-port.left {
-	left: -26px;
+	left: -16px;
 }
 
 ::deep .diagram-port.right {
-	right: -26px;
+	right: -16px;
+}
+
+::deep .rz-form-field-content {
+	margin-top: 0 !important;
 }
