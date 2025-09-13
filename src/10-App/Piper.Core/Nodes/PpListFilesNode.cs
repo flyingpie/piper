@@ -2,6 +2,30 @@ using Blazor.Diagrams.Core.Models;
 
 namespace Piper.Core.Nodes;
 
+// public enum PpPortDirection
+// {
+// 	In,
+// 	Out,
+// }
+//
+// [AttributeUsage(AttributeTargets.Property)]
+// public sealed class PpPortAttribute(PpPortDirection direction) : Attribute
+// {
+// 	public PpPortDirection Direction { get; } = direction;
+// }
+//
+// [AttributeUsage(AttributeTargets.Property)]
+// public sealed class PpInput(string name) : Attribute
+// {
+// 	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
+// }
+//
+// [AttributeUsage(AttributeTargets.Property)]
+// public sealed class PpOutput(string name) : Attribute
+// {
+// 	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
+// }
+
 public class PpListFilesNode : NodeModel, IPpNode
 {
 	private PpDataFrame _files = new();
@@ -15,16 +39,21 @@ public class PpListFilesNode : NodeModel, IPpNode
 
 	public bool IsExecuting { get; set; }
 
+	public string NodeType => "List Files";
+
 	public string? Name { get; set; }
 
+	// [PpInput("Path")]
 	public PpNodeInput InPath { get; set; } = new();
 
 	public PortModel InPathPort { get; set; }
 
+	// [PpInput("Pattern")]
 	public PpNodeInput InPattern { get; set; } = new();
 
 	public PortModel InPatternPort { get; set; }
 
+	// [PpOutput("Files")]
 	public PpNodeOutput OutFiles { get; } = new();
 
 	public PortModel OutFilesPort { get; set; }

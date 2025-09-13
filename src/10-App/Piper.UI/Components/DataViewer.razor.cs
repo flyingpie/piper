@@ -2,6 +2,7 @@ using Dapper;
 using DuckDB.NET.Data;
 using Microsoft.AspNetCore.Components;
 using Piper.Core;
+using Piper.UI.Services;
 using Radzen;
 using Radzen.Blazor;
 using System.ComponentModel.DataAnnotations.Schema;

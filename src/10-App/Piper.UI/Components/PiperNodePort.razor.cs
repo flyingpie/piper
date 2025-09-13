@@ -1,6 +1,7 @@
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using Piper.Core;
+using Piper.UI.Services;
 
 namespace Piper.UI.Components;
 

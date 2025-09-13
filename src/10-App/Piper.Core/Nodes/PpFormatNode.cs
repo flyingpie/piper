@@ -4,6 +4,8 @@ public class PpFormatNode : IPpNode
 {
 	private PpDataFrame _outLines = new();
 
+	public string NodeType => "Format";
+
 	public string? Name { get; set; }
 
 	public Func<PpRecord, string> Formatter { get; set; }

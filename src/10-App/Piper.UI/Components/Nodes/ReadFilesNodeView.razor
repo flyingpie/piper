@@ -1,0 +1,8 @@
+@using Piper.Core.Nodes
+
+@inherits NodeViewBase<PpCatFilesNode>
+
+<NodeView Node="Node">
+	<PiperNodePort Port="Node.InFilesPort" SelectDataFrame="() => Node.InFiles.DataFrame()"/>
+	<PiperNodePort Port="Node.OutLinesPort" SelectDataFrame="() => Node.OutLines.DataFrame()"/>
+</NodeView>

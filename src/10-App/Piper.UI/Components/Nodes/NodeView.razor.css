@@ -1,0 +1,22 @@
+.pp-node {
+	width: 260px;
+	outline: 1px solid black;
+	padding: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.pp-node.selected {
+	outline: 1px solid var(--rz-primary);
+}
+
+::deep .pp-field {
+	position: relative;
+}
+
+.piper-node-separator {
+	border-bottom: 1px var(--rz-base-600) solid;
+}
+
+.piper-field {
+	position: relative;
+}

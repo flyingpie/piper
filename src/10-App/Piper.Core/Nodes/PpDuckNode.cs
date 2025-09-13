@@ -8,6 +8,8 @@ public class PpDuckNode : IPpNode
 
 	private PpDataFrame _outLines = new();
 
+	public string NodeType => "SQL";
+
 	public string? Name { get; set; }
 
 	public PpNodeInput In { get; set; } = new();

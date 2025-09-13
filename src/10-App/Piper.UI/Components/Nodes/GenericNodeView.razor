@@ -1,0 +1,107 @@
+<div
+	class="diagram-node pp-node @((SelectedThingy.IsNodeSelected(Node) ? "selected" : ""))"
+	style="background-color: var(--rz-base-800); border-radius: .3em;" @onmousedown="() => SelectedThingy.SelectNode(Node)">
+
+	<RadzenStack Orientation="Orientation.Vertical" Gap="1em">
+		<RadzenStack
+			Orientation="Orientation.Horizontal"
+			AlignItems="AlignItems.Center"
+			JustifyContent="JustifyContent.SpaceBetween"
+			Style="background-color: var(--rz-secondary); margin: -10px -10px 0 -10px; padding: .6em;"
+		>
+			<h3 style="margin: 0;">Generic Node</h3>
+
+			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
+				<RadzenProgressBarCircular
+					ProgressBarStyle="ProgressBarStyle.Primary"
+					Value="100"
+					ShowValue="false"
+					Visible="@Node.IsExecuting"
+					Mode="ProgressBarMode.Indeterminate"
+					Size="ProgressBarCircularSize.ExtraSmall"
+				/>
+				<RadzenButton
+					Click="async () => await Node.ExecuteAsync()"
+					ButtonStyle="ButtonStyle.Secondary"
+					Size="ButtonSize.ExtraSmall"
+					Icon="menu"
+					Style="height: 2em; width: 3em;"
+				/>
+				<RadzenButton
+					Click="async () => await Node.ExecuteAsync()"
+					Size="ButtonSize.ExtraSmall"
+					Icon="play_arrow"
+					Disabled="@Node.IsExecuting"
+					Style="height: 2em; width: 3em;"
+				/>
+			</RadzenStack>
+		</RadzenStack>
+
+		@*
+		<div class="piper-field">
+			Path
+			<RadzenTextBox Placeholder="cmd" Style="width: 100%;" @bind-Value="Node.InPath.Value"/>
+		</div>
+
+		<div class="piper-field">
+			Pattern
+			<RadzenTextBox Placeholder="cmd" Style="width: 100%;" @bind-Value="Node.InPattern.Value"/>
+		</div>
+		*@
+
+		<RadzenFormField Text="Path" Style="width: 100%;">
+			<RadzenTextBox
+				@bind-Value="@Node.InPath.Value"
+				@onmousedown:stopPropagation
+				@onmousemove:stopPropagation
+			/>
+		</RadzenFormField>
+
+		<RadzenFormField Text="Pattern" Style="width: 100%;">
+			<RadzenTextBox @bind-Value="@Node.InPattern.Value"/>
+		</RadzenFormField>
+
+		@*
+		@foreach (var arg in Node.Args)
+		{
+			<div class="piper-field">
+				Argument
+				<RadzenStack Orientation="Orientation.Horizontal">
+					<RadzenTextBox Placeholder="args" Style="width: 100%;" @bind-Value="arg.Arg"/>
+					<RadzenButton Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@(() => Node.Args.Remove(arg))" />
+				</RadzenStack>
+			</div>
+		}
+		*@
+
+		@*
+		<div class="piper-field">
+			<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+				<RadzenButton
+					Icon="add"
+					Size="ButtonSize.ExtraSmall"
+					ButtonStyle="ButtonStyle.Primary"
+					Click="@(() => Node.Args.Add(new Core.ListFilesNodeModel.CmdArgument()))"
+				/>
+			</RadzenStack>
+		</div>
+		*@
+
+		<span class="piper-node-separator"></span>
+
+		<PiperNodePort Port="Node.InPathPort" SelectDataFrame="() => Node.InPath.DataFrame()"/>
+		<PiperNodePort Port="Node.InPatternPort" SelectDataFrame="() => Node.InPattern.DataFrame()"/>
+		<PiperNodePort Port="Node.OutFilesPort" SelectDataFrame="() => Node.OutFiles.DataFrame()"/>
+	</RadzenStack>
+
+</div>
+
+<style>
+	.piper-node-separator {
+		border-bottom: 1px var(--rz-base-600) solid;
+	}
+
+	.piper-field {
+		position: relative;
+	}
+</style>

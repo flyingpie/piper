@@ -1,0 +1,46 @@
+@typeparam TNodeType
+
+<div
+	class="diagram-node pp-node @((SelectedThingy.IsNodeSelected(Node) ? "selected" : ""))"
+	style="background-color: var(--rz-base-800); border-radius: .3em;" @onmousedown="() => SelectedThingy.SelectNode(Node)">
+
+	<RadzenStack Orientation="Orientation.Vertical" Gap="1em">
+		<RadzenStack
+			Orientation="Orientation.Horizontal"
+			AlignItems="AlignItems.Center"
+			JustifyContent="JustifyContent.SpaceBetween"
+			Style="background-color: var(--rz-secondary); margin: -10px -10px 0 -10px; padding: .6em;"
+		>
+			<h3 style="margin: 0;">@Node.NodeType</h3>
+
+			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
+				<RadzenProgressBarCircular
+					ProgressBarStyle="ProgressBarStyle.Primary"
+					Value="100"
+					ShowValue="false"
+					Mode="ProgressBarMode.Indeterminate"
+					Size="ProgressBarCircularSize.ExtraSmall"
+				/>
+				<RadzenButton
+					Click="async () => await Node.ExecuteAsync()"
+					ButtonStyle="ButtonStyle.Secondary"
+					Size="ButtonSize.ExtraSmall"
+					Icon="menu"
+					Style="height: 2em; width: 3em;"
+				/>
+				<RadzenButton
+					Click="async () => await Node.ExecuteAsync()"
+					Size="ButtonSize.ExtraSmall"
+					Icon="play_arrow"
+					Style="height: 2em; width: 3em;"
+				/>
+			</RadzenStack>
+		</RadzenStack>
+
+		@ChildContent
+	</RadzenStack>
+
+</div>
+
+<style>
+</style>

@@ -1,5 +1,5 @@
 namespace Piper.UI.Components.Nodes;
 
-public partial class ListFilesNodeView
+public partial class ReadFilesNodeView
 {
 }

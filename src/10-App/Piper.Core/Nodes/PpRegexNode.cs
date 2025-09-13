@@ -1,12 +1,15 @@
-using Piper.Core.Nodes;
 using System.Text.RegularExpressions;
 
-namespace Piper.Core;
+namespace Piper.Core.Nodes;
 
 public class PpRegexNode : IPpNode
 {
 	private PpDataFrame _match = new();
 	private PpDataFrame _noMatch = new();
+
+	public string NodeType => "Regex";
+
+	public string Name { get; set; }
 
 	public PpNodeInput InPattern { get; set; }
 
@@ -42,32 +45,20 @@ public class PpRegexNode : IPpNode
 					f[grp.Name] = new(grp.Value);
 				}
 
-				var rec2 = new PpRecord()
-				{
-					Fields = f,
-				};
+				var rec2 = new PpRecord() { Fields = f, };
 
 				resMatch.Add(rec2);
 			}
 			else
 			{
-				var rec2 = new PpRecord()
-				{
-					Fields = f,
-				};
+				var rec2 = new PpRecord() { Fields = f, };
 				resNoMatch.Add(rec2);
 			}
 		}
 
-		_match = new()
-		{
-			Records = resMatch,
-		};
+		_match = new() { Records = resMatch, };
 
-		_noMatch = new()
-		{
-			Records = resNoMatch,
-		};
+		_noMatch = new() { Records = resNoMatch, };
 
 		OutMatch.DataFrame = () => _match;
 		OutNoMatch.DataFrame = () => _noMatch;

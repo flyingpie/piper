@@ -10,6 +10,10 @@ public class PpCSharpNode : IPpNode
 		public Dictionary<string, PpField> Rec { get; set; }
 	}
 
+	public string NodeType => "Script";
+
+	public string Name { get; set; }
+
 	private PpDataFrame _outLines = new();
 
 	public string Script { get; set; }
@@ -31,10 +35,7 @@ public class PpCSharpNode : IPpNode
 		{
 			var ff = new Dictionary<string, PpField>(rec.Fields, StringComparer.OrdinalIgnoreCase);
 
-			var glbs = new MyGlobals()
-			{
-				Rec = ff,
-			};
+			var glbs = new MyGlobals() { Rec = ff, };
 
 			var result = await scr
 				.RunAsync(glbs, ex =>
@@ -44,10 +45,7 @@ public class PpCSharpNode : IPpNode
 				})
 				.ConfigureAwait(true);
 
-			_outLines.Records.Add(new PpRecord()
-			{
-				Fields = glbs.Rec,
-			});
+			_outLines.Records.Add(new PpRecord() { Fields = glbs.Rec, });
 		}
 
 		Out.DataFrame = () => _outLines;

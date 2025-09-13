@@ -3,10 +3,9 @@ using Blazor.Diagrams.Core.PathGenerators;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
 using Microsoft.Extensions.DependencyInjection;
-using Piper.Core;
 using Piper.Core.Nodes;
-using Piper.UI.Components;
 using Piper.UI.Components.Nodes;
+using Piper.UI.Services;
 using BD = Blazor.Diagrams.Core.Geometry;
 
 namespace Piper.UI;
@@ -42,11 +41,30 @@ public static class BlazorDiagramConfiguration
 
 		var diagram = new BlazorDiagram(options);
 		diagram.RegisterComponent<PpListFilesNode, ListFilesNodeView>();
+		diagram.RegisterComponent<PpCatFilesNode, ReadFilesNodeView>();
 
 		var catNode = diagram.Nodes.Add(
 			new PpListFilesNode()
 			{
 				Position = new BD.Point(50, 200),
+				Name = "Node 3",
+				InPath = "/home/marco/Downloads",
+				InPattern = "*.pfx",
+				// Command = "cat",
+				// Args =
+				// [
+				// 	new ListFilesNodeModel.CmdArgument()
+				// 	{
+				// 		Arg = "/home/marco/Downloads/jsonnd.txt",
+				// 	},
+				// ],
+			}
+		);
+
+		var catNode2 = diagram.Nodes.Add(
+			new PpListFilesNode()
+			{
+				Position = new BD.Point(400, 200),
 				Name = "Node 3",
 				InPath = "/home/marco/Downloads",
 				InPattern = "*.pfx",
