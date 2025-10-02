@@ -3,9 +3,9 @@ using Piper.Core.Nodes;
 
 namespace Piper.UI.Components.Nodes;
 
-public abstract class NodeViewBase<TNodeType> : ComponentBase
-	where TNodeType : class, IPpNode
+public abstract class NodeViewBase<TNode> : ComponentBase
+	where TNode : IPpNode
 {
 	[Parameter]
-	public TNodeType Node { get; set; } = null!;
+	public GenericNodeModel<TNode> Node { get; set; } = null!;
 }

@@ -10,6 +10,8 @@ public class PpFormatNode : IPpNode
 
 	public Func<PpRecord, string> Formatter { get; set; }
 
+	public bool IsExecuting { get; }
+
 	public PpNodeInput In { get; set; } = new();
 
 	public PpNodeOutput Out { get; } = new();

@@ -12,6 +12,8 @@ public class PpDuckNode : IPpNode
 
 	public string? Name { get; set; }
 
+	public bool IsExecuting { get; }
+
 	public PpNodeInput In { get; set; } = new();
 
 	public PpNodeOutput OutIncl { get; } = new();

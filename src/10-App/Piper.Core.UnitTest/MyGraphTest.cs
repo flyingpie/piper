@@ -21,7 +21,7 @@ public class MyGraphTest
 			InPattern = "*.log",
 		};
 
-		var node2 = new PpCatFilesNode
+		var node2 = new PpReadFilesNode
 		{
 			InFiles = (node1.OutFiles, "path")
 		};

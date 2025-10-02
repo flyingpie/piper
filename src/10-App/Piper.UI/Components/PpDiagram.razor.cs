@@ -18,30 +18,30 @@ public partial class PpDiagram : ComponentBase
 		switch (args.Value ?? string.Empty)
 		{
 			case "PP_NODE_LIST_FILES":
-				var catNode = Diagram.Nodes.Add(
-					new PpListFilesNode()
-					{
-						Position = new BD.Point(args.ClientX, args.ClientY), Name = "Node 3",
-						// InPath = "",
-						// InPattern = "*.pfx",
-						// Command = "cat",
-						// Args =
-						// [
-						// 	new ListFilesNodeModel.CmdArgument()
-						// 	{
-						// 		Arg = "/home/marco/Downloads/jsonnd.txt",
-						// 	},
-						// ],
-					});
+				// var catNode = Diagram.Nodes.Add(
+				// 	new PpListFilesNode()
+				// 	{
+				// 		Position = new BD.Point(args.ClientX, args.ClientY), Name = "Node 3",
+				// 		// InPath = "",
+				// 		// InPattern = "*.pfx",
+				// 		// Command = "cat",
+				// 		// Args =
+				// 		// [
+				// 		// 	new ListFilesNodeModel.CmdArgument()
+				// 		// 	{
+				// 		// 		Arg = "/home/marco/Downloads/jsonnd.txt",
+				// 		// 	},
+				// 		// ],
+				// 	});
 				break;
 
 			case "PP_NODE_READ_FILES":
-				var node = Diagram.Nodes.Add(
-					new PpCatFilesNode()
-					{
-						Name = "Node 3",
-						Position = new BD.Point(args.ClientX, args.ClientY),
-					});
+				// var node = Diagram.Nodes.Add(
+				// 	new PpReadFilesNode()
+				// 	{
+				// 		Name = "Node 3",
+				// 		Position = new BD.Point(args.ClientX, args.ClientY),
+				// 	});
 				break;
 
 			default:

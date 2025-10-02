@@ -1,28 +1,20 @@
-using Blazor.Diagrams.Core.Models;
-
 namespace Piper.Core.Nodes;
 
-public class PpCatFilesNode : NodeModel, IPpNode
+public class PpReadFilesNode : IPpNode
 {
-	public PpCatFilesNode()
-	{
-		InFilesPort = AddPort(PortAlignment.Left);
-		OutLinesPort = AddPort(PortAlignment.Right);
-	}
-
 	public string NodeType => "Read Files";
 
 	private PpDataFrame _outLines = new();
 
 	public string? Name { get; set; }
 
+	public bool IsExecuting { get; }
+
+	[PpInput("File Paths")]
 	public PpNodeInput InFiles { get; set; } = new();
 
-	public PortModel InFilesPort { get; set; }
-
+	[PpOutput("Lines")]
 	public PpNodeOutput OutLines { get; } = new();
-
-	public PortModel OutLinesPort { get; set; }
 
 	public async Task ExecuteAsync()
 	{

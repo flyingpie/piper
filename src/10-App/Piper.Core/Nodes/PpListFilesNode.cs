@@ -1,41 +1,38 @@
-using Blazor.Diagrams.Core.Models;
-
 namespace Piper.Core.Nodes;
 
-// public enum PpPortDirection
-// {
-// 	In,
-// 	Out,
-// }
-//
-// [AttributeUsage(AttributeTargets.Property)]
-// public sealed class PpPortAttribute(PpPortDirection direction) : Attribute
-// {
-// 	public PpPortDirection Direction { get; } = direction;
-// }
-//
-// [AttributeUsage(AttributeTargets.Property)]
-// public sealed class PpInput(string name) : Attribute
-// {
-// 	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
-// }
-//
-// [AttributeUsage(AttributeTargets.Property)]
-// public sealed class PpOutput(string name) : Attribute
-// {
-// 	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
-// }
+public enum PpPortDirection
+{
+	In,
+	Out,
+}
 
-public class PpListFilesNode : NodeModel, IPpNode
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class PpPortAttribute(PpPortDirection direction) : Attribute
+{
+	public PpPortDirection Direction { get; } = direction;
+}
+
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class PpInput(string name) : Attribute
+{
+	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
+}
+
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class PpOutput(string name) : Attribute
+{
+	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
+}
+
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class PpParam(string name) : Attribute
+{
+	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
+}
+
+public class PpListFilesNode : IPpNode
 {
 	private PpDataFrame _files = new();
-
-	public PpListFilesNode()
-	{
-		InPathPort = AddPort(PortAlignment.Left);
-		InPatternPort = AddPort(PortAlignment.Left);
-		OutFilesPort = AddPort(PortAlignment.Right);
-	}
 
 	public bool IsExecuting { get; set; }
 
@@ -43,28 +40,22 @@ public class PpListFilesNode : NodeModel, IPpNode
 
 	public string? Name { get; set; }
 
-	// [PpInput("Path")]
-	public PpNodeInput InPath { get; set; } = new();
+	[PpParam("Path")]
+	public string InPath { get; set; }
 
-	public PortModel InPathPort { get; set; }
+	[PpParam("Pattern")]
+	public string InPattern { get; set; }
 
-	// [PpInput("Pattern")]
-	public PpNodeInput InPattern { get; set; } = new();
-
-	public PortModel InPatternPort { get; set; }
-
-	// [PpOutput("Files")]
+	[PpOutput("Files")]
 	public PpNodeOutput OutFiles { get; } = new();
-
-	public PortModel OutFilesPort { get; set; }
 
 	public async Task ExecuteAsync()
 	{
 		_files.Records.Clear();
 
 		var dirs = Directory.GetFiles(
-			path: InPath.Value,
-			searchPattern: InPattern.Value,
+			path: InPath,
+			searchPattern: InPattern,
 			new EnumerationOptions()
 			{
 				RecurseSubdirectories = true, // TODO: Use glob instead

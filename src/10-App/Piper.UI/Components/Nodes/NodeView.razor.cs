@@ -4,8 +4,8 @@ using Piper.UI.Services;
 
 namespace Piper.UI.Components.Nodes;
 
-public partial class NodeView<TNodeType> : ComponentBase
-	where TNodeType : class, IPpNode
+public partial class NodeView<TNode> : ComponentBase
+	where TNode : IPpNode
 {
 	[Inject]
 	public SelectedThingyService? SelectedThingy { get; set; }
@@ -16,7 +16,7 @@ public partial class NodeView<TNodeType> : ComponentBase
 
 	[EditorRequired]
 	[Parameter]
-	public TNodeType Node { get; set; } = null!;
+	public GenericNodeModel<TNode> Node { get; set; } = null!;
 
 	protected override Task OnInitializedAsync()
 	{

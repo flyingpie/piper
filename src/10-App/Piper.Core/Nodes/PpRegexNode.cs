@@ -11,6 +11,8 @@ public class PpRegexNode : IPpNode
 
 	public string Name { get; set; }
 
+	public bool IsExecuting { get; }
+
 	public PpNodeInput InPattern { get; set; }
 
 	public PpNodeInput OutMatch { get; set; } = new();

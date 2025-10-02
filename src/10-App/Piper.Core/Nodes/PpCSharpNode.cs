@@ -18,6 +18,8 @@ public class PpCSharpNode : IPpNode
 
 	public string Script { get; set; }
 
+	public bool IsExecuting { get; }
+
 	public PpNodeInput In { get; set; } = new();
 
 	public PpNodeOutput Out { get; } = new();

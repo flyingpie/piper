@@ -1,4 +1,8 @@
 using Blazor.Diagrams;
+using Blazor.Diagrams.Core;
+using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.PathGenerators;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
@@ -29,27 +33,48 @@ public static class BlazorDiagramConfiguration
 			{
 				DefaultColor = "#ffffff",
 				DefaultPathGenerator = new SmoothPathGenerator(),
+				// DefaultPathGenerator = new StraightPathGenerator(),
 				DefaultRouter = new NormalRouter(),
+				// DefaultRouter = new OrthogonalRouter(),
 				EnableSnapping = true,
 				SnappingRadius = 15,
+				// Factory = (diagram1, source, targetAnchor) =>
+				// {
+				// 	Anchor source1;
+				// 	switch (source)
+				// 	{
+				// 		case NodeModel model2:
+				// 			source1 = (Anchor)new ShapeIntersectionAnchor(model2);
+				// 			break;
+				// 		case PortModel port2:
+				// 			source1 = (Anchor)new SinglePortAnchor(port2);
+				// 			break;
+				// 		default:
+				// 			throw new NotImplementedException();
+				// 	}
+				//
+				// 	return (BaseLinkModel)new LinkModel(source1, targetAnchor);
+				// },
 			},
-			Zoom =
-			{
-				Enabled = true,
-			},
+			Zoom = { Enabled = true, },
 		};
 
 		var diagram = new BlazorDiagram(options);
-		diagram.RegisterComponent<PpListFilesNode, ListFilesNodeView>();
-		diagram.RegisterComponent<PpCatFilesNode, ReadFilesNodeView>();
+		diagram.RegisterComponent<GenericNodeModel<PpListFilesNode>, GenericNodeView<PpListFilesNode>>();
+		diagram.RegisterComponent<GenericNodeModel<PpReadFilesNode>, GenericNodeView<PpReadFilesNode>>();
+		// diagram.RegisterComponent<PpListFilesNode, ListFilesNodeView>();
+		// diagram.RegisterComponent<PpCatFilesNode, ReadFilesNodeView>();
 
 		var catNode = diagram.Nodes.Add(
-			new PpListFilesNode()
+			new GenericNodeModel<PpListFilesNode>(new()
+				{
+					Name = "Node 3",
+					InPath = "/home/marco/Downloads",
+					InPattern = "*.pfx",
+				})
 			{
 				Position = new BD.Point(50, 200),
-				Name = "Node 3",
-				InPath = "/home/marco/Downloads",
-				InPattern = "*.pfx",
+
 				// Command = "cat",
 				// Args =
 				// [
@@ -58,16 +83,18 @@ public static class BlazorDiagramConfiguration
 				// 		Arg = "/home/marco/Downloads/jsonnd.txt",
 				// 	},
 				// ],
-			}
-		);
+			});
 
 		var catNode2 = diagram.Nodes.Add(
-			new PpListFilesNode()
+			new GenericNodeModel<PpReadFilesNode>(new()
+			{
+				Name = "Node 3",
+				// InPath = "/home/marco/Downloads",
+				// InPattern = "*.pfx",
+			})
 			{
 				Position = new BD.Point(400, 200),
-				Name = "Node 3",
-				InPath = "/home/marco/Downloads",
-				InPattern = "*.pfx",
+
 				// Command = "cat",
 				// Args =
 				// [
@@ -76,8 +103,7 @@ public static class BlazorDiagramConfiguration
 				// 		Arg = "/home/marco/Downloads/jsonnd.txt",
 				// 	},
 				// ],
-			}
-		);
+			});
 
 		// var jqNode = diagram.Nodes.Add(
 		// 	new ListFilesNodeModel()
