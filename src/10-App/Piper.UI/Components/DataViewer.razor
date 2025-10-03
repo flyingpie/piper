@@ -1,28 +1,46 @@
-<RadzenDataGrid
+@using Piper.Core
 
-	@ref="_grid"
+<RadzenStack Orientation="Orientation.Vertical">
 
-	AllowAlternatingRows="true"
-	AllowColumnResize="true"
-	AllowFiltering="true"
-	AllowPaging="true"
-	AllowSorting="true"
-	FilterMode="FilterMode.SimpleWithMenu"
-	LogicalFilterOperator="LogicalFilterOperator.Or"
-	PagerHorizontalAlign="HorizontalAlign.Left"
-	PageSize="15"
-	SelectionMode="DataGridSelectionMode.Single"
-	ShowPagingSummary="true"
+	<RadzenTextBox @bind-Value="SearchTerm" />
 
-	Data="@Reptiles"
-	Count="@ReptileCount"
-	LoadData="@LoadDataAsync"
+	<RadzenDataGrid
 
->
-	<Columns>
-		<RadzenDataGridColumn
-			Title="ID"
-			Property="@nameof(Reptile.ganzh)"
-		/>
-	</Columns>
-</RadzenDataGrid>
+		TItem="PpRecord"
+
+		@ref="_grid"
+
+		AllowAlternatingRows="true"
+		AllowColumnResize="true"
+		AllowFiltering="true"
+		AllowPaging="true"
+		AllowSorting="true"
+		FilterMode="FilterMode.SimpleWithMenu"
+		LogicalFilterOperator="LogicalFilterOperator.Or"
+		PagerHorizontalAlign="HorizontalAlign.Left"
+		PageSize="15"
+		SelectionMode="DataGridSelectionMode.Single"
+		ShowPagingSummary="true"
+
+		Data="@RecordsSub"
+		Count="@RecordCount"
+		LoadData="@LoadDataAsync"
+
+	>
+		<Columns>
+
+			@foreach (var field in FieldNames)
+			{
+				<RadzenDataGridColumn
+					TItem="PpRecord"
+					Title="@field"
+				>
+					<Template Context="item">
+						@(item.Fields.TryGetValue(field, out var v) ? v : null)
+					</Template>
+				</RadzenDataGridColumn>
+			}
+		</Columns>
+	</RadzenDataGrid>
+
+</RadzenStack>

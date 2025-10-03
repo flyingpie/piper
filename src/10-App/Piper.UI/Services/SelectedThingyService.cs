@@ -5,6 +5,8 @@ namespace Piper.UI.Services;
 
 public class SelectedThingyService
 {
+	public static SelectedThingyService Instance { get; } = new();
+
 	public IPpNode? SelectedNode { get; set; }
 
 	private PpDataFrame? _node;
@@ -41,6 +43,8 @@ public class SelectedThingyService
 	}
 
 	public bool IsNodeSelected(IPpNode? node) => SelectedNode == node;
+
+	public bool IsDataFrameSelected(PpDataFrame frame) => Node == frame;
 
 	public void OnChanged(Action onChanged)
 	{

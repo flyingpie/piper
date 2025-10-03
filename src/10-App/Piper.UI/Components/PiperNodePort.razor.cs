@@ -12,17 +12,19 @@ public partial class PiperNodePort : ComponentBase
 	[Parameter]
 	public PortModel? Port { get; set; }
 
-	[Inject]
-	public SelectedThingyService? SelectedThingy { get; set; }
+	// [Inject]
+	// public SelectedThingyService? SelectedThingy { get; set; }
 
 	[Parameter]
 	public Func<PpDataFrame>? SelectDataFrame { get; set; }
+
+	private bool IsPortSelected => SelectDataFrame?.Invoke() != null && SelectedThingyService.Instance.IsDataFrameSelected(SelectDataFrame?.Invoke());
 
 	public void OnClickShowData()
 	{
 		var res = SelectDataFrame?.Invoke();
 
-		SelectedThingy.Node = res;
+		SelectedThingyService.Instance.Node = res;
 		// SelectedThingy.Node = ["Sup!"];
 	}
 }

@@ -19,11 +19,10 @@ public static class BlazorDiagramConfiguration
 	public static IServiceCollection AddBlazorDiagram(this IServiceCollection services)
 	{
 		return services
-			.AddSingleton<SelectedThingyService>()
-			.AddSingleton(p => CreateDiagram(p.GetRequiredService<SelectedThingyService>()));
+			.AddSingleton(p => CreateDiagram());
 	}
 
-	public static BlazorDiagram CreateDiagram(SelectedThingyService sel)
+	public static BlazorDiagram CreateDiagram()
 	{
 		var options = new BlazorDiagramOptions
 		{
@@ -70,7 +69,7 @@ public static class BlazorDiagramConfiguration
 				{
 					Name = "Node 3",
 					InPath = "/home/marco/Downloads",
-					InPattern = "*.pfx",
+					InPattern = "*.txt",
 				})
 			{
 				Position = new BD.Point(50, 200),

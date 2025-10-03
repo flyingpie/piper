@@ -2,6 +2,8 @@ namespace Piper.Core;
 
 public class PpDataFrame
 {
+	// public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
+
 	public static readonly PpDataFrame Empty = new()
 	{
 		Records = [],

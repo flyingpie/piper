@@ -12,38 +12,42 @@ namespace Piper.UI.Components;
 
 public partial class DataViewer : ComponentBase
 {
-	private RadzenDataGrid<Reptile> _grid = null!;
+	private RadzenDataGrid<PpRecord> _grid = null!;
 
 	public class Stuff
 	{
 		public string? Val1 { get; set; }
 	}
 
-	[Inject]
-	public SelectedThingyService? SelectedThingy { get; set; }
+	// [Inject]
+	// public SelectedThingyService? SelectedThingy { get; set; }
 
-	public IEnumerable<string> FieldNames => SelectedThingy?.Node?.FieldNames ?? [];
+	public IEnumerable<string> FieldNames = [];
 
+	public List<PpRecord> Records { get; set; } = [];
 
-	public List<PpRecord> Records
-	{
-		get
-		{
-			//
-			return SelectedThingy
-					?.Node
-					?.Records
-				// ?.Select(r => new Stuff()
-				// {
-				// 	Val1 = "sup11",
-				// })
-				?? [];
-		}
-	}
+	public int RecordCount { get; set; }
 
-	public int ReptileCount { get; set; }
+	public List<PpRecord> RecordsSub { get; set; } = [];
 
-	public ICollection<Reptile> Reptiles { get; set; } = [];
+	// {
+	// 	get
+	// 	{
+	// 		//
+	// 		return SelectedThingy
+	// 				?.Node
+	// 				?.Records
+	// 			// ?.Select(r => new Stuff()
+	// 			// {
+	// 			// 	Val1 = "sup11",
+	// 			// })
+	// 			?? [];
+	// 	}
+	// }
+
+	// public int ReptileCount { get; set; }
+
+	// public ICollection<Reptile> Reptiles { get; set; } = [];
 
 	// [
 	// 	new PiperRecord() { Fields = [new PiperField() { Value = "R1", }] },
@@ -53,7 +57,34 @@ public partial class DataViewer : ComponentBase
 
 	protected override async Task OnInitializedAsync()
 	{
-		SelectedThingy.OnChanged(() => InvokeAsync(() => StateHasChanged()));
+		SelectedThingyService.Instance.OnChanged(() => InvokeAsync(() =>
+		{
+			FieldNames = SelectedThingyService.Instance?.Node?.FieldNames?.ToList() ?? [];
+
+			Records = SelectedThingyService.Instance
+					?.Node
+					?.Records
+				// ?.Select(rec => new Reptile() { ganzh = rec.Fields.Values.FirstOrDefault()?.ValueAsString })
+				// ?.ToList()
+				?? [];
+
+			RecordCount = Records.Count;
+
+			// StateHasChanged();
+			_grid.Reload();
+		}));
+	}
+
+	private string _searchTerm;
+
+	public string SearchTerm
+	{
+		get => _searchTerm;
+		set
+		{
+			_searchTerm = value;
+			_grid.Reload();
+		}
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -66,51 +97,56 @@ public partial class DataViewer : ComponentBase
 
 	private async Task LoadDataAsync(LoadDataArgs args)
 	{
-		using var db = await CreateConnectionAsync();
+		RecordsSub = Records
+			.Where(rec => string.IsNullOrWhiteSpace(_searchTerm) || rec.Fields.Any(f => f.Value?.ValueAsString?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) ?? false))
+			.Skip(args.Skip ?? 0)
+			.Take(args.Top ?? 50)
+			.ToList();
 
-
-		var sb = new StringBuilder();
-
-		// Select
-
-		// Filter
-		var filter = args.Filters.FirstOrDefault();
-		if (filter != null)
-		{
-			switch (filter.FilterOperator)
-			{
-				case FilterOperator.Contains:
-				default:
-					sb.AppendLine($"where {filter.Property} ilike '%{filter.FilterValue}%'");
-					break;
-			}
-		}
-
-		// Order
-		var sort = args.Sorts.FirstOrDefault();
-		if (sort != null)
-		{
-			sb.AppendLine($"ORDER BY {sort.Property} {(sort.SortOrder == SortOrder.Ascending ? "asc" : "desc")}");
-		}
-
-		sb.AppendLine($"offset {args.Skip} limit {args.Top}");
-
-		var sb2 = new StringBuilder();
-		sb2.AppendLine("select count(1) from reptiles");
-		sb2.AppendLine(sb.ToString());
-
-		ReptileCount = await db.ExecuteScalarAsync<int>(sb2.ToString());
-
-		var sb1 = new StringBuilder();
-		sb1.AppendLine("select * from reptiles");
-		sb1.AppendLine(sb.ToString());
-		var q = sb1.ToString();
-		Console.WriteLine("=== QUERY ===");
-		Console.WriteLine(q);
-		Console.WriteLine("=== /QUERY ===");
-
-		var res = await db.QueryAsync<Reptile>(q);
-		Reptiles = res.ToList();
+		// using var db = await CreateConnectionAsync();
+		//
+		// var sb = new StringBuilder();
+		//
+		// // Select
+		//
+		// // Filter
+		// var filter = args.Filters.FirstOrDefault();
+		// if (filter != null)
+		// {
+		// 	switch (filter.FilterOperator)
+		// 	{
+		// 		case FilterOperator.Contains:
+		// 		default:
+		// 			sb.AppendLine($"where {filter.Property} ilike '%{filter.FilterValue}%'");
+		// 			break;
+		// 	}
+		// }
+		//
+		// // Order
+		// var sort = args.Sorts.FirstOrDefault();
+		// if (sort != null)
+		// {
+		// 	sb.AppendLine($"ORDER BY {sort.Property} {(sort.SortOrder == SortOrder.Ascending ? "asc" : "desc")}");
+		// }
+		//
+		// sb.AppendLine($"offset {args.Skip} limit {args.Top}");
+		//
+		// var sb2 = new StringBuilder();
+		// sb2.AppendLine("select count(1) from reptiles");
+		// sb2.AppendLine(sb.ToString());
+		//
+		// ReptileCount = await db.ExecuteScalarAsync<int>(sb2.ToString());
+		//
+		// var sb1 = new StringBuilder();
+		// sb1.AppendLine("select * from reptiles");
+		// sb1.AppendLine(sb.ToString());
+		// var q = sb1.ToString();
+		// Console.WriteLine("=== QUERY ===");
+		// Console.WriteLine(q);
+		// Console.WriteLine("=== /QUERY ===");
+		//
+		// var res = await db.QueryAsync<Reptile>(q);
+		// Reptiles = res.ToList();
 	}
 
 	private async Task<DuckDBConnection> CreateConnectionAsync()

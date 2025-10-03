@@ -30,54 +30,77 @@ public sealed class PpParam(string name) : Attribute
 	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
 }
 
-public class PpListFilesNode : IPpNode
+public abstract class PpNodeBase : IPpNode
 {
-	private PpDataFrame _files = new();
+	public abstract string NodeType { get; }
+
+	public abstract string Name { get; set; }
 
 	public bool IsExecuting { get; set; }
 
-	public string NodeType => "List Files";
+	public async Task ExecuteAsync()
+	{
+		IsExecuting = true;
 
-	public string? Name { get; set; }
+		await OnExecuteAsync();
+
+		IsExecuting = false;
+	}
+
+	protected abstract Task OnExecuteAsync();
+}
+
+public class PpListFilesNode : PpNodeBase
+{
+	private PpDataFrame _files = new();
+
+	// public bool IsExecuting { get; set; }
+
+	public override string NodeType => "List Files";
+
+	public override string? Name { get; set; }
 
 	[PpParam("Path")]
-	public string InPath { get; set; }
+	public string? InPath { get; set; }
 
 	[PpParam("Pattern")]
-	public string InPattern { get; set; }
+	public string? InPattern { get; set; }
 
 	[PpOutput("Files")]
 	public PpNodeOutput OutFiles { get; } = new();
 
-	public async Task ExecuteAsync()
+	protected override async Task OnExecuteAsync()
 	{
 		_files.Records.Clear();
 
-		var dirs = Directory.GetFiles(
-			path: InPath,
-			searchPattern: InPattern,
-			new EnumerationOptions()
-			{
-				RecurseSubdirectories = true, // TODO: Use glob instead
-			});
-
-		_files = new()
+		await Task.Run(async () =>
 		{
-			Records = dirs
-				.Select(d => new PpRecord()
+			var dirs = Directory.GetFiles(
+				path: InPath,
+				searchPattern: InPattern,
+				new EnumerationOptions()
 				{
-					Fields =
-					{
-						{ "uuid", new(Guid.CreateVersion7()) },
-						{ "path", new(d) },
-						{ "dir", new(Path.GetDirectoryName((string?)d)) },
-						{ "file", new(Path.GetFileName((string?)d)) },
-						{ "ext", new(Path.GetExtension((string?)d)) },
-					},
-				})
-				.ToList(),
-		};
+					RecurseSubdirectories = true, // TODO: Use glob instead
+				});
 
-		OutFiles.DataFrame = () => _files;
+			_files = new()
+			{
+				Records = dirs
+					.Select(d => new PpRecord()
+					{
+						Fields =
+						{
+							{ "uuid", new(Guid.CreateVersion7()) },
+							{ "path", new(d) },
+							{ "dir", new(Path.GetDirectoryName((string?)d)) },
+							{ "file", new(Path.GetFileName((string?)d)) },
+							{ "ext", new(Path.GetExtension((string?)d)) },
+						},
+					})
+					.ToList(),
+			};
+
+			OutFiles.DataFrame = () => _files;
+		});
 	}
 }

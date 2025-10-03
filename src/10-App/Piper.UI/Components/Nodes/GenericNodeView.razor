@@ -3,21 +3,25 @@
 
 <NodeView Node="Node">
 
-	@foreach (var param in Node.Params)
+	@foreach (var prop in Node.NodeProps)
 	{
-		<RadzenFormField Text="@param.Name" Style="width: 100%;">
-			<RadzenTextBox
-				@bind-Value="@param.Value"
-				@onmousedown:stopPropagation
-				@onmousemove:stopPropagation
-			/>
-		</RadzenFormField>
+		if (prop is MyParam param)
+		{
+			<RadzenFormField Text="@param.Name" Style="width: 100%;">
+				<RadzenTextBox
+					@bind-Value="@param.Value"
+					@onmousedown:stopPropagation
+					@onmousemove:stopPropagation
+				/>
+			</RadzenFormField>
+		}
+
+		else if (prop is MyPortModel port)
+		{
+			<PiperNodePort Port="port" SelectDataFrame="port.SelectDataFrame"/>
+		}
 	}
 
-	<span class="piper-node-separator"></span>
+	@* <span class="piper-node-separator"></span> *@
 
-	@foreach (var port in Node.Ports)
-	{
-		<PiperNodePort Port="port" SelectDataFrame="port.SelectDataFrame"/>
-	}
 </NodeView>

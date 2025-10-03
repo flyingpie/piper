@@ -20,7 +20,7 @@ public class DuckDbPpDb : IPpDb
 		var cols = frame.FieldNames.ToList();
 
 		await CreateTableAsync(db, cols);
-		InsertDataAsync(db, cols, frame);
+		InsertDataAsync(db, frame);
 	}
 
 	public async Task<PpDataFrame> QueryAsync(string sql)
@@ -53,14 +53,14 @@ public class DuckDbPpDb : IPpDb
 		await db.ExecuteAsync(sb1.ToString());
 	}
 
-	private static void InsertDataAsync(DuckDBConnection db, List<string> cols, PpDataFrame frame)
+	private static void InsertDataAsync(DuckDBConnection db, PpDataFrame frame)
 	{
 		using var appender = db.CreateAppender("t1");
 
 		foreach (var rec in frame.Records)
 		{
 			var row = appender.CreateRow();
-			foreach (var col in cols)
+			foreach (var col in frame.FieldNames)
 			{
 				var v = rec.Fields.TryGetValue(col, out var val) ? val?.ValueAsString : null;
 

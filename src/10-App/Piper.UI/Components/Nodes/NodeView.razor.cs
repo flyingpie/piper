@@ -7,8 +7,8 @@ namespace Piper.UI.Components.Nodes;
 public partial class NodeView<TNode> : ComponentBase
 	where TNode : IPpNode
 {
-	[Inject]
-	public SelectedThingyService? SelectedThingy { get; set; }
+	// [Inject]
+	// public SelectedThingyService? SelectedThingy { get; set; }
 
 	[EditorRequired]
 	[Parameter]
@@ -20,7 +20,7 @@ public partial class NodeView<TNode> : ComponentBase
 
 	protected override Task OnInitializedAsync()
 	{
-		SelectedThingy.OnChanged(() => InvokeAsync(() => StateHasChanged()));
+		SelectedThingyService.Instance.OnChanged(() => InvokeAsync(() => StateHasChanged()));
 
 		return Task.CompletedTask;
 	}

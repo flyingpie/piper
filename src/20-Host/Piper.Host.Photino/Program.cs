@@ -16,9 +16,8 @@ internal static class Program
 		var app = appBuilder.Build();
 
 		app.MainWindow.SetLogVerbosity(0)
-			.SetSize(new Size(1920, 1080))
-			// .SetIconFile(WtqPaths.GetPathRelativeToWtqAppDir("assets", "icon-v2-64.png"))
-			.SetTitle("Piper.Core");
+			.SetSize(new Size(1920, 900))
+			.SetTitle("Piper");
 
 		app.Run();
 	}

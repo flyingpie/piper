@@ -10,7 +10,3 @@ public interface IPpNode
 
 	Task ExecuteAsync();
 }
-
-public static class Ext2
-{
-}

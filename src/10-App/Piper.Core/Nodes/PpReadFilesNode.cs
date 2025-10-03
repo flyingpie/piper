@@ -11,10 +11,13 @@ public class PpReadFilesNode : IPpNode
 	public bool IsExecuting { get; }
 
 	[PpInput("File Paths")]
-	public PpNodeInput InFiles { get; set; } = new();
+	public PpNodeInput InFiles { get; set; } = new() { NodePortName = "File Paths" };
+
+	[PpParam("In Attribute")]
+	public string? InAttr { get; set; }
 
 	[PpOutput("Lines")]
-	public PpNodeOutput OutLines { get; } = new();
+	public PpNodeOutput OutLines { get; } = new() { NodePortName = "Lines" };
 
 	public async Task ExecuteAsync()
 	{
@@ -23,12 +26,14 @@ public class PpReadFilesNode : IPpNode
 		foreach (var file in InFiles.DataFrame().Records)
 		{
 			// Get attribute
-			var field = file.Fields.FirstOrDefault(f =>
-				InFiles.AttributeName == null || f.Key == InFiles.AttributeName);
+			// var field = file.Fields.FirstOrDefault(f =>
+			// 	InFiles.AttributeName == null || f.Key == InFiles.AttributeName);
+			var field = file.Fields.FirstOrDefault(f => f.Key?.Equals(InAttr, StringComparison.OrdinalIgnoreCase) ?? false);
 
 			if (field.Value == null)
 			{
 				Console.WriteLine("No attributes");
+				_outLines.Records.Add(file);
 				continue;
 			}
 
@@ -37,6 +42,7 @@ public class PpReadFilesNode : IPpNode
 			if (!File.Exists(path))
 			{
 				Console.WriteLine($"File at path '{path}' does not exist");
+				_outLines.Records.Add(file);
 				continue;
 			}
 

@@ -11,7 +11,7 @@
 		Gap="1em"
 	>
 		<RadzenButton
-			ButtonStyle="@(SelectedThingy.Node != null ? ButtonStyle.Info : ButtonStyle.Secondary)"
+			ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"
 			Click="() => OnClickShowData()"
 			Icon="list"
 			Size="ButtonSize.ExtraSmall"
@@ -27,7 +27,7 @@
 		</RadzenFormField>
 
 		<RadzenButton
-			ButtonStyle="@(SelectedThingy.Node != null ? ButtonStyle.Info : ButtonStyle.Secondary)"
+			ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"
 			Click="() => OnClickShowData()"
 			Icon="list"
 			Size="ButtonSize.ExtraSmall"

@@ -13,12 +13,12 @@ public partial class GenericNodeView<TNode>
 	[Parameter]
 	public GenericNodeModel<TNode> Model { get; set; } = null!;
 
-	[Inject]
-	public SelectedThingyService? SelectedThingy { get; set; }
+	// [Inject]
+	// public SelectedThingyService? SelectedThingy { get; set; }
 
 	protected override Task OnInitializedAsync()
 	{
-		SelectedThingy.OnChanged(() => InvokeAsync(() => StateHasChanged()));
+		SelectedThingyService.Instance.OnChanged(() => InvokeAsync(() => StateHasChanged()));
 
 		return Task.CompletedTask;
 	}
@@ -43,51 +43,49 @@ public class GenericNodeModel<TNode> : NodeModel
 	{
 		Node = Guard.Against.Null(node);
 
-		var attrs = node
+		var props = node
 				.GetType()
 				.GetProperties(BindingFlags.Instance | BindingFlags.Public)
 			;
 
-		// Params
-		foreach (var param in attrs)
+		foreach (var prop in props)
 		{
-			var paramAttr = param.GetCustomAttribute<PpParam>();
+			// Param
+			var paramAttr = prop.GetCustomAttribute<PpParam>();
 			if (paramAttr != null)
 			{
-				Params.Add(new()
+				NodeProps.Add(new MyParam()
 				{
-					Name = param.Name,
-					Value = null,
+					Name = prop.Name,
+					Value = prop.GetValue(node) as string,
 					OnSet = v =>
 					{
 						Console.WriteLine($"ON SET ({v})");
-						param.SetValue(node, v);
+						prop.SetValue(node, v);
 					},
 				});
 				continue;
 			}
-		}
 
-		// Ports
-		foreach (var port in attrs)
-		{
-			var inAttr = port.GetCustomAttribute<PpInput>();
+			// Input
+			var inAttr = prop.GetCustomAttribute<PpInput>();
 			if (inAttr != null)
 			{
 				var pp = (MyPortModel)AddPort(new MyPortModel(this, PortAlignment.Left));
-				pp.SelectDataFrame = ((PpNodeInput)port.GetValue(node)).DataFrame;
-				pp.GetNodeInput = () => (PpNodeInput)port.GetValue(node);
-				Ports.Add(pp);
+				pp.SelectDataFrame = () => ((PpNodeInput)prop.GetValue(node)).DataFrame?.Invoke();
+				pp.GetNodeInput = () => (PpNodeInput)prop.GetValue(node);
+				NodeProps.Add(pp);
 				continue;
 			}
 
-			var outAttr = port.GetCustomAttribute<PpOutput>();
+			// Output
+			var outAttr = prop.GetCustomAttribute<PpOutput>();
 			if (outAttr != null)
 			{
 				var pp = (MyPortModel)AddPort(new MyPortModel(this, PortAlignment.Right));
-				pp.SelectDataFrame = ((PpNodeOutput)port.GetValue(node)).DataFrame;
-				pp.GetNodeOutput = () => (PpNodeOutput)port.GetValue(node);
-				Ports.Add(pp);
+				pp.SelectDataFrame = () => ((PpNodeOutput)prop.GetValue(node)).DataFrame?.Invoke();
+				pp.GetNodeOutput = () => (PpNodeOutput)prop.GetValue(node);
+				NodeProps.Add(pp);
 				continue;
 			}
 		}
@@ -97,18 +95,24 @@ public class GenericNodeModel<TNode> : NodeModel
 
 	public TNode Node { get; }
 
-	public List<MyParam> Params { get; set; } = [];
+	public List<INodeProperty> NodeProps { get; set; } = [];
 
-	public List<MyPortModel> Ports { get; set; } = [];
+	public IEnumerable<MyParam> Params => NodeProps.OfType<MyParam>();
+
+	public IEnumerable<MyPortModel> Ports => NodeProps.OfType<MyPortModel>();
 }
 
-public class MyParam
+public interface INodeProperty
+{
+}
+
+public class MyParam : INodeProperty
 {
 	private string? _value;
 
 	public string Name { get; set; }
 
-	public string Value
+	public string? Value
 	{
 		get => _value;
 		set
@@ -118,10 +122,10 @@ public class MyParam
 		}
 	}
 
-	public Action<string> OnSet { get; set; }
+	public Action<string?> OnSet { get; set; }
 }
 
-public class MyPortModel : PortModel
+public class MyPortModel : PortModel, INodeProperty
 {
 	public MyPortModel(NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, Size? size = null)
 		: base(parent, alignment, position, size)
@@ -154,20 +158,20 @@ public class MyPortModel : PortModel
 			return;
 		}
 
-		var nodeIn = src.GetNodeOutput?.Invoke();
-		if (nodeIn == null)
+		var nodeSrc = src.GetNodeOutput?.Invoke();
+		if (nodeSrc == null)
 		{
 			return;
 		}
 
-		var nodeOut = dst.GetNodeInput?.Invoke();
-		if (nodeOut == null)
+		var nodeDst = dst.GetNodeInput?.Invoke();
+		if (nodeDst == null)
 		{
 			return;
 		}
 
+		nodeDst.DataFrame = () => nodeSrc.DataFrame?.Invoke() ?? PpDataFrame.Empty;
 
-
-		Console.WriteLine("Refresh");
+		// Console.WriteLine("Refresh");
 	}
 }

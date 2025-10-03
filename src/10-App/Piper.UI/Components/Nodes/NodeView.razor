@@ -1,8 +1,9 @@
+@using Piper.UI.Services
 @typeparam TNode where TNode : Piper.Core.Nodes.IPpNode
 
 <div
-	class="diagram-node pp-node @((SelectedThingy.IsNodeSelected(Node.Node) ? "selected" : ""))"
-	style="background-color: var(--rz-base-800); border-radius: .3em;" @onmousedown="() => SelectedThingy.SelectNode(Node.Node)">
+	class="diagram-node pp-node @((SelectedThingyService.Instance.IsNodeSelected(Node.Node) ? "selected" : ""))"
+	style="background-color: var(--rz-base-800); border-radius: .3em;" @onmousedown="() => SelectedThingyService.Instance.SelectNode(Node.Node)">
 
 	<RadzenStack Orientation="Orientation.Vertical" Gap="1em">
 		<RadzenStack
@@ -18,6 +19,7 @@
 					ProgressBarStyle="ProgressBarStyle.Primary"
 					Value="100"
 					ShowValue="false"
+					Visible="@Node.Node.IsExecuting"
 					Mode="ProgressBarMode.Indeterminate"
 					Size="ProgressBarCircularSize.ExtraSmall"
 				/>
@@ -41,6 +43,3 @@
 	</RadzenStack>
 
 </div>
-
-<style>
-</style>
