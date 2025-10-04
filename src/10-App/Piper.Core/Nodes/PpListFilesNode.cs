@@ -52,7 +52,7 @@ public abstract class PpNodeBase : IPpNode
 
 public class PpListFilesNode : PpNodeBase
 {
-	private PpDataFrame _files = new();
+	// private PpDataFrame _files = new();
 
 	// public bool IsExecuting { get; set; }
 
@@ -67,13 +67,28 @@ public class PpListFilesNode : PpNodeBase
 	public string? InPattern { get; set; }
 
 	[PpOutput("Files")]
-	public PpNodeOutput OutFiles { get; } = new();
+	public PpNodeOutput OutFiles { get; } = new()
+	{
+		Table = new()
+		{
+			TableName = "listfiles",
+			Columns =
+			[
+				new PpColumn() { Name = "uuid" },
+				new PpColumn() { Name = "path" },
+				new PpColumn() { Name = "dir" },
+				new PpColumn() { Name = "file" },
+				new PpColumn() { Name = "ext" },
+			],
+		},
+	};
 
 	protected override async Task OnExecuteAsync()
 	{
-		_files.Records.Clear();
+		// _files.Records.Clear();
+		await OutFiles.Table.ClearAsync();
 
-		await Task.Run(async () =>
+		var records = await Task.Run(async () =>
 		{
 			var dirs = Directory.GetFiles(
 				path: InPath,
@@ -83,24 +98,21 @@ public class PpListFilesNode : PpNodeBase
 					RecurseSubdirectories = true, // TODO: Use glob instead
 				});
 
-			_files = new()
-			{
-				Records = dirs
-					.Select(d => new PpRecord()
+			return dirs
+				.Select(d => new PpRecord()
+				{
+					Fields =
 					{
-						Fields =
-						{
-							{ "uuid", new(Guid.CreateVersion7()) },
-							{ "path", new(d) },
-							{ "dir", new(Path.GetDirectoryName((string?)d)) },
-							{ "file", new(Path.GetFileName((string?)d)) },
-							{ "ext", new(Path.GetExtension((string?)d)) },
-						},
-					})
-					.ToList(),
-			};
-
-			OutFiles.DataFrame = () => _files;
+						{ "uuid", new(Guid.CreateVersion7()) },
+						{ "path", new(d) },
+						{ "dir", new(Path.GetDirectoryName((string?)d)) },
+						{ "file", new(Path.GetFileName((string?)d)) },
+						{ "ext", new(Path.GetExtension((string?)d)) },
+					},
+				})
+				.ToList();
 		});
+
+		await OutFiles.Table.AddAsync(records);
 	}
 }

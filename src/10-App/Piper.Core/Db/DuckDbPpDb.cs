@@ -6,11 +6,19 @@ namespace Piper.Core.Db;
 
 public class DuckDbPpDb : IPpDb
 {
+	public static DuckDbPpDb Instance { get; } = new();
+
+	private DuckDBConnection? _conn;
+
 	private async Task<DuckDBConnection> CreateConnectionAsync()
 	{
-		var db = new DuckDBConnection("data source=piper.db");
-		await db.OpenAsync();
-		return db;
+		if (_conn == null)
+		{
+			_conn = new DuckDBConnection("data source=piper.db");
+			await _conn.OpenAsync();
+		}
+
+		return _conn;
 	}
 
 	public async Task LoadAsync(PpDataFrame frame)
@@ -111,5 +119,59 @@ public class DuckDbPpDb : IPpDb
 		}
 
 		return outLines;
+	}
+
+	public async Task CreateTableAsync(string tableName, List<PpColumn> cols)
+	{
+		var db = await CreateConnectionAsync();
+
+		var sb1 = new StringBuilder();
+		sb1.Append(
+			$"""
+			DROP TABLE IF EXISTS {tableName};
+			CREATE TABLE {tableName}
+			(
+			""");
+
+		foreach (var col in cols)
+		{
+			sb1.AppendLine($"{col.Name} text null,"); // TODO: Column escaping, TODO: Types
+		}
+
+		sb1.Append(
+			"""
+			);
+			""");
+
+		await db.ExecuteAsync(sb1.ToString());
+	}
+
+	public async Task InsertDataAsync(string tableName, IEnumerable<PpRecord> records)
+	{
+		var db = await CreateConnectionAsync();
+
+		using var appender = db.CreateAppender(tableName);
+
+		foreach (var rec in records)
+		{
+			var row = appender.CreateRow();
+			foreach (var col in rec.Fields)
+			{
+				// var v = rec.Fields.TryGetValue(col, out var val) ? val?.ValueAsString : null;
+				var colName = col.Key;
+				var colVal = col.Value?.ValueAsString;
+
+				if (!string.IsNullOrWhiteSpace(colVal))
+				{
+					row.AppendValue(colVal);
+				}
+				else
+				{
+					row.AppendNullValue();
+				}
+			}
+
+			row.EndRow();
+		}
 	}
 }
