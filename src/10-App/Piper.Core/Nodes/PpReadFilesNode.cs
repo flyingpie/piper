@@ -1,14 +1,24 @@
+using Piper.Core.Db;
+
 namespace Piper.Core.Nodes;
 
-public class PpReadFilesNode : IPpNode
+public class PpReadFilesNode : PpNodeBase
 {
-	public string NodeType => "Read Files";
+	public override string NodeType => "Read Files";
 
-	private PpDataFrame _outLines = new();
+	// private PpDataFrame _outLines = new();
+	private PpTable? _outLines;
 
-	public string? Name { get; set; }
+	public PpReadFilesNode()
+	{
+		OutLines = new()
+		{
+			NodePortName = "Lines",
+			Table = () => _outLines,
+		};
+	}
 
-	public bool IsExecuting { get; }
+	public override string? Name { get; set; }
 
 	[PpInput("File Paths")]
 	public PpNodeInput InFiles { get; set; } = new() { NodePortName = "File Paths" };
@@ -16,14 +26,32 @@ public class PpReadFilesNode : IPpNode
 	[PpParam("In Attribute")]
 	public string? InAttr { get; set; }
 
+	[PpParam("Max File Size")]
+	public int MaxFileSize { get; set; } = 2_000_000; // 2MB
+
 	[PpOutput("Lines")]
-	public PpNodeOutput OutLines { get; } = new() { NodePortName = "Lines" };
+	public PpNodeOutput OutLines { get; }
 
-	public async Task ExecuteAsync()
+	protected override async Task OnExecuteAsync()
 	{
-		_outLines.Records.Clear();
+		var inTable = InFiles.Table();
+		var inp = await DuckDbPpDb.Instance.Query2Async($"select * from {inTable.TableName}");
 
-		foreach (var file in InFiles.DataFrame().Records)
+		var cols = inTable.Columns.ToList();
+		cols.AddRange([
+			new() { Name = "idx", },
+			new() { Name = "line", },
+		]);
+
+		_outLines = new()
+		{
+			TableName = "readlines",
+			Columns = cols,
+		};
+
+		await _outLines.ClearAsync();
+		var i = 0;
+		foreach (var file in inp)
 		{
 			// Get attribute
 			// var field = file.Fields.FirstOrDefault(f =>
@@ -33,7 +61,7 @@ public class PpReadFilesNode : IPpNode
 			if (field.Value == null)
 			{
 				Console.WriteLine("No attributes");
-				_outLines.Records.Add(file);
+				// await _outLines.AddAsync(file);
 				continue;
 			}
 
@@ -42,13 +70,22 @@ public class PpReadFilesNode : IPpNode
 			if (!File.Exists(path))
 			{
 				Console.WriteLine($"File at path '{path}' does not exist");
-				_outLines.Records.Add(file);
+				// await _outLines.AddAsync(file);
+				continue;
+			}
+
+			Console.WriteLine($"({i++}/{inp.Count}) Reading file at path {path}");
+
+			var fileInfo = new FileInfo(path);
+			if (fileInfo.Length > MaxFileSize)
+			{
+				Console.WriteLine($"File at path '{path}' exceeds max size, skipping. Increase '{MaxFileSize}' to include larger files.");
 				continue;
 			}
 
 			var lines = await File.ReadAllLinesAsync(path);
 
-			_outLines.Records.AddRange(lines.Select((line, idx) =>
+			await _outLines.AddAsync(lines.Select((line, idx) =>
 			{
 				var ff = new Dictionary<string, PpField>(file.Fields,
 					StringComparer.OrdinalIgnoreCase);
@@ -58,7 +95,5 @@ public class PpReadFilesNode : IPpNode
 				return new PpRecord() { Fields = ff, };
 			}));
 		}
-
-		OutLines.DataFrame = () => _outLines;
 	}
 }

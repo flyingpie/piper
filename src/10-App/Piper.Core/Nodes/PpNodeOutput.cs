@@ -7,5 +7,5 @@ public class PpNodeOutput
 	public Func<PpDataFrame> DataFrame { get; set; }
 
 
-	public PpTable Table { get; set; }
+	public Func<PpTable> Table { get; set; }
 }

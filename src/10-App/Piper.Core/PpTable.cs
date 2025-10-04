@@ -24,6 +24,11 @@ public class PpTable
 		_onChange?.Invoke(this);
 	}
 
+	public async Task AddAsync(PpRecord record)
+	{
+		await AddAsync([record]);
+	}
+
 	public async Task AddAsync(IEnumerable<PpRecord> records)
 	{
 		ArgumentNullException.ThrowIfNull(records);

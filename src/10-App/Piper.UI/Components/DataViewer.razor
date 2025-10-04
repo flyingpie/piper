@@ -22,21 +22,21 @@
 		SelectionMode="DataGridSelectionMode.Single"
 		ShowPagingSummary="true"
 
-		Data="@RecordsSub"
+		Data="@Records"
 		Count="@RecordCount"
 		LoadData="@LoadDataAsync"
 
 	>
 		<Columns>
 
-			@foreach (var field in FieldNames)
+			@foreach (var field in Columns)
 			{
 				<RadzenDataGridColumn
 					TItem="PpRecord"
-					Title="@field"
+					Title="@field.Name"
 				>
 					<Template Context="item">
-						@(item.Fields.TryGetValue(field, out var v) ? v : null)
+						@(item.Fields.TryGetValue(field.Name, out var v) ? v : null)
 					</Template>
 				</RadzenDataGridColumn>
 			}

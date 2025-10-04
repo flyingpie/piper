@@ -1,5 +1,5 @@
-using Piper.Core;
 using Piper.Core.Nodes;
+using Piper.UI.Components.Nodes;
 
 namespace Piper.UI.Services;
 
@@ -7,54 +7,58 @@ public class SelectedThingyService
 {
 	public static SelectedThingyService Instance { get; } = new();
 
-	public IPpNode? SelectedNode { get; set; }
+	private readonly List<Action> _onChanged = [];
+	private IPpNode? _selectedNode;
+	private MyPortModel? _selectedPort;
 
-	private PpDataFrame? _node;
-	// private List<string> _node;
-
-	public PpDataFrame? Node
+	public MyPortModel? SelectedPort
 	{
-		get => _node;
+		get => _selectedPort;
 		set
 		{
-			_node = value;
+			_selectedPort = value;
 			Changed();
 		}
 	}
 
-	// public List<string>? Node
-	// {
-	// 	get => _node;
-	// 	set
-	// 	{
-	// 		_node = value;
-	// 		Changed();
-	// 	}
-	// }
-
-	private readonly List<Action> _onChanged = [];
+	public IPpNode? SelectedNode
+	{
+		get => _selectedNode;
+		set
+		{
+			_selectedNode = value;
+			Changed();
+		}
+	}
 
 	public void Changed()
 	{
+		Console.WriteLine($"Changed ({_onChanged.Count})");
+
 		foreach (var c in _onChanged)
 		{
 			c.Invoke();
 		}
 	}
 
-	public bool IsNodeSelected(IPpNode? node) => SelectedNode == node;
+	public bool IsNodeSelected(IPpNode? node) => _selectedNode != null && _selectedNode == node;
 
-	public bool IsDataFrameSelected(PpDataFrame frame) => Node == frame;
-
-	public void OnChanged(Action onChanged)
-	{
-		_onChanged.Add(onChanged);
-	}
+	public bool IsNodePortSelected(MyPortModel port) => _selectedPort != null && _selectedPort == port;
 
 	public void SelectNode(IPpNode? node)
 	{
 		SelectedNode = node;
 
 		Changed();
+	}
+
+	public void SelectPort(MyPortModel port)
+	{
+		SelectedPort = port;
+	}
+
+	public void OnChanged(Action onChanged)
+	{
+		_onChanged.Add(onChanged);
 	}
 }

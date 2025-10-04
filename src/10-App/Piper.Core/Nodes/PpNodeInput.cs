@@ -10,6 +10,8 @@ public class PpNodeInput
 
 	public string? Value { get; set; }
 
+	public Func<PpTable> Table { get; set; }
+
 	public static implicit operator PpNodeInput(string str) => new() { Value = str };
 
 	public static implicit operator PpNodeInput(PpNodeOutput outp) =>

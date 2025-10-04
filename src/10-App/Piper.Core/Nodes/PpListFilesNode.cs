@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Piper.Core.Nodes;
 
 public enum PpPortDirection
@@ -40,11 +42,23 @@ public abstract class PpNodeBase : IPpNode
 
 	public async Task ExecuteAsync()
 	{
+		Console.WriteLine($"Executing node '{GetType().FullName}'");
+		var sw = Stopwatch.StartNew();
+
 		IsExecuting = true;
 
-		await OnExecuteAsync();
+		try
+		{
+			await OnExecuteAsync();
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error executing node '{GetType().FullName}': {ex.Message}");
+		}
 
 		IsExecuting = false;
+
+		Console.WriteLine($"Executed node '{GetType().FullName}', took {sw.Elapsed}");
 	}
 
 	protected abstract Task OnExecuteAsync();
@@ -53,8 +67,28 @@ public abstract class PpNodeBase : IPpNode
 public class PpListFilesNode : PpNodeBase
 {
 	// private PpDataFrame _files = new();
+	private PpTable _files = new()
+	{
+		TableName = "listfiles",
+		Columns =
+		[
+			new PpColumn() { Name = "uuid" },
+			new PpColumn() { Name = "path" },
+			new PpColumn() { Name = "dir" },
+			new PpColumn() { Name = "file" },
+			new PpColumn() { Name = "ext" },
+		],
+	};
 
 	// public bool IsExecuting { get; set; }
+
+	public PpListFilesNode()
+	{
+		OutFiles = new()
+		{
+			Table = () => _files,
+		};
+	}
 
 	public override string NodeType => "List Files";
 
@@ -67,26 +101,11 @@ public class PpListFilesNode : PpNodeBase
 	public string? InPattern { get; set; }
 
 	[PpOutput("Files")]
-	public PpNodeOutput OutFiles { get; } = new()
-	{
-		Table = new()
-		{
-			TableName = "listfiles",
-			Columns =
-			[
-				new PpColumn() { Name = "uuid" },
-				new PpColumn() { Name = "path" },
-				new PpColumn() { Name = "dir" },
-				new PpColumn() { Name = "file" },
-				new PpColumn() { Name = "ext" },
-			],
-		},
-	};
+	public PpNodeOutput OutFiles { get; }
 
 	protected override async Task OnExecuteAsync()
 	{
-		// _files.Records.Clear();
-		await OutFiles.Table.ClearAsync();
+		await _files.ClearAsync();
 
 		var records = await Task.Run(async () =>
 		{
@@ -113,6 +132,6 @@ public class PpListFilesNode : PpNodeBase
 				.ToList();
 		});
 
-		await OutFiles.Table.AddAsync(records);
+		await _files.AddAsync(records);
 	}
 }

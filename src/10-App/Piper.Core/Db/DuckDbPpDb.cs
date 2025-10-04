@@ -8,36 +8,6 @@ public class DuckDbPpDb : IPpDb
 {
 	public static DuckDbPpDb Instance { get; } = new();
 
-	private DuckDBConnection? _conn;
-
-	private async Task<DuckDBConnection> CreateConnectionAsync()
-	{
-		if (_conn == null)
-		{
-			_conn = new DuckDBConnection("data source=piper.db");
-			await _conn.OpenAsync();
-		}
-
-		return _conn;
-	}
-
-	public async Task LoadAsync(PpDataFrame frame)
-	{
-		await using var db = await CreateConnectionAsync();
-
-		var cols = frame.FieldNames.ToList();
-
-		await CreateTableAsync(db, cols);
-		InsertDataAsync(db, frame);
-	}
-
-	public async Task<PpDataFrame> QueryAsync(string sql)
-	{
-		await using var db = await CreateConnectionAsync();
-
-		return await ReadDataAsync(db, sql);
-	}
-
 	private static async Task CreateTableAsync(DuckDBConnection db, List<string> cols)
 	{
 		var sb1 = new StringBuilder();
@@ -84,6 +54,80 @@ public class DuckDbPpDb : IPpDb
 
 			row.EndRow();
 		}
+	}
+
+	public async Task<long> CountAsync(string query)
+	{
+		await using var db = await CreateConnectionAsync();
+		await using var cmd = db.CreateCommand();
+
+		cmd.CommandText = query;
+
+		return (long)(await cmd.ExecuteScalarAsync() ?? 0);
+	}
+
+	public async Task<List<PpRecord>> Query2Async(string query)
+	{
+		await using var db = await CreateConnectionAsync();
+		await using var cmd = db.CreateCommand();
+
+		// cmd.CommandText =
+		// 	"""
+		// 	select * from t1 limit 250
+		// 	""";
+		cmd.CommandText = query;
+
+		var result = new List<PpRecord>();
+
+		var reader = await cmd.ExecuteReaderAsync();
+		while (await reader.ReadAsync())
+		{
+			var dict = new Dictionary<string, PpField>();
+
+			for (var i = 0; i < reader.FieldCount; i++)
+			{
+				var name = reader.GetName(i);
+				var type = reader.GetFieldType(i);
+				var isNull = reader.IsDBNull(i);
+				var val = isNull ? null : reader.GetString(i);
+
+				dict[name] = new(val);
+			}
+
+			result.Add(new()
+			{
+				Fields = dict,
+			});
+		}
+
+		return result;
+	}
+
+	private async Task<DuckDBConnection> CreateConnectionAsync()
+	{
+		var db = new DuckDBConnection("data source=piper.db");
+		await db.OpenAsync();
+
+		return db;
+	}
+
+	////////////////////
+
+	public async Task LoadAsync(PpDataFrame frame)
+	{
+		await using var db = await CreateConnectionAsync();
+
+		var cols = frame.FieldNames.ToList();
+
+		await CreateTableAsync(db, cols);
+		InsertDataAsync(db, frame);
+	}
+
+	public async Task<PpDataFrame> QueryAsync(string sql)
+	{
+		await using var db = await CreateConnectionAsync();
+
+		return await ReadDataAsync(db, sql);
 	}
 
 	private static async Task<PpDataFrame> ReadDataAsync(DuckDBConnection db, string query)

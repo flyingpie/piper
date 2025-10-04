@@ -71,9 +71,12 @@ public class GenericNodeModel<TNode> : NodeModel
 			var inAttr = prop.GetCustomAttribute<PpInput>();
 			if (inAttr != null)
 			{
+				var nodeInput = prop.GetValue(node) as PpNodeInput;
+
 				var pp = (MyPortModel)AddPort(new MyPortModel(this, PortAlignment.Left));
-				pp.SelectDataFrame = () => ((PpNodeInput)prop.GetValue(node)).DataFrame?.Invoke();
-				pp.GetNodeInput = () => (PpNodeInput)prop.GetValue(node);
+				// pp.SelectDataFrame = () => ((PpNodeInput)prop.GetValue(node)).DataFrame?.Invoke();
+				pp.GetNodeInput = () => nodeInput;
+				pp.Table = nodeInput.Table;
 				NodeProps.Add(pp);
 				continue;
 			}
@@ -82,9 +85,12 @@ public class GenericNodeModel<TNode> : NodeModel
 			var outAttr = prop.GetCustomAttribute<PpOutput>();
 			if (outAttr != null)
 			{
+				var nodeOutput = prop.GetValue(node) as PpNodeOutput;
+
 				var pp = (MyPortModel)AddPort(new MyPortModel(this, PortAlignment.Right));
-				pp.SelectDataFrame = () => ((PpNodeOutput)prop.GetValue(node)).DataFrame?.Invoke();
-				pp.GetNodeOutput = () => (PpNodeOutput)prop.GetValue(node);
+				// pp.SelectDataFrame = () => ((PpNodeOutput)prop.GetValue(node)).DataFrame?.Invoke();
+				pp.GetNodeOutput = () => nodeOutput;
+				pp.Table = nodeOutput.Table;
 				NodeProps.Add(pp);
 				continue;
 			}
@@ -137,12 +143,18 @@ public class MyPortModel : PortModel, INodeProperty
 	{
 	}
 
+	public Func<PpTable> Table { get; set; }
+
 	// public Func<PpDataFrame> Type { get; set; }
-	public Func<PpDataFrame>? SelectDataFrame { get; set; }
+	// public Func<PpDataFrame>? SelectDataFrame { get; set; }
 
-	public Func<PpNodeInput>? GetNodeInput { get; set; }
+	// public Func<PpNodeInput>? GetNodeInput { get; set; }
 
-	public Func<PpNodeOutput>? GetNodeOutput { get; set; }
+	// public Func<PpNodeOutput>? GetNodeOutput { get; set; }
+
+	public Func<PpNodeInput> GetNodeInput { get; set; }
+
+	public Func<PpNodeOutput> GetNodeOutput { get; set; }
 
 	public override void Refresh()
 	{
@@ -158,19 +170,32 @@ public class MyPortModel : PortModel, INodeProperty
 			return;
 		}
 
-		var nodeSrc = src.GetNodeOutput?.Invoke();
-		if (nodeSrc == null)
-		{
-			return;
-		}
+		// dst.Table = src.Table;
 
-		var nodeDst = dst.GetNodeInput?.Invoke();
-		if (nodeDst == null)
-		{
-			return;
-		}
+		dst.GetNodeInput().Table = src.GetNodeOutput().Table;
 
-		nodeDst.DataFrame = () => nodeSrc.DataFrame?.Invoke() ?? PpDataFrame.Empty;
+		Console.WriteLine($"Connected {src} to {dst}");
+
+		// var nodeSrc = src.Table?.Invoke();
+		// var nodeDst = dst.Table?.Invoke();
+		// if(nodeSrc == null || nodeDst == null)
+		// {
+		// return;
+		// }
+
+		// var nodeSrc = src.GetNodeOutput?.Invoke();
+		// if (nodeSrc == null)
+		// {
+		// 	return;
+		// }
+		//
+		// var nodeDst = dst.GetNodeInput?.Invoke();
+		// if (nodeDst == null)
+		// {
+		// 	return;
+		// }
+
+		// nodeDst.DataFrame = () => nodeSrc.DataFrame?.Invoke() ?? PpDataFrame.Empty;
 
 		// Console.WriteLine("Refresh");
 	}
