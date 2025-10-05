@@ -1,72 +1,7 @@
-using System.Diagnostics;
-
 namespace Piper.Core.Nodes;
-
-public enum PpPortDirection
-{
-	In,
-	Out,
-}
-
-[AttributeUsage(AttributeTargets.Property)]
-public sealed class PpPortAttribute(PpPortDirection direction) : Attribute
-{
-	public PpPortDirection Direction { get; } = direction;
-}
-
-[AttributeUsage(AttributeTargets.Property)]
-public sealed class PpInput(string name) : Attribute
-{
-	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
-}
-
-[AttributeUsage(AttributeTargets.Property)]
-public sealed class PpOutput(string name) : Attribute
-{
-	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
-}
-
-[AttributeUsage(AttributeTargets.Property)]
-public sealed class PpParam(string name) : Attribute
-{
-	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
-}
-
-public abstract class PpNodeBase : IPpNode
-{
-	public abstract string NodeType { get; }
-
-	public abstract string Name { get; set; }
-
-	public bool IsExecuting { get; set; }
-
-	public async Task ExecuteAsync()
-	{
-		Console.WriteLine($"Executing node '{GetType().FullName}'");
-		var sw = Stopwatch.StartNew();
-
-		IsExecuting = true;
-
-		try
-		{
-			await OnExecuteAsync();
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine($"Error executing node '{GetType().FullName}': {ex.Message}");
-		}
-
-		IsExecuting = false;
-
-		Console.WriteLine($"Executed node '{GetType().FullName}', took {sw.Elapsed}");
-	}
-
-	protected abstract Task OnExecuteAsync();
-}
 
 public class PpListFilesNode : PpNodeBase
 {
-	// private PpDataFrame _files = new();
 	private PpTable _files = new()
 	{
 		TableName = "listfiles",
@@ -79,8 +14,6 @@ public class PpListFilesNode : PpNodeBase
 			new PpColumn() { Name = "ext" },
 		],
 	};
-
-	// public bool IsExecuting { get; set; }
 
 	public PpListFilesNode()
 	{
