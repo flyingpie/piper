@@ -56,11 +56,9 @@
 	</ItemGroup>
 
 	<!-- Analyzers -->
-	<!--
 	<ItemGroup>
 		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
 		<PackageReference Include="SonarAnalyzer.CSharp" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
 		<PackageReference Include="StyleCop.Analyzers.Unstable" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
 	</ItemGroup>
-	-->
 </Project>

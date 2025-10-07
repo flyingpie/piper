@@ -1,16 +1,33 @@
+using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
+
 namespace Piper.Core.Nodes;
 
 public abstract class PpNodeBase : IPpNode
 {
-	public abstract string NodeType { get; }
+	public virtual string NodeType => GetType().Name;
 
-	public abstract string Name { get; set; }
+	public string Name { get; set; }
 
 	public bool IsExecuting { get; set; }
 
+	public ConcurrentQueue<PpLog> Logs { get; set; } = [];
+
+	public void Log(LogLevel level, string message)
+		=> Logs.Enqueue(new() { Level = level, Message = message });
+
+	public void Log(string message)
+		=> Log(LogLevel.Information, message);
+
+	public void LogWarning(string message)
+		=> Log(LogLevel.Warning, message);
+
 	public async Task ExecuteAsync()
 	{
-		Console.WriteLine($"Executing node '{GetType().FullName}'");
+		Logs.Clear();
+
+		Log($"Executing node '{GetType().FullName}'");
+
 		var sw = Stopwatch.StartNew();
 
 		IsExecuting = true;
@@ -21,12 +38,12 @@ public abstract class PpNodeBase : IPpNode
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"Error executing node '{GetType().FullName}': {ex.Message}");
+			Log($"Error executing node '{GetType().FullName}': {ex.Message}");
 		}
 
 		IsExecuting = false;
 
-		Console.WriteLine($"Executed node '{GetType().FullName}', took {sw.Elapsed}");
+		Log($"Executed node '{GetType().FullName}', took {sw.Elapsed}");
 	}
 
 	protected abstract Task OnExecuteAsync();

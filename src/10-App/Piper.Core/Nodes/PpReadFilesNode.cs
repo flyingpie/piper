@@ -4,9 +4,6 @@ namespace Piper.Core.Nodes;
 
 public class PpReadFilesNode : PpNodeBase
 {
-	public override string NodeType => "Read Files";
-
-	// private PpDataFrame _outLines = new();
 	private PpTable? _outLines;
 
 	public PpReadFilesNode()
@@ -17,8 +14,6 @@ public class PpReadFilesNode : PpNodeBase
 			Table = () => _outLines,
 		};
 	}
-
-	public override string? Name { get; set; }
 
 	[PpInput("File Paths")]
 	public PpNodeInput InFiles { get; set; } = new() { NodePortName = "File Paths" };
@@ -35,7 +30,7 @@ public class PpReadFilesNode : PpNodeBase
 	protected override async Task OnExecuteAsync()
 	{
 		var inTable = InFiles.Table();
-		var inp = await DuckDbPpDb.Instance.Query2Async($"select * from {inTable.TableName}");
+		var inp = await DuckDbPpDb.Instance.QueryAsync($"select * from {inTable.TableName}");
 
 		var cols = inTable.Columns.ToList();
 		cols.AddRange([
@@ -54,8 +49,6 @@ public class PpReadFilesNode : PpNodeBase
 		foreach (var file in inp)
 		{
 			// Get attribute
-			// var field = file.Fields.FirstOrDefault(f =>
-			// 	InFiles.AttributeName == null || f.Key == InFiles.AttributeName);
 			var field = file.Fields.FirstOrDefault(f => f.Key?.Equals(InAttr, StringComparison.OrdinalIgnoreCase) ?? false);
 
 			if (field.Value == null)

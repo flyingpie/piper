@@ -6,21 +6,18 @@
 
 	<ItemGroup>
 		<PackageReference Include="Ardalis.GuardClauses"/>
-		<PackageReference Include="Dapper"/>
 		<PackageReference Include="DuckDB.NET.Data.Full"/>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" />
-		<PackageReference Include="Microsoft.Data.Sqlite"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting"/>
 		<PackageReference Include="Microsoft.Extensions.Hosting"/>
 		<PackageReference Include="morelinq"/>
 		<PackageReference Include="Newtonsoft.Json"/>
-		<PackageReference Include="Samboy063.Tomlet"/>
 		<PackageReference Include="Serilog"/>
 		<PackageReference Include="Serilog.Extensions.Hosting"/>
 		<PackageReference Include="Serilog.Extensions.Logging"/>
 		<PackageReference Include="Serilog.Sinks.Console"/>
 		<PackageReference Include="Serilog.Sinks.File"/>
 		<PackageReference Include="shortid"/>
-		<PackageReference Include="Tomlyn"/>
+		<PackageReference Include="System.Linq.AsyncEnumerable" />
 		<PackageReference Include="Z.Blazor.Diagrams"/>
 		<PackageReference Include="Z.Blazor.Diagrams.Algorithms"/>
 		<PackageReference Include="Z.Blazor.Diagrams.Core"/>

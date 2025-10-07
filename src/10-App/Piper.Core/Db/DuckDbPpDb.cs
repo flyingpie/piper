@@ -1,60 +1,10 @@
-using Dapper;
 using DuckDB.NET.Data;
-using System.Text;
 
 namespace Piper.Core.Db;
 
 public class DuckDbPpDb : IPpDb
 {
 	public static DuckDbPpDb Instance { get; } = new();
-
-	private static async Task CreateTableAsync(DuckDBConnection db, List<string> cols)
-	{
-		var sb1 = new StringBuilder();
-		sb1.Append(
-			"""
-			DROP TABLE IF EXISTS t1;
-			CREATE TABLE t1
-			(
-			""");
-
-		foreach (var col in cols)
-		{
-			sb1.AppendLine($"{col} text null,"); // TODO: Column escaping, TODO: Types
-		}
-
-		sb1.Append(
-			"""
-			);
-			""");
-
-		await db.ExecuteAsync(sb1.ToString());
-	}
-
-	private static void InsertDataAsync(DuckDBConnection db, PpDataFrame frame)
-	{
-		using var appender = db.CreateAppender("t1");
-
-		foreach (var rec in frame.Records)
-		{
-			var row = appender.CreateRow();
-			foreach (var col in frame.FieldNames)
-			{
-				var v = rec.Fields.TryGetValue(col, out var val) ? val?.ValueAsString : null;
-
-				if (!string.IsNullOrWhiteSpace(v))
-				{
-					row.AppendValue(v);
-				}
-				else
-				{
-					row.AppendNullValue();
-				}
-			}
-
-			row.EndRow();
-		}
-	}
 
 	public async Task<long> CountAsync(string query)
 	{
@@ -66,118 +16,17 @@ public class DuckDbPpDb : IPpDb
 		return (long)(await cmd.ExecuteScalarAsync() ?? 0);
 	}
 
-	public async Task<List<PpRecord>> Query2Async(string query)
+	public async Task CreateTableAsync(PpTable table)
 	{
-		await using var db = await CreateConnectionAsync();
-		await using var cmd = db.CreateCommand();
-
-		// cmd.CommandText =
-		// 	"""
-		// 	select * from t1 limit 250
-		// 	""";
-		cmd.CommandText = query;
-
-		var result = new List<PpRecord>();
-
-		var reader = await cmd.ExecuteReaderAsync();
-		while (await reader.ReadAsync())
-		{
-			var dict = new Dictionary<string, PpField>();
-
-			for (var i = 0; i < reader.FieldCount; i++)
-			{
-				var name = reader.GetName(i);
-				var type = reader.GetFieldType(i);
-				var isNull = reader.IsDBNull(i);
-				var val = isNull ? null : reader.GetString(i);
-
-				dict[name] = new(val);
-			}
-
-			result.Add(new()
-			{
-				Fields = dict,
-			});
-		}
-
-		return result;
-	}
-
-	private async Task<DuckDBConnection> CreateConnectionAsync()
-	{
-		var db = new DuckDBConnection("data source=piper.db");
-		await db.OpenAsync();
-
-		return db;
-	}
-
-	////////////////////
-
-	public async Task LoadAsync(PpDataFrame frame)
-	{
-		await using var db = await CreateConnectionAsync();
-
-		var cols = frame.FieldNames.ToList();
-
-		await CreateTableAsync(db, cols);
-		InsertDataAsync(db, frame);
-	}
-
-	public async Task<PpDataFrame> QueryAsync(string sql)
-	{
-		await using var db = await CreateConnectionAsync();
-
-		return await ReadDataAsync(db, sql);
-	}
-
-	private static async Task<PpDataFrame> ReadDataAsync(DuckDBConnection db, string query)
-	{
-		using var cmd = db.CreateCommand();
-		// cmd.CommandText =
-		// 	"""
-		// 	select * from t1 limit 250
-		// 	""";
-		cmd.CommandText = query;
-
-		var outLines = new PpDataFrame();
-
-		var reader = await cmd.ExecuteReaderAsync();
-		while (await reader.ReadAsync())
-		{
-			var dict = new Dictionary<string, PpField>();
-
-			for (var i = 0; i < reader.FieldCount; i++)
-			{
-				var name = reader.GetName(i);
-				var type = reader.GetFieldType(i);
-				var isNull = reader.IsDBNull(i);
-				var val = isNull ? null : reader.GetString(i);
-
-				dict[name] = new(val);
-			}
-
-			outLines.Records.Add(new()
-			{
-				Fields = dict,
-			});
-		}
-
-		return outLines;
-	}
-
-	public async Task CreateTableAsync(string tableName, List<PpColumn> cols)
-	{
-		var db = await CreateConnectionAsync();
-
 		var sb1 = new StringBuilder();
 		sb1.Append(
 			$"""
-			DROP TABLE IF EXISTS {tableName};
-			CREATE TABLE {tableName}
+			DROP TABLE IF EXISTS {table.TableName};
+			CREATE TABLE {table.TableName}
 			(
 			""");
 
-		foreach (var col in cols)
+		foreach (var col in table.Columns)
 		{
 			sb1.AppendLine($"{col.Name} text null,"); // TODO: Column escaping, TODO: Types
 		}
@@ -187,7 +36,12 @@ public class DuckDbPpDb : IPpDb
 			);
 			""");
 
-		await db.ExecuteAsync(sb1.ToString());
+		await using var db = await CreateConnectionAsync();
+		await using var cmd = db.CreateCommand();
+
+		cmd.CommandText = sb1.ToString();
+
+		await cmd.ExecuteNonQueryAsync();
 	}
 
 	public async Task InsertDataAsync(string tableName, IEnumerable<PpRecord> records)
@@ -201,7 +55,6 @@ public class DuckDbPpDb : IPpDb
 			var row = appender.CreateRow();
 			foreach (var col in rec.Fields)
 			{
-				// var v = rec.Fields.TryGetValue(col, out var val) ? val?.ValueAsString : null;
 				var colName = col.Key;
 				var colVal = col.Value?.ValueAsString;
 
@@ -217,5 +70,42 @@ public class DuckDbPpDb : IPpDb
 
 			row.EndRow();
 		}
+	}
+
+	public async IAsyncEnumerable<PpRecord> QueryAsync(string query)
+	{
+		await using var db = await CreateConnectionAsync();
+		await using var cmd = db.CreateCommand();
+
+		cmd.CommandText = query;
+
+		var reader = await cmd.ExecuteReaderAsync();
+		while (await reader.ReadAsync())
+		{
+			var dict = new Dictionary<string, PpField>();
+
+			for (var i = 0; i < reader.FieldCount; i++)
+			{
+				var name = reader.GetName(i);
+				var type = reader.GetFieldType(i);
+				var isNull = reader.IsDBNull(i);
+				var val = isNull ? null : reader.GetString(i);
+
+				dict[name] = new(val);
+			}
+
+			yield return new PpRecord()
+			{
+				Fields = dict,
+			};
+		}
+	}
+
+	private static async Task<DuckDBConnection> CreateConnectionAsync()
+	{
+		var db = new DuckDBConnection("data source=piper.db");
+		await db.OpenAsync();
+
+		return db;
 	}
 }

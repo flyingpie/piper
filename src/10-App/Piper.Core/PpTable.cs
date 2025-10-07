@@ -1,4 +1,5 @@
 using Piper.Core.Db;
+using System.Threading;
 
 namespace Piper.Core;
 
@@ -10,22 +11,22 @@ public class PpTable
 
 	public List<PpColumn> Columns { get; set; } = [];
 
-	// public IEnumerable<PpRow> Rows { get; }
-
 	public void OnChange(Action<PpTable> onChange)
 	{
 		_onChange = onChange;
 	}
 
-	public async Task ClearAsync()
+	public async Task ClearAsync(CancellationToken ct = default)
 	{
-		await DuckDbPpDb.Instance.CreateTableAsync(TableName, Columns);
+		await DuckDbPpDb.Instance.CreateTableAsync(this);
 
 		_onChange?.Invoke(this);
 	}
 
 	public async Task AddAsync(PpRecord record)
 	{
+		Guard.Against.Null(record);
+
 		await AddAsync([record]);
 	}
 
@@ -40,15 +41,13 @@ public class PpTable
 		_onChange?.Invoke(this);
 	}
 
-	public async Task<ICollection<PpRecord>> QueryAsync(string sql)
+	public IAsyncEnumerable<PpRecord> QueryAllAsync()
 	{
-		return null;
+		return DuckDbPpDb.Instance.QueryAsync($"select * from {TableName}");
 	}
-}
 
-public class PpColumn
-{
-	public string Name { get; set; }
-
-	public int Type { get; set; }
+	public IAsyncEnumerable<PpRecord> QueryAsync(string sql)
+	{
+		return DuckDbPpDb.Instance.QueryAsync(sql);
+	}
 }

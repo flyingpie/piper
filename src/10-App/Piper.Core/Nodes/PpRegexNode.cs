@@ -1,11 +1,17 @@
-using System.Text.RegularExpressions;
-
 namespace Piper.Core.Nodes;
 
-public class PpRegexNode : IPpNode
+public class PpRegexNode : PpNodeBase
 {
-	private PpDataFrame _match = new();
-	private PpDataFrame _noMatch = new();
+	private PpTable _match = new();
+	private PpTable _noMatch = new();
+
+	public PpRegexNode()
+	{
+		In = new();
+
+		OutMatch = new() { Table = () => _match, };
+		OutNoMatch = new() { Table = () => _noMatch, };
+	}
 
 	public string NodeType => "Regex";
 
@@ -13,28 +19,45 @@ public class PpRegexNode : IPpNode
 
 	public bool IsExecuting { get; }
 
-	public PpNodeInput InPattern { get; set; }
+	[PpParam("Pattern")]
+	public string? InPattern { get; set; }
 
-	public PpNodeInput OutMatch { get; set; } = new();
+	[PpParam("Attribute")]
+	public string? InAttribute { get; set; }
 
-	public PpNodeOutput OutNoMatch { get; } = new();
+	[PpInput("Input")]
+	public PpNodeInput In { get; set; }
 
-	public async Task ExecuteAsync()
+	[PpOutput("Match")]
+	public PpNodeOutput OutMatch { get; }
+
+	[PpOutput("No Match")]
+	public PpNodeOutput OutNoMatch { get; }
+
+	protected override async Task OnExecuteAsync()
 	{
-		_match.Records.Clear();
-		_noMatch.Records.Clear();
+		if (!In.IsConnected)
+		{
+			LogWarning($"Port '{In}' not connected, stopping");
+			return;
+		}
 
-		var regex = new Regex(InPattern.Value, RegexOptions.Compiled);
+		if (string.IsNullOrWhiteSpace(InAttribute))
+		{
+			LogWarning("No attribute specified, stopping");
+			return;
+		}
 
-		var resMatch = new List<PpRecord>();
+		await _match.ClearAsync();
+		await _noMatch.ClearAsync();
 
-		var resNoMatch = new List<PpRecord>();
+		var regex = new Regex(InPattern ?? string.Empty, RegexOptions.Compiled);
 
-		foreach (var rec in OutMatch.DataFrame().Records)
+		await foreach (var rec in In.Table().QueryAllAsync())
 		{
 			var f = rec.Fields.ToDictionary();
 
-			var match = regex.Match(f[OutMatch.AttributeName].ValueAsString);
+			var match = regex.Match(f[InAttribute].ValueAsString);
 			if (match.Success)
 			{
 				foreach (var grp in match.Groups.OfType<Group>())
@@ -48,21 +71,13 @@ public class PpRegexNode : IPpNode
 				}
 
 				var rec2 = new PpRecord() { Fields = f, };
-
-				resMatch.Add(rec2);
+				await _match.AddAsync(rec2);
 			}
 			else
 			{
 				var rec2 = new PpRecord() { Fields = f, };
-				resNoMatch.Add(rec2);
+				await _noMatch.AddAsync(rec2);
 			}
 		}
-
-		_match = new() { Records = resMatch, };
-
-		_noMatch = new() { Records = resNoMatch, };
-
-		OutMatch.DataFrame = () => _match;
-		OutNoMatch.DataFrame = () => _noMatch;
 	}
 }

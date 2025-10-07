@@ -2,7 +2,11 @@ namespace Piper.Core.Db;
 
 public interface IPpDb
 {
-	Task LoadAsync(PpDataFrame frame);
+	Task<long> CountAsync(string query);
 
-	Task<PpDataFrame> QueryAsync(string sql);
+	Task CreateTableAsync(PpTable table);
+
+	Task InsertDataAsync(string tableName, IEnumerable<PpRecord> records);
+
+	IAsyncEnumerable<PpRecord> QueryAsync(string query);
 }

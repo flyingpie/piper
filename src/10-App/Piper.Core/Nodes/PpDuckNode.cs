@@ -22,15 +22,15 @@ public class PpDuckNode : IPpNode
 
 	public async Task ExecuteAsync()
 	{
-		// Prep frame
-		_outLines.Records.Clear();
-
-		// Insert data
-		await _db.LoadAsync(In.DataFrame());
-
-		// Read data
-		_outLines = await _db.QueryAsync(Query);
-
-		OutIncl.DataFrame = () => _outLines;
+		// // Prep frame
+		// _outLines.Records.Clear();
+		//
+		// // Insert data
+		// await _db.LoadAsync(In.DataFrame());
+		//
+		// // Read data
+		// _outLines = await _db.QueryAsync(Query);
+		//
+		// OutIncl.DataFrame = () => _outLines;
 	}
 }
