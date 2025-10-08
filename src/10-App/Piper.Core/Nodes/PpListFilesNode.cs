@@ -23,10 +23,6 @@ public class PpListFilesNode : PpNodeBase
 		};
 	}
 
-	public override string NodeType => "List Files";
-
-	public override string? Name { get; set; }
-
 	[PpParam("Path")]
 	public string? InPath { get; set; }
 

@@ -3,37 +3,31 @@ using Microsoft.CodeAnalysis.Scripting;
 
 namespace Piper.Core.Nodes;
 
-public class PpCSharpNode : IPpNode
+public class PpCSharpNode : PpNodeBase
 {
 	public class MyGlobals
 	{
 		public Dictionary<string, PpField> Rec { get; set; }
 	}
 
-	public string NodeType => "Script";
-
-	public string Name { get; set; }
-
-	private PpDataFrame _outLines = new();
+	private PpTable _outLines = new();
 
 	public string Script { get; set; }
-
-	public bool IsExecuting { get; }
 
 	public PpNodeInput In { get; set; } = new();
 
 	public PpNodeOutput Out { get; } = new();
 
-	public async Task ExecuteAsync()
+	protected override async Task OnExecuteAsync()
 	{
-		_outLines.Records.Clear();
+		await _outLines.ClearAsync();
 
 		var options = ScriptOptions.Default;
 
 		var scr = CSharpScript.Create(Script, options, typeof(MyGlobals));
 		var diags = scr.Compile();
 
-		foreach (var rec in In.DataFrame().Records)
+		await foreach (var rec in In.Table().QueryAllAsync())
 		{
 			var ff = new Dictionary<string, PpField>(rec.Fields, StringComparer.OrdinalIgnoreCase);
 
@@ -47,9 +41,7 @@ public class PpCSharpNode : IPpNode
 				})
 				.ConfigureAwait(true);
 
-			_outLines.Records.Add(new PpRecord() { Fields = glbs.Rec, });
+			await _outLines.AddAsync(new PpRecord() { Fields = glbs.Rec, });
 		}
-
-		Out.DataFrame = () => _outLines;
 	}
 }

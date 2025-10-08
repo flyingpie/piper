@@ -1,12 +1,8 @@
 namespace Piper.Core.Nodes;
 
-public class PpFormatNode : IPpNode
+public class PpFormatNode : PpNodeBase
 {
-	private PpDataFrame _outLines = new();
-
-	public string NodeType => "Format";
-
-	public string? Name { get; set; }
+	private PpTable _outLines = new();
 
 	public Func<PpRecord, string> Formatter { get; set; }
 
@@ -16,22 +12,20 @@ public class PpFormatNode : IPpNode
 
 	public PpNodeOutput Out { get; } = new();
 
-	public async Task ExecuteAsync()
+	protected override async Task OnExecuteAsync()
 	{
-		_outLines.Records.Clear();
+		await _outLines.ClearAsync();
 
-		foreach (var rec in In.DataFrame().Records)
+		await foreach (var rec in In.Table().QueryAllAsync())
 		{
 			var ff = new Dictionary<string, PpField>(rec.Fields,
 				StringComparer.OrdinalIgnoreCase);
 			ff["fmt"] = new(Formatter(rec));
 
-			_outLines.Records.Add(new PpRecord()
+			await _outLines.AddAsync(new PpRecord()
 			{
 				Fields = ff,
 			});
 		}
-
-		Out.DataFrame = () => _outLines;
 	}
 }

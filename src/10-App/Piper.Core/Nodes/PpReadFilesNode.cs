@@ -1,5 +1,3 @@
-using Piper.Core.Db;
-
 namespace Piper.Core.Nodes;
 
 public class PpReadFilesNode : PpNodeBase
@@ -8,15 +6,15 @@ public class PpReadFilesNode : PpNodeBase
 
 	public PpReadFilesNode()
 	{
+		InFiles = new();
 		OutLines = new()
 		{
-			NodePortName = "Lines",
 			Table = () => _outLines,
 		};
 	}
 
 	[PpInput("File Paths")]
-	public PpNodeInput InFiles { get; set; } = new() { NodePortName = "File Paths" };
+	public PpNodeInput InFiles { get; }
 
 	[PpParam("In Attribute")]
 	public string? InAttr { get; set; }
@@ -30,7 +28,7 @@ public class PpReadFilesNode : PpNodeBase
 	protected override async Task OnExecuteAsync()
 	{
 		var inTable = InFiles.Table();
-		var inp = await DuckDbPpDb.Instance.QueryAsync($"select * from {inTable.TableName}");
+		// var inp = await DuckDbPpDb.Instance.QueryAsync($"select * from {inTable.TableName}");
 
 		var cols = inTable.Columns.ToList();
 		cols.AddRange([
@@ -46,7 +44,7 @@ public class PpReadFilesNode : PpNodeBase
 
 		await _outLines.ClearAsync();
 		var i = 0;
-		foreach (var file in inp)
+		await foreach (var file in inTable.QueryAllAsync())
 		{
 			// Get attribute
 			var field = file.Fields.FirstOrDefault(f => f.Key?.Equals(InAttr, StringComparison.OrdinalIgnoreCase) ?? false);
@@ -67,7 +65,7 @@ public class PpReadFilesNode : PpNodeBase
 				continue;
 			}
 
-			Console.WriteLine($"({i++}/{inp.Count}) Reading file at path {path}");
+			Console.WriteLine($"({i++}/{9999}) Reading file at path {path}");
 
 			var fileInfo = new FileInfo(path);
 			if (fileInfo.Length > MaxFileSize)

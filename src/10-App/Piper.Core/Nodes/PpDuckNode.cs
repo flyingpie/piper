@@ -6,7 +6,7 @@ public class PpDuckNode : IPpNode
 {
 	private readonly IPpDb _db = new DuckDbPpDb();
 
-	private PpDataFrame _outLines = new();
+	private PpTable _outLines = new();
 
 	public string NodeType => "SQL";
 

@@ -1,10 +1,10 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Components;
 using Piper.Core;
+using Piper.Core.Db;
 using Piper.UI.Services;
 using Radzen;
 using Radzen.Blazor;
-using Piper.Core.Db;
+using System.Diagnostics;
 
 namespace Piper.UI.Components;
 
@@ -76,7 +76,7 @@ public partial class DataViewer : ComponentBase
 			;
 
 		RecordCount = (int)await DuckDbPpDb.Instance.CountAsync(sqlCount);
-		Records = await DuckDbPpDb.Instance.Query2Async(sql);
+		Records = await DuckDbPpDb.Instance.QueryAsync(sql).ToListAsync();
 
 		Console.WriteLine($"Data reload took {sw.Elapsed}");
 	}
