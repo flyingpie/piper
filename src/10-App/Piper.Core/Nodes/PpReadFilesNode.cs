@@ -1,19 +1,23 @@
+using Piper.Core.Attributes;
+using Piper.Core.Data;
+using static Piper.Core.Data.PpDataType;
+using static Piper.Core.Data.PpPortDirection;
+
 namespace Piper.Core.Nodes;
 
 public class PpReadFilesNode : PpNodeBase
 {
-	private PpTable? _outLines;
+	private readonly PpTable _outLines = new("readlines");
 
 	public PpReadFilesNode()
 	{
 		InFiles = new();
-		OutLines = new()
-		{
-			Table = () => _outLines,
-		};
+		OutLines = new() { Table = () => _outLines, };
 	}
 
-	[PpInput("File Paths")]
+	public override string NodeType => "Read Files";
+
+	[PpPort(In, "File Paths")]
 	public PpNodeInput InFiles { get; }
 
 	[PpParam("In Attribute")]
@@ -22,25 +26,33 @@ public class PpReadFilesNode : PpNodeBase
 	[PpParam("Max File Size")]
 	public int MaxFileSize { get; set; } = 2_000_000; // 2MB
 
-	[PpOutput("Lines")]
+	[PpPort(Out, "Lines")]
 	public PpNodeOutput OutLines { get; }
 
 	protected override async Task OnExecuteAsync()
 	{
+		if (!InFiles.IsConnected)
+		{
+			LogWarning($"Port '{InFiles}' not connected");
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(InAttr))
+		{
+			LogWarning($"Param '{InAttr}' not set");
+			return;
+		}
+
 		var inTable = InFiles.Table();
-		// var inp = await DuckDbPpDb.Instance.QueryAsync($"select * from {inTable.TableName}");
 
 		var cols = inTable.Columns.ToList();
-		cols.AddRange([
-			new() { Name = "idx", },
-			new() { Name = "line", },
+		cols.AddRange(
+		[
+			new("idx", PpString),
+			new("line", PpString),
 		]);
 
-		_outLines = new()
-		{
-			TableName = "readlines",
-			Columns = cols,
-		};
+		_outLines.Columns = cols;
 
 		await _outLines.ClearAsync();
 		var i = 0;
@@ -49,10 +61,10 @@ public class PpReadFilesNode : PpNodeBase
 			// Get attribute
 			var field = file.Fields.FirstOrDefault(f => f.Key?.Equals(InAttr, StringComparison.OrdinalIgnoreCase) ?? false);
 
-			if (field.Value == null)
+			if (string.IsNullOrWhiteSpace(field.Value?.ValueAsString))
 			{
-				Console.WriteLine("No attributes");
-				// await _outLines.AddAsync(file);
+				LogWarning($"Record does not have an attribute with name '{InAttr}'");
+				await _outLines.AddAsync(CreateRecord(file, -1, string.Empty));
 				continue;
 			}
 
@@ -60,31 +72,33 @@ public class PpReadFilesNode : PpNodeBase
 			var path = field.Value.ValueAsString;
 			if (!File.Exists(path))
 			{
-				Console.WriteLine($"File at path '{path}' does not exist");
-				// await _outLines.AddAsync(file);
+				LogWarning($"File at path '{path}' does not exist");
+				await _outLines.AddAsync(CreateRecord(file, -1, string.Empty));
 				continue;
 			}
 
-			Console.WriteLine($"({i++}/{9999}) Reading file at path {path}");
+			Log($"({i++}/{9999}) Reading file at path {path}");
 
 			var fileInfo = new FileInfo(path);
 			if (fileInfo.Length > MaxFileSize)
 			{
-				Console.WriteLine($"File at path '{path}' exceeds max size, skipping. Increase '{MaxFileSize}' to include larger files.");
+				LogWarning($"File at path '{path}' exceeds max size, skipping. Increase '{MaxFileSize}' to include larger files.");
 				continue;
 			}
 
 			var lines = await File.ReadAllLinesAsync(path);
 
-			await _outLines.AddAsync(lines.Select((line, idx) =>
-			{
-				var ff = new Dictionary<string, PpField>(file.Fields,
-					StringComparer.OrdinalIgnoreCase);
-				ff["idx"] = new(idx);
-				ff["line"] = new(line);
-
-				return new PpRecord() { Fields = ff, };
-			}));
+			await _outLines.AddAsync(lines.Select((line, idx) => CreateRecord(file, idx, line)));
 		}
 	}
+
+	public PpRecord CreateRecord(PpRecord file, int idx, string line) =>
+		new()
+		{
+			Fields = new Dictionary<string, PpField>(file.Fields, StringComparer.OrdinalIgnoreCase)
+			{
+				{ "idx", $"{idx}" },
+				{ "line", line },
+			},
+		};
 }

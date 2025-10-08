@@ -7,9 +7,6 @@ namespace Piper.UI.Components.Nodes;
 public partial class NodeView<TNode> : ComponentBase
 	where TNode : IPpNode
 {
-	// [Inject]
-	// public SelectedThingyService? SelectedThingy { get; set; }
-
 	[EditorRequired]
 	[Parameter]
 	public RenderFragment ChildContent { get; set; } = null!;

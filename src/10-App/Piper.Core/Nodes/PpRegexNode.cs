@@ -1,13 +1,17 @@
+using Piper.Core.Attributes;
+using Piper.Core.Data;
+using static Piper.Core.Data.PpPortDirection;
+
 namespace Piper.Core.Nodes;
 
 public class PpRegexNode : PpNodeBase
 {
-	private PpTable _match = new();
-	private PpTable _noMatch = new();
+	private PpTable _match = new("todo");
+	private PpTable _noMatch = new("todo");
 
 	public PpRegexNode()
 	{
-		In = new();
+		InPaths = new();
 
 		OutMatch = new() { Table = () => _match, };
 		OutNoMatch = new() { Table = () => _noMatch, };
@@ -25,20 +29,20 @@ public class PpRegexNode : PpNodeBase
 	[PpParam("Attribute")]
 	public string? InAttribute { get; set; }
 
-	[PpInput("Input")]
-	public PpNodeInput In { get; set; }
+	[PpPort(In, "Input")]
+	public PpNodeInput InPaths { get; set; }
 
-	[PpOutput("Match")]
+	[PpPort(Out, "Match")]
 	public PpNodeOutput OutMatch { get; }
 
-	[PpOutput("No Match")]
+	[PpPort(Out, "No Match")]
 	public PpNodeOutput OutNoMatch { get; }
 
 	protected override async Task OnExecuteAsync()
 	{
-		if (!In.IsConnected)
+		if (!InPaths.IsConnected)
 		{
-			LogWarning($"Port '{In}' not connected, stopping");
+			LogWarning($"Port '{InPaths}' not connected, stopping");
 			return;
 		}
 
@@ -53,7 +57,7 @@ public class PpRegexNode : PpNodeBase
 
 		var regex = new Regex(InPattern ?? string.Empty, RegexOptions.Compiled);
 
-		await foreach (var rec in In.Table().QueryAllAsync())
+		await foreach (var rec in InPaths.Table().QueryAllAsync())
 		{
 			var f = rec.Fields.ToDictionary();
 

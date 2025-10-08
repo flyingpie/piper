@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Piper.Core;
+using Piper.Core.Data;
 using Piper.Core.Db;
 using Piper.UI.Services;
 using Radzen;
@@ -46,7 +47,8 @@ public partial class DataViewer : ComponentBase
 	{
 		Console.WriteLine("LoadDataAsync");
 
-		var table = SelectedThingyService.Instance.SelectedPort?.Table?.Invoke();
+		// var table = SelectedThingyService.Instance.SelectedPort?.Table?.Invoke();
+		var table = SelectedThingyService.Instance.SelectedPort?.GetNodeOutput?.Invoke()?.Table?.Invoke();
 		if (table == null)
 		{
 			return;
@@ -75,8 +77,8 @@ public partial class DataViewer : ComponentBase
 				"""
 			;
 
-		RecordCount = (int)await DuckDbPpDb.Instance.CountAsync(sqlCount);
-		Records = await DuckDbPpDb.Instance.QueryAsync(sql).ToListAsync();
+		RecordCount = (int)await PpDb.Instance.CountAsync(sqlCount);
+		Records = await PpDb.Instance.QueryAsync(sql).ToListAsync();
 
 		Console.WriteLine($"Data reload took {sw.Elapsed}");
 	}

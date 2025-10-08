@@ -7,21 +7,13 @@
 	{
 		if (prop is MyParam param)
 		{
-			<RadzenFormField Text="@param.Name" Style="width: 100%;">
-				<RadzenTextBox
-					@bind-Value="@param.Value"
-					@onmousedown:stopPropagation
-					@onmousemove:stopPropagation
-				/>
-			</RadzenFormField>
+			<PpNodeParam Param="param" />
 		}
 
 		else if (prop is MyPortModel port)
 		{
-			<PiperNodePort Port="port"/>
+			<PpNodePort Port="port"/>
 		}
 	}
-
-	@* <span class="piper-node-separator"></span> *@
 
 </NodeView>

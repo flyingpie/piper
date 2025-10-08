@@ -1,27 +1,20 @@
+using Piper.Core.Attributes;
+using Piper.Core.Data;
+using static Piper.Core.Data.PpDataType;
+using static Piper.Core.Data.PpPortDirection;
+
 namespace Piper.Core.Nodes;
 
 public class PpListFilesNode : PpNodeBase
 {
-	private PpTable _files = new()
-	{
-		TableName = "listfiles",
-		Columns =
-		[
-			new PpColumn() { Name = "uuid" },
-			new PpColumn() { Name = "path" },
-			new PpColumn() { Name = "dir" },
-			new PpColumn() { Name = "file" },
-			new PpColumn() { Name = "ext" },
-		],
-	};
+	private readonly PpTable _files = new("listfiles");
 
 	public PpListFilesNode()
 	{
-		OutFiles = new()
-		{
-			Table = () => _files,
-		};
+		OutFiles = new() { Table = () => _files, };
 	}
+
+	public override string NodeType => "List Files";
 
 	[PpParam("Path")]
 	public string? InPath { get; set; }
@@ -29,37 +22,55 @@ public class PpListFilesNode : PpNodeBase
 	[PpParam("Pattern")]
 	public string? InPattern { get; set; }
 
-	[PpOutput("Files")]
+	[PpPort(Out, "Files")]
 	public PpNodeOutput OutFiles { get; }
 
 	protected override async Task OnExecuteAsync()
 	{
+		if (string.IsNullOrWhiteSpace(InPath))
+		{
+			LogWarning($"Missing value for param '{nameof(InPath)}'.");
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(InPattern))
+		{
+			LogWarning($"Missing value for param '{nameof(InPattern)}'.");
+			return;
+		}
+
+		_files.Columns =
+		[
+			new("uuid", PpString),
+			new("path", PpString),
+			new("dir", PpString),
+			new("file", PpString),
+			new("ext", PpString),
+		];
+
 		await _files.ClearAsync();
 
-		var records = await Task.Run(async () =>
-		{
-			var dirs = Directory.GetFiles(
-				path: InPath,
-				searchPattern: InPattern,
-				new EnumerationOptions()
-				{
-					RecurseSubdirectories = true, // TODO: Use glob instead
-				});
+		var dirs = Directory.GetFiles(
+			path: InPath,
+			searchPattern: InPattern,
+			new EnumerationOptions()
+			{
+				RecurseSubdirectories = true, // TODO: Use glob instead
+			});
 
-			return dirs
-				.Select(d => new PpRecord()
+		var records = dirs
+			.Select(d => new PpRecord()
+			{
+				Fields =
 				{
-					Fields =
-					{
-						{ "uuid", new(Guid.CreateVersion7()) },
-						{ "path", new(d) },
-						{ "dir", new(Path.GetDirectoryName((string?)d)) },
-						{ "file", new(Path.GetFileName((string?)d)) },
-						{ "ext", new(Path.GetExtension((string?)d)) },
-					},
-				})
-				.ToList();
-		});
+					{ "uuid", new(Guid.CreateVersion7()) },
+					{ "path", new(d) },
+					{ "dir", new(Path.GetDirectoryName((string?)d)) },
+					{ "file", new(Path.GetFileName((string?)d)) },
+					{ "ext", new(Path.GetExtension((string?)d)) },
+				},
+			})
+			.ToList();
 
 		await _files.AddAsync(records);
 	}

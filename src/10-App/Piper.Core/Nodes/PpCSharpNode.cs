@@ -1,5 +1,6 @@
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using Piper.Core.Data;
 
 namespace Piper.Core.Nodes;
 
@@ -10,7 +11,7 @@ public class PpCSharpNode : PpNodeBase
 		public Dictionary<string, PpField> Rec { get; set; }
 	}
 
-	private PpTable _outLines = new();
+	private PpTable _outLines = new("todo");
 
 	public string Script { get; set; }
 

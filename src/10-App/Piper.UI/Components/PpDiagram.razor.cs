@@ -1,6 +1,7 @@
 using Blazor.Diagrams;
 using Microsoft.AspNetCore.Components;
 using Piper.Core.Nodes;
+using Piper.UI.Components.Nodes;
 using Radzen;
 using BD = Blazor.Diagrams.Core.Geometry;
 
@@ -18,21 +19,8 @@ public partial class PpDiagram : ComponentBase
 		switch (args.Value ?? string.Empty)
 		{
 			case "PP_NODE_LIST_FILES":
-				// var catNode = Diagram.Nodes.Add(
-				// 	new PpListFilesNode()
-				// 	{
-				// 		Position = new BD.Point(args.ClientX, args.ClientY), Name = "Node 3",
-				// 		// InPath = "",
-				// 		// InPattern = "*.pfx",
-				// 		// Command = "cat",
-				// 		// Args =
-				// 		// [
-				// 		// 	new ListFilesNodeModel.CmdArgument()
-				// 		// 	{
-				// 		// 		Arg = "/home/marco/Downloads/jsonnd.txt",
-				// 		// 	},
-				// 		// ],
-				// 	});
+				var catNode = Diagram.Nodes.Add(
+					new GenericNodeModel<PpListFilesNode>(new() { Name = "Node 3", InPath = "/home/marco/Downloads", InPattern = "*.txt", }) { Position = new BD.Point(args.ClientX, args.ClientY), });
 				break;
 
 			case "PP_NODE_READ_FILES":

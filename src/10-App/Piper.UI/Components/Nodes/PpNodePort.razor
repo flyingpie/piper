@@ -1,0 +1,33 @@
+@using Blazor.Diagrams.Core.Models
+@using Blazor.Diagrams.Components.Renderers
+
+<div class="pp-field">
+	<PortRenderer @key="Port" Port="Port"/>
+
+	<RadzenStack
+		Orientation="Orientation.Horizontal"
+		JustifyContent="JustifyContent.SpaceBetween"
+		AlignItems="AlignItems.Center"
+		Gap="1em"
+	>
+		<RadzenButton
+			ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"
+			Click="() => OnClickShowData()"
+			Icon="list"
+			Size="ButtonSize.ExtraSmall"
+			Visible="@(Port.Alignment == PortAlignment.Left)"
+		/>
+		<RadzenLabel Visible="@(Port.Alignment == PortAlignment.Right)" />
+
+		<RadzenLabel Text="@Port.Name" />
+
+		<RadzenButton
+			ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"
+			Click="() => OnClickShowData()"
+			Icon="list"
+			Size="ButtonSize.ExtraSmall"
+			Visible="@(Port.Alignment == PortAlignment.Right)"
+		/>
+		<RadzenLabel Visible="@(Port.Alignment == PortAlignment.Left)" />
+	</RadzenStack>
+</div>

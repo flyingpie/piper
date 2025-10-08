@@ -1,13 +1,14 @@
+using Piper.Core.Data;
 using Piper.Core.Db;
 using System.Threading;
 
 namespace Piper.Core;
 
-public class PpTable
+public class PpTable(string tableName)
 {
 	private Action<PpTable>? _onChange;
 
-	public string TableName { get; set; }
+	public string TableName { get; } = Guard.Against.NullOrWhiteSpace(tableName);
 
 	public List<PpColumn> Columns { get; set; } = [];
 
@@ -18,7 +19,7 @@ public class PpTable
 
 	public async Task ClearAsync(CancellationToken ct = default)
 	{
-		await DuckDbPpDb.Instance.CreateTableAsync(this);
+		await PpDb.Instance.CreateTableAsync(this);
 
 		_onChange?.Invoke(this);
 	}
@@ -34,7 +35,7 @@ public class PpTable
 	{
 		ArgumentNullException.ThrowIfNull(records);
 
-		var db = DuckDbPpDb.Instance;
+		var db = PpDb.Instance;
 
 		await db.InsertDataAsync(TableName, records);
 
@@ -43,11 +44,11 @@ public class PpTable
 
 	public IAsyncEnumerable<PpRecord> QueryAllAsync()
 	{
-		return DuckDbPpDb.Instance.QueryAsync($"select * from {TableName}");
+		return PpDb.Instance.QueryAsync($"select * from {TableName}");
 	}
 
 	public IAsyncEnumerable<PpRecord> QueryAsync(string sql)
 	{
-		return DuckDbPpDb.Instance.QueryAsync(sql);
+		return PpDb.Instance.QueryAsync(sql);
 	}
 }

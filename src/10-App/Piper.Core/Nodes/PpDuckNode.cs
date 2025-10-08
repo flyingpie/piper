@@ -1,12 +1,13 @@
+using Piper.Core.Data;
 using Piper.Core.Db;
 
 namespace Piper.Core.Nodes;
 
 public class PpDuckNode : IPpNode
 {
-	private readonly IPpDb _db = new DuckDbPpDb();
+	private readonly IPpDb _db = new PpDb();
 
-	private PpTable _outLines = new();
+	private PpTable _outLines = new("todo");
 
 	public string NodeType => "SQL";
 

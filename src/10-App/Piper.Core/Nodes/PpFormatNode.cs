@@ -1,8 +1,10 @@
+using Piper.Core.Data;
+
 namespace Piper.Core.Nodes;
 
 public class PpFormatNode : PpNodeBase
 {
-	private PpTable _outLines = new();
+	private PpTable _outLines = new("todo");
 
 	public Func<PpRecord, string> Formatter { get; set; }
 
