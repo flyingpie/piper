@@ -1,9 +1,8 @@
 @using Piper.UI.Services
-@typeparam TNode where TNode : Piper.Core.Nodes.IPpNode
 
 <div
-	class="diagram-node pp-node @((SelectedThingyService.Instance.IsNodeSelected(Node.Node) ? "selected" : ""))"
-	style="background-color: var(--rz-base-800); border-radius: .3em;" @onmousedown="() => SelectedThingyService.Instance.SelectNode(Node.Node)">
+	class="diagram-node pp-node @((SelectedThingyService.Instance.IsNodeSelected(Node) ? "selected" : ""))"
+	style="background-color: var(--rz-base-800); border-radius: .3em;" @onmousedown="() => SelectedThingyService.Instance.SelectNode(Node)">
 
 	<RadzenStack Orientation="Orientation.Vertical" Gap="1em">
 		<RadzenStack
@@ -12,26 +11,26 @@
 			JustifyContent="JustifyContent.SpaceBetween"
 			Style="background-color: var(--rz-secondary); margin: -10px -10px 0 -10px; padding: .6em;"
 		>
-			<h3 style="margin: 0;">@Node.Node.NodeType</h3>
+			<h3 style="margin: 0;">@Node.NodeType</h3>
 
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
 				<RadzenProgressBarCircular
 					ProgressBarStyle="ProgressBarStyle.Primary"
 					Value="100"
 					ShowValue="false"
-					Visible="@Node.Node.IsExecuting"
+					Visible="@Node.IsExecuting"
 					Mode="ProgressBarMode.Indeterminate"
 					Size="ProgressBarCircularSize.ExtraSmall"
 				/>
 				<RadzenButton
-					Click="async () => await Node.Node.ExecuteAsync()"
+					Click="async () => await Node.ExecuteAsync()"
 					ButtonStyle="ButtonStyle.Secondary"
 					Size="ButtonSize.ExtraSmall"
 					Icon="menu"
 					Style="height: 2em; width: 3em;"
 				/>
 				<RadzenButton
-					Click="async () => await Node.Node.ExecuteAsync()"
+					Click="async () => await Node.ExecuteAsync()"
 					Size="ButtonSize.ExtraSmall"
 					Icon="play_arrow"
 					Style="height: 2em; width: 3em;"

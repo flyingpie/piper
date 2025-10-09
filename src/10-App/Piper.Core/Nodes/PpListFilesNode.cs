@@ -1,4 +1,3 @@
-using Blazor.Diagrams.Core.Models;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
 using static Piper.Core.Data.PpDataType;
@@ -12,7 +11,7 @@ public class PpListFilesNode : PpNodeBase
 
 	public PpListFilesNode()
 	{
-		OutFiles = new() { Table = () => _files, };
+		OutFiles = new(this, nameof(OutFiles)) { Table = () => _files, };
 	}
 
 	public override string NodeType => "List Files";
@@ -25,8 +24,6 @@ public class PpListFilesNode : PpNodeBase
 
 	[PpPort(Out, "Files")]
 	public PpNodeOutput OutFiles { get; }
-
-	public override NodeModel ToNodeModel() => new GenericNodeModel<PpListFilesNode>();
 
 	protected override async Task OnExecuteAsync()
 	{

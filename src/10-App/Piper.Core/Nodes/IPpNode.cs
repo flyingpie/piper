@@ -13,5 +13,5 @@ public interface IPpNode
 
 public class PpGraph
 {
-	public List<IPpNode> Nodes { get; set; }
+	public List<PpNodeBase> Nodes { get; set; }
 }

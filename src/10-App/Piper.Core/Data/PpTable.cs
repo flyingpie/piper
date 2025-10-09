@@ -1,8 +1,7 @@
-using Piper.Core.Data;
 using Piper.Core.Db;
 using System.Threading;
 
-namespace Piper.Core;
+namespace Piper.Core.Data;
 
 public class PpTable(string tableName)
 {

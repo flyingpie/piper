@@ -11,8 +11,8 @@ public class PpReadFilesNode : PpNodeBase
 
 	public PpReadFilesNode()
 	{
-		InFiles = new();
-		OutLines = new() { Table = () => _outLines, };
+		InFiles = new(this, nameof(InFiles));
+		OutLines = new(this, nameof(OutLines)) { Table = () => _outLines, };
 	}
 
 	public override string NodeType => "Read Files";
@@ -43,7 +43,7 @@ public class PpReadFilesNode : PpNodeBase
 			return;
 		}
 
-		var inTable = InFiles.Table();
+		var inTable = InFiles.Output.Table();
 
 		var cols = inTable.Columns.ToList();
 		cols.AddRange(

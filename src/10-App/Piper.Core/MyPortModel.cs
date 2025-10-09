@@ -51,7 +51,8 @@ public class MyPortModel : PortModel, INodeProperty
 			return;
 		}
 
-		dstNodeInput.Table = srcNodeOutput.Table;
+		// dstNodeInput.Table = srcNodeOutput.Table;
+		dstNodeInput.Output = srcNodeOutput;
 
 		Console.WriteLine($"Connected {src} to {dst}");
 	}

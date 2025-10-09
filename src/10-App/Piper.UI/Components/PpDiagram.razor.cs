@@ -21,7 +21,7 @@ public partial class PpDiagram : ComponentBase
 		{
 			case "PP_NODE_LIST_FILES":
 				var catNode = Diagram.Nodes.Add(
-					new GenericNodeModel<PpListFilesNode>(new() { Name = "Node 3", InPath = "/home/marco/Downloads", InPattern = "*.txt", }) { Position = new BD.Point(args.ClientX, args.ClientY), });
+					new PpListFilesNode() { Name = "Node 3", InPath = "/home/marco/Downloads", InPattern = "*.txt", Position = new BD.Point(args.ClientX, args.ClientY), });
 				break;
 
 			case "PP_NODE_READ_FILES":

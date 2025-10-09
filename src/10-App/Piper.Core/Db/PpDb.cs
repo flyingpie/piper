@@ -1,4 +1,5 @@
 using DuckDB.NET.Data;
+using Piper.Core.Data;
 
 namespace Piper.Core.Db;
 

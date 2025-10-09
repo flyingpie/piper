@@ -5,8 +5,7 @@ using Piper.UI.Services;
 
 namespace Piper.UI.Components.Nodes;
 
-public partial class NodeView<TNode> : ComponentBase
-	where TNode : IPpNode
+public partial class NodeView : ComponentBase
 {
 	[EditorRequired]
 	[Parameter]
@@ -14,7 +13,7 @@ public partial class NodeView<TNode> : ComponentBase
 
 	[EditorRequired]
 	[Parameter]
-	public GenericNodeModel<TNode> Node { get; set; } = null!;
+	public PpNodeBase Node { get; set; } = null!;
 
 	protected override Task OnInitializedAsync()
 	{

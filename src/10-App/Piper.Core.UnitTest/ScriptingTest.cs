@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Piper.Core.Data;
 
 namespace Piper.Core.UnitTest;
 

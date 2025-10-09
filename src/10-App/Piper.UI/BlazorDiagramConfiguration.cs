@@ -4,37 +4,98 @@ using Blazor.Diagrams.Core.PathGenerators;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Piper.Core;
+using Piper.Core.Attributes;
+using Piper.Core.Data;
 using Piper.Core.Nodes;
 using Piper.UI.Components.Nodes;
-using BD = Blazor.Diagrams.Core.Geometry;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Piper.UI;
+
+public class PpJsonNode : Dictionary<string, object?>
+{
+	// public string NodeType { get; set; }
+}
 
 public static class BlazorDiagramConfiguration
 {
 	public static IServiceCollection AddBlazorDiagram(this IServiceCollection services)
 	{
+		var graph = CreateGraph();
+
+		var obj = new List<PpJsonNode>();
+
+		foreach (var n in graph.Nodes)
+		{
+			var jsonNode = new PpJsonNode()
+			{
+				// NodeType = n.NodeType,
+			};
+
+			foreach (var prop in n.GetType().GetProperties())
+			{
+				var attrs = prop.GetCustomAttributes(inherit: true);
+
+				var attrParam = attrs.OfType<PpParamAttribute>().FirstOrDefault();
+				if (attrParam != null)
+				{
+					jsonNode[prop.Name] = prop.GetValue(n);
+				}
+
+				var attrPort = attrs.OfType<PpPortAttribute>().FirstOrDefault();
+				if (attrPort != null)
+				{
+					if (attrPort.Direction == PpPortDirection.In)
+					{
+						jsonNode[prop.Name] = null;
+
+						if (prop.GetValue(n) is PpNodeInput { Output.Node: not null } inPort)
+						{
+							jsonNode[prop.Name] = $"{inPort.Output.Node.Name}:{inPort.Output.Name}";
+						}
+					}
+					else
+					{
+						jsonNode[prop.Name] = null;
+
+						// if(prop.GetValue(n) is PpNodeOutput {}
+						// jsonNode[prop.Name] = prop.GetValue(n);
+					}
+				}
+			}
+
+			obj.Add(jsonNode);
+		}
+
+		var json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
+		{
+			ReferenceHandler = ReferenceHandler.IgnoreCycles,
+			PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower,
+			// DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault | JsonIgnoreCondition.WhenWritingNull,
+			TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+			WriteIndented = true,
+			IndentCharacter = '\t',
+			IndentSize = 1,
+		});
+
 		return services
-			.AddSingleton(p => CreateDiagram(CreateGraph()));
+			.AddSingleton(p => CreateDiagram(graph));
 	}
 
 	public static PpGraph CreateGraph()
 	{
 		var listFilesNode = new PpListFilesNode()
 		{
-			Name = "Node 3",
-			InPath = "/home/marco/Downloads",
-			InPattern = "*.txt",
-			Position = new(50, 200),
+			Name = "Node 3", InPath = "/home/marco/Downloads", InPattern = "*.txt", Position = new(50, 200),
 		};
 
 		var readFilesNode = new PpReadFilesNode()
 		{
 			Name = "Node 3",
 			InAttr = "path",
-			InFiles = { Table = () => listFilesNode.OutFiles.Table() },
+			InFiles = { Output = listFilesNode.OutFiles },
 			MaxFileSize = 12345,
 			Position = new(400, 200),
 		};
@@ -67,49 +128,45 @@ public static class BlazorDiagramConfiguration
 		};
 
 		var diagram = new BlazorDiagram(options);
-		diagram.RegisterComponent<GenericNodeModel<PpListFilesNode>, GenericNodeView<PpListFilesNode>>();
-		diagram.RegisterComponent<GenericNodeModel<PpReadFilesNode>, GenericNodeView<PpReadFilesNode>>();
+		diagram.RegisterComponent<PpListFilesNode, GenericNodeView>();
+		diagram.RegisterComponent<PpReadFilesNode, GenericNodeView>();
 
-		diagram.Nodes.Add();
+		graph.Nodes.ForEach(n => diagram.Nodes.Add(n));
 
 		// var listFilesNode = diagram.Nodes.Add(
-		// 	new GenericNodeModel<PpListFilesNode>(new()
+		// 	new PpListFilesNode()
 		// 		{
 		// 			Name = "Node 3",
 		// 			InPath = "/home/marco/Downloads",
 		// 			InPattern = "*.txt",
-		// 		})
-		// 	{
-		// 		Position = new BD.Point(50, 200),
-		// 	});
+		// 			Position = new BD.Point(50, 200),
+		// 		});
 		//
 		// var readFilesNode = diagram.Nodes.Add(
-		// 	new GenericNodeModel<PpReadFilesNode>(new()
+		// 	new PpReadFilesNode()
 		// 	{
 		// 		Name = "Node 3",
 		// 		InAttr = "path",
-		// 		InFiles = { Table = () => listFilesNode.Node.OutFiles.Table() },
+		// 		InFiles = { Table = () => listFilesNode.OutFiles.Table() },
 		// 		MaxFileSize = 12345,
-		// 	})
-		// 	{
 		// 		Position = new BD.Point(400, 200),
 		// 	});
 
-		foreach (var n in diagram.Nodes.OfType<GenericNodeModel>())
+		foreach (var n in diagram.Nodes.OfType<PpNodeBase>())
 		{
 			foreach (var p in n.Ports)
 			{
-				var t = p.GetNodeInput?.Invoke()?.Table?.Invoke();
+				var t = p.GetNodeInput?.Invoke()?.Output;
 				if (t == null)
 				{
 					continue;
 				}
 
-				foreach (var n2 in diagram.Nodes.OfType<GenericNodeModel>())
+				foreach (var n2 in diagram.Nodes.OfType<PpNodeBase>())
 				{
 					foreach (var p2 in n2.Ports)
 					{
-						var t2 = p2.GetNodeOutput?.Invoke()?.Table?.Invoke();
+						var t2 = p2.GetNodeOutput?.Invoke();
 						if (t2 == null)
 						{
 							continue;
