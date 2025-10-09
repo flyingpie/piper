@@ -1,5 +1,6 @@
 using Blazor.Diagrams;
 using Microsoft.AspNetCore.Components;
+using Piper.Core;
 using Piper.Core.Nodes;
 using Piper.UI.Components.Nodes;
 using Radzen;

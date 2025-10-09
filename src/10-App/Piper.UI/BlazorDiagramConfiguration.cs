@@ -4,6 +4,8 @@ using Blazor.Diagrams.Core.PathGenerators;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Piper.Core;
 using Piper.Core.Nodes;
 using Piper.UI.Components.Nodes;
 using BD = Blazor.Diagrams.Core.Geometry;
@@ -15,10 +17,39 @@ public static class BlazorDiagramConfiguration
 	public static IServiceCollection AddBlazorDiagram(this IServiceCollection services)
 	{
 		return services
-			.AddSingleton(p => CreateDiagram());
+			.AddSingleton(p => CreateDiagram(CreateGraph()));
 	}
 
-	public static BlazorDiagram CreateDiagram()
+	public static PpGraph CreateGraph()
+	{
+		var listFilesNode = new PpListFilesNode()
+		{
+			Name = "Node 3",
+			InPath = "/home/marco/Downloads",
+			InPattern = "*.txt",
+			Position = new(50, 200),
+		};
+
+		var readFilesNode = new PpReadFilesNode()
+		{
+			Name = "Node 3",
+			InAttr = "path",
+			InFiles = { Table = () => listFilesNode.OutFiles.Table() },
+			MaxFileSize = 12345,
+			Position = new(400, 200),
+		};
+
+		return new PpGraph()
+		{
+			Nodes =
+			[
+				listFilesNode,
+				readFilesNode,
+			],
+		};
+	}
+
+	public static BlazorDiagram CreateDiagram(PpGraph graph)
 	{
 		var options = new BlazorDiagramOptions
 		{
@@ -39,28 +70,30 @@ public static class BlazorDiagramConfiguration
 		diagram.RegisterComponent<GenericNodeModel<PpListFilesNode>, GenericNodeView<PpListFilesNode>>();
 		diagram.RegisterComponent<GenericNodeModel<PpReadFilesNode>, GenericNodeView<PpReadFilesNode>>();
 
-		var listFilesNode = diagram.Nodes.Add(
-			new GenericNodeModel<PpListFilesNode>(new()
-				{
-					Name = "Node 3",
-					InPath = "/home/marco/Downloads",
-					InPattern = "*.txt",
-				})
-			{
-				Position = new BD.Point(50, 200),
-			});
+		diagram.Nodes.Add();
 
-		var readFilesNode = diagram.Nodes.Add(
-			new GenericNodeModel<PpReadFilesNode>(new()
-			{
-				Name = "Node 3",
-				InAttr = "path",
-				InFiles = { Table = () => listFilesNode.Node.OutFiles.Table() },
-				MaxFileSize = 12345,
-			})
-			{
-				Position = new BD.Point(400, 200),
-			});
+		// var listFilesNode = diagram.Nodes.Add(
+		// 	new GenericNodeModel<PpListFilesNode>(new()
+		// 		{
+		// 			Name = "Node 3",
+		// 			InPath = "/home/marco/Downloads",
+		// 			InPattern = "*.txt",
+		// 		})
+		// 	{
+		// 		Position = new BD.Point(50, 200),
+		// 	});
+		//
+		// var readFilesNode = diagram.Nodes.Add(
+		// 	new GenericNodeModel<PpReadFilesNode>(new()
+		// 	{
+		// 		Name = "Node 3",
+		// 		InAttr = "path",
+		// 		InFiles = { Table = () => listFilesNode.Node.OutFiles.Table() },
+		// 		MaxFileSize = 12345,
+		// 	})
+		// 	{
+		// 		Position = new BD.Point(400, 200),
+		// 	});
 
 		foreach (var n in diagram.Nodes.OfType<GenericNodeModel>())
 		{
@@ -91,7 +124,9 @@ public static class BlazorDiagramConfiguration
 			}
 		}
 
-		diagram.Refresh();
+		// diagram.Refresh();
+
+		// var json = JsonConvert.SerializeObject(diagram.Nodes);
 
 		return diagram;
 	}

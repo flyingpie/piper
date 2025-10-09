@@ -10,3 +10,8 @@ public interface IPpNode
 
 	Task ExecuteAsync();
 }
+
+public class PpGraph
+{
+	public List<IPpNode> Nodes { get; set; }
+}

@@ -1,5 +1,7 @@
+using Blazor.Diagrams.Core.Models;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using System.Numerics;
 
 namespace Piper.Core.Nodes;
 
@@ -12,6 +14,8 @@ public abstract class PpNodeBase : IPpNode
 	public bool IsExecuting { get; set; }
 
 	public ConcurrentQueue<PpLog> Logs { get; set; } = [];
+
+	public Vector2 Position { get; set; }
 
 	public void Log(LogLevel level, string message)
 		=> Logs.Enqueue(new() { Level = level, Message = message });
@@ -45,6 +49,8 @@ public abstract class PpNodeBase : IPpNode
 
 		Log($"Executed node '{GetType().FullName}', took {sw.Elapsed}");
 	}
+
+	public abstract NodeModel ToNodeModel();
 
 	protected abstract Task OnExecuteAsync();
 }

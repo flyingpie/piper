@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using Piper.Core;
 using Piper.Core.Nodes;
 
 namespace Piper.UI.Components.Nodes;
