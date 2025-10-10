@@ -1,37 +1,70 @@
 using Blazor.Diagrams;
+using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.PathGenerators;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Piper.Core;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
 using Piper.Core.Nodes;
 using Piper.UI.Components.Nodes;
+using System.IO;
+using System.Numerics;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
 namespace Piper.UI;
 
-public class PpJsonNode : Dictionary<string, object?>
-{
-	// public string NodeType { get; set; }
-}
-
 public static class BlazorDiagramConfiguration
 {
+	private static JsonSerializerOptions jsonOpts = new JsonSerializerOptions()
+	{
+		ReferenceHandler = ReferenceHandler.IgnoreCycles,
+		PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower,
+		TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+		WriteIndented = true,
+		IndentCharacter = '\t',
+		IndentSize = 1,
+	};
+
 	public static IServiceCollection AddBlazorDiagram(this IServiceCollection services)
 	{
-		var graph = CreateGraph();
+		var path = "/home/marco/Downloads/graph.json";
 
+		// var graph = CreateGraph();
+		// var jsonOut = SerializeGraphJson(graph);
+		// File.WriteAllText(path, jsonOut);
+
+		var desJsonStr = File.ReadAllText(path);
+		var graph = DeserializeGraph(desJsonStr);
+
+		return services
+			.AddSingleton(p => CreateDiagram(graph));
+	}
+
+	private static string SerializeGraphJson(PpGraph graph)
+	{
+		var jsonGraph = SerializeGraph(graph);
+		var json = JsonSerializer.Serialize(jsonGraph, jsonOpts);
+
+		return json;
+	}
+
+	private static List<PpJsonNode> SerializeGraph(PpGraph graph)
+	{
 		var obj = new List<PpJsonNode>();
 
 		foreach (var n in graph.Nodes)
 		{
 			var jsonNode = new PpJsonNode()
 			{
-				// NodeType = n.NodeType,
+				Name = n.Name,
+				Type = n.GetType().Name,
+				Pos = new(n.Position.X, n.Position.Y),
 			};
 
 			foreach (var prop in n.GetType().GetProperties())
@@ -41,7 +74,15 @@ public static class BlazorDiagramConfiguration
 				var attrParam = attrs.OfType<PpParamAttribute>().FirstOrDefault();
 				if (attrParam != null)
 				{
-					jsonNode[prop.Name] = prop.GetValue(n);
+					var v = prop.GetValue(n);
+					if (v is int vInt)
+					{
+						jsonNode.Params[prop.Name] = new PpJsonParam() { IntValue = vInt };
+					}
+					if (v is string vStr)
+					{
+						jsonNode.Params[prop.Name] = new PpJsonParam() { StrValue = vStr };
+					}
 				}
 
 				var attrPort = attrs.OfType<PpPortAttribute>().FirstOrDefault();
@@ -49,16 +90,16 @@ public static class BlazorDiagramConfiguration
 				{
 					if (attrPort.Direction == PpPortDirection.In)
 					{
-						jsonNode[prop.Name] = null;
+						jsonNode.Ports[prop.Name] = null;
 
 						if (prop.GetValue(n) is PpNodeInput { Output.Node: not null } inPort)
 						{
-							jsonNode[prop.Name] = $"{inPort.Output.Node.Name}:{inPort.Output.Name}";
+							jsonNode.Ports[prop.Name] = new(inPort.Output.Node.Name, inPort.Output.Name);
 						}
 					}
 					else
 					{
-						jsonNode[prop.Name] = null;
+						jsonNode.Ports[prop.Name] = null;
 
 						// if(prop.GetValue(n) is PpNodeOutput {}
 						// jsonNode[prop.Name] = prop.GetValue(n);
@@ -69,19 +110,112 @@ public static class BlazorDiagramConfiguration
 			obj.Add(jsonNode);
 		}
 
-		var json = JsonSerializer.Serialize(obj, new JsonSerializerOptions()
-		{
-			ReferenceHandler = ReferenceHandler.IgnoreCycles,
-			PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower,
-			// DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault | JsonIgnoreCondition.WhenWritingNull,
-			TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
-			WriteIndented = true,
-			IndentCharacter = '\t',
-			IndentSize = 1,
-		});
+		return obj;
+	}
 
-		return services
-			.AddSingleton(p => CreateDiagram(graph));
+	public static PpGraph DeserializeGraph(string json)
+	{
+		var nodes = JsonSerializer.Deserialize<List<PpJsonNode>>(json, jsonOpts);
+
+		return DeserializeGraph(nodes);
+	}
+
+	public static PpGraph DeserializeGraph(List<PpJsonNode> nodes)
+	{
+		var graph = new PpGraph();
+
+		var nodeTypes = typeof(PpNodeBase) // TODO: Pull from all loaded assemblies
+			.Assembly
+			.GetTypes()
+			.Where(t => !t.IsAbstract)
+			.Where(t => t.IsAssignableTo(typeof(PpNodeBase)))
+			.ToDictionary(t => t.Name, t => t, StringComparer.OrdinalIgnoreCase);
+
+		foreach (var n in nodes)
+		{
+			if (!nodeTypes.TryGetValue(n.Type, out var nodeType))
+			{
+				Console.WriteLine($"No such node type '{n.Type}'");
+				continue;
+			}
+
+			if (Activator.CreateInstance(nodeType) is not PpNodeBase nodeInst)
+			{
+				Console.WriteLine($"Cannot instantiate node of type '{nodeType.FullName}'");
+				continue;
+			}
+
+			nodeInst.Name = n.Name;
+			nodeInst.Position = new Point(n.Pos.X, n.Pos.Y);
+
+			// Params
+			foreach (var p in n.Params)
+			{
+				var prop = nodeType.GetProperty(p.Key);
+				if (prop == null)
+				{
+					Console.WriteLine($"Could not get property with name '{p.Key}' on type '{nodeType.FullName}'");
+					continue;
+				}
+
+				if (prop.PropertyType == typeof(string))
+				{
+					prop.SetValue(nodeInst, p.Value.StrValue);
+				}
+
+				if (prop.PropertyType == typeof(int))
+				{
+					prop.SetValue(nodeInst, p.Value.IntValue);
+				}
+			}
+
+			graph.Nodes.Add(nodeInst);
+		}
+
+		foreach (var jsonNode in nodes)
+		{
+			var inNode = graph.Nodes.FirstOrDefault(x => x.Name == jsonNode.Name);
+
+			foreach (var port in jsonNode.Ports)
+			{
+				if (port.Value == null)
+				{
+					continue;
+				}
+
+				var inPort = inNode.GetType().GetProperty(port.Key);
+				if (inPort == null)
+				{
+					continue;
+				}
+
+				if (inPort.GetValue(inNode) is not PpNodeInput nodeInput)
+				{
+					continue;
+				}
+
+				var outNode = graph.Nodes.FirstOrDefault(nx => nx.Name == port.Value.Node);
+				if (outNode == null)
+				{
+					continue;
+				}
+
+				var outPort = outNode.GetType().GetProperty(port.Value.Port);
+				if (outPort == null)
+				{
+					continue;
+				}
+
+				if (outPort.GetValue(outNode) is not PpNodeOutput nodeOutput)
+				{
+					continue;
+				}
+
+				nodeInput.Output = nodeOutput;
+			}
+		}
+
+		return graph;
 	}
 
 	public static PpGraph CreateGraph()
