@@ -1,5 +1,6 @@
 @using Blazor.Diagrams.Components
 @using Blazor.Diagrams.Components.Widgets
+@using Piper.Core
 @using Piper.UI.Components.CodeEditor
 
 @inject ContextMenuService ContextMenuService
@@ -56,6 +57,26 @@
 				</RadzenTabsItem>
 				<RadzenTabsItem Text="Code">
 					<PpCodeEditor/>
+				</RadzenTabsItem>
+				<RadzenTabsItem Text="Graphs">
+					<RadzenTable>
+						<RadzenTableBody>
+
+							@foreach (var graphFile in Graphs)
+							{
+								<RadzenTableRow>
+									<RadzenTableCell Style="width: 80px;">
+										<RadzenStack Orientation="Orientation.Horizontal" Gap="1em">
+											<RadzenButton Icon="file_open" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.ExtraSmall" Click="() => LoadGraphFile(graphFile)" />
+											<RadzenButton Icon="save" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" Click="() => SaveGraphFile(graphFile)" />
+										</RadzenStack>
+									</RadzenTableCell>
+									<RadzenTableCell>@graphFile.Name</RadzenTableCell>
+								</RadzenTableRow>
+							}
+
+						</RadzenTableBody>
+					</RadzenTable>
 				</RadzenTabsItem>
 			</Tabs>
 		</RadzenTabs>

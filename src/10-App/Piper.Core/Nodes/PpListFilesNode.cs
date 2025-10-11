@@ -11,7 +11,10 @@ public class PpListFilesNode : PpNodeBase
 
 	public PpListFilesNode()
 	{
-		OutFiles = new(this, nameof(OutFiles)) { Table = () => _files, };
+		OutFiles = new(this, nameof(OutFiles))
+		{
+			Table = () => _files,
+		};
 	}
 
 	public override string NodeType => "List Files";

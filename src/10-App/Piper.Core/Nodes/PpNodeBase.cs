@@ -2,8 +2,9 @@ using Blazor.Diagrams.Core.Models;
 using Microsoft.Extensions.Logging;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
+using shortid;
+using shortid.Configuration;
 using System.Collections.Concurrent;
-using System.Numerics;
 using System.Reflection;
 
 namespace Piper.Core.Nodes;
@@ -13,6 +14,8 @@ public abstract class PpNodeBase : NodeModel, IPpNode
 	protected PpNodeBase()
 	{
 	}
+
+	public string NodeId { get; set; } = ShortId.Generate(new GenerationOptions(useNumbers: true, useSpecialCharacters: false));
 
 	public virtual string NodeType => GetType().Name;
 

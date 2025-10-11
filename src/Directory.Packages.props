@@ -13,6 +13,7 @@
 		<PackageVersion Include="System.Linq.AsyncEnumerable" Version="10.0.0-rc.1.25451.107"/>
 		<PackageVersion Include="System.Numerics.Vectors" Version="4.5.0"/>
 		<PackageVersion Include="System.Resources.Extensions" Version="9.0.0"/>
+		<PackageVersion Include="YamlDotNet" Version="16.3.0"/>
 		<!-- Analyzers -->
 		<PackageVersion Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15"/>
 		<PackageVersion Include="SonarAnalyzer.CSharp" Version="10.15.0.120848"/>
