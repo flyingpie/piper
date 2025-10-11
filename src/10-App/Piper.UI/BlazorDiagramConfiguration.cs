@@ -14,22 +14,10 @@ public static class BlazorDiagramConfiguration
 {
 	public static IServiceCollection AddBlazorDiagram(this IServiceCollection services)
 	{
-		// var path = "/home/marco/Downloads/graph.json";
-		// var path = "/home/marco/workspace/flyingpie/piper_1/graphs/graph.json";
-
-		// NodeSerializer.SerializeGraphYaml(CreateGraph());
-
-		// var graph1 = CreateGraph();
-		// var jsonOut = NodeSerializer.SerializeGraphJson(graph1);
-		// File.WriteAllText(path, jsonOut);
-
-		// var desJsonStr = File.ReadAllText(path);
-		// var graph = NodeSerializer.DeserializeGraph(desJsonStr);
-
-		var graph = new PpGraph();
+		// PpNodeSerializer.SerializeGraphYaml(CreateGraph());
 
 		return services
-			.AddSingleton(p => CreateDiagram(graph));
+			.AddSingleton(p => CreateDiagram());
 	}
 
 	public static PpGraph CreateGraph()
@@ -61,7 +49,7 @@ public static class BlazorDiagramConfiguration
 		};
 	}
 
-	public static BlazorDiagram CreateDiagram(PpGraph graph)
+	private static BlazorDiagram CreateDiagram()
 	{
 		var options = new BlazorDiagramOptions
 		{
@@ -82,7 +70,7 @@ public static class BlazorDiagramConfiguration
 		diagram.RegisterComponent<PpListFilesNode, GenericNodeView>();
 		diagram.RegisterComponent<PpReadFilesNode, GenericNodeView>();
 
-		diagram.LoadGraph(graph);
+		// diagram.LoadGraph(graph);
 
 		return diagram;
 	}

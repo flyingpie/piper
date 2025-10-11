@@ -13,7 +13,7 @@ public partial class NodeView : ComponentBase
 
 	[EditorRequired]
 	[Parameter]
-	public PpNodeBase Node { get; set; } = null!;
+	public PpNode Node { get; set; } = null!;
 
 	protected override Task OnInitializedAsync()
 	{

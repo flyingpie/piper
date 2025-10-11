@@ -1,17 +1,18 @@
 using Blazor.Diagrams.Core.Geometry;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
-using Piper.Core.Nodes;
 using System.Globalization;
 using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using YamlDotNet.Core;
+using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
 namespace Piper.Core.Serialization;
 
-public static class NodeSerializer
+public static class PpNodeSerializer
 {
 	private static JsonSerializerOptions jsonOpts = new()
 	{
@@ -35,13 +36,14 @@ public static class NodeSerializer
 
 	public static string SerializeGraphYaml(PpGraph graph)
 	{
-		var json = SerializeGraphJson(graph);
-
-		var j = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JArray>(json);
+		// var json = SerializeGraphJson(graph);
+		// var j = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JArray>(json);
 		var s = new SerializerBuilder()
+			.WithTypeConverter(new PpNodeYamlTypeConverter())
+			.WithTypeConverter(new PpNodeParamYamlTypeConverter())
 			.Build();
 
-		var yaml = s.Serialize(j);
+		var yaml = s.Serialize(graph);
 
 		return null;
 	}
@@ -128,11 +130,11 @@ public static class NodeSerializer
 	{
 		var graph = new PpGraph();
 
-		var nodeTypes = typeof(PpNodeBase) // TODO: Pull from all loaded assemblies
+		var nodeTypes = typeof(PpNode) // TODO: Pull from all loaded assemblies
 			.Assembly
 			.GetTypes()
 			.Where(t => !t.IsAbstract)
-			.Where(t => t.IsAssignableTo(typeof(PpNodeBase)))
+			.Where(t => t.IsAssignableTo(typeof(PpNode)))
 			.ToDictionary(t => t.Name, t => t, StringComparer.OrdinalIgnoreCase);
 
 		foreach (var n in nodes)
@@ -143,7 +145,7 @@ public static class NodeSerializer
 				continue;
 			}
 
-			if (Activator.CreateInstance(nodeType) is not PpNodeBase nodeInst)
+			if (Activator.CreateInstance(nodeType) is not PpNode nodeInst)
 			{
 				Console.WriteLine($"Cannot instantiate node of type '{nodeType.FullName}'");
 				continue;
@@ -310,5 +312,50 @@ public class PpJsonNodeIdJsonConverter : JsonConverter<PpJsonNodeId>
 	public override void Write(Utf8JsonWriter writer, PpJsonNodeId value, JsonSerializerOptions options)
 	{
 		writer.WriteStringValue($"{value.Id}:{value.Type}:{value.Name}");
+	}
+}
+
+public class PpNodeYamlTypeConverter : IYamlTypeConverter
+{
+	public bool Accepts(Type type) => type.IsAssignableTo(typeof(PpNode));
+
+	public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
+	{
+		// parser.
+		return null;
+	}
+
+	public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
+	{
+		var node = (PpNode)value;
+
+		emitter.Emit(new MappingStart());
+		emitter.Emit(new Scalar("id"));
+		emitter.Emit(new Scalar(node.NodeId));
+		emitter.Emit(new MappingEnd());
+
+		emitter.Emit(new Scalar("params"));
+		// serializer(node.NodeParams);
+
+	}
+}
+
+public class PpNodeParamYamlTypeConverter : IYamlTypeConverter
+{
+	public bool Accepts(Type type) => type.IsAssignableTo(typeof(PpNodeParam));
+
+	public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
+	{
+		return null;
+	}
+
+	public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
+	{
+		var port = (PpNodeParam)value;
+
+		emitter.Emit(new MappingStart());
+		emitter.Emit(new Scalar(port.Name));
+		emitter.Emit(new Scalar(port.ValueAsString));
+		emitter.Emit(new MappingEnd());
 	}
 }

@@ -1,6 +1,6 @@
 namespace Piper.Core;
 
-public class MyParam : INodeProperty
+public class PpNodeParam : IPpNodeProperty
 {
 	private object? _value;
 
@@ -16,7 +16,7 @@ public class MyParam : INodeProperty
 		}
 	}
 
-	public Action<MyParam> OnSet { get; set; }
+	public Action<PpNodeParam> OnSet { get; set; }
 
 	public int ValueAsInt
 	{

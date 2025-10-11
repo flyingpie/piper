@@ -78,14 +78,14 @@ public partial class PpDiagram : ComponentBase
 
 	private void LoadGraphFile(PpGraphFile file)
 	{
-		var graph = NodeSerializer.DeserializeGraph(File.ReadAllText(file.Path));
+		var graph = PpNodeSerializer.DeserializeGraph(File.ReadAllText(file.Path));
 
 		Diagram.LoadGraph(graph);
 	}
 
 	private void SaveGraphFile(PpGraphFile file)
 	{
-		var graph = NodeSerializer.SerializeGraphJson(Diagram.GetGraph());
+		var graph = PpNodeSerializer.SerializeGraphJson(Diagram.GetGraph());
 
 		File.WriteAllText(file.Path, graph);
 	}

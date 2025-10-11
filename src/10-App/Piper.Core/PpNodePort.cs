@@ -5,14 +5,23 @@ using Piper.Core.Data;
 
 namespace Piper.Core;
 
-public class MyPortModel : PortModel, INodeProperty
+public class PpNodePort : PortModel, IPpNodeProperty
 {
-	public MyPortModel(NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, Size? size = null)
+	public PpNodePort(
+		NodeModel parent,
+		PortAlignment alignment = PortAlignment.Bottom,
+		Point? position = null,
+		Size? size = null)
 		: base(parent, alignment, position, size)
 	{
 	}
 
-	public MyPortModel(string id, NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, Size? size = null)
+	public PpNodePort(
+		string id,
+		NodeModel parent,
+		PortAlignment alignment = PortAlignment.Bottom,
+		Point? position = null,
+		Size? size = null)
 		: base(id, parent, alignment, position, size)
 	{
 	}
@@ -29,12 +38,12 @@ public class MyPortModel : PortModel, INodeProperty
 	{
 		base.Refresh();
 
-		if (Links.FirstOrDefault()?.Source?.Model is not MyPortModel src)
+		if (Links.FirstOrDefault()?.Source?.Model is not PpNodePort src)
 		{
 			return;
 		}
 
-		if (Links.FirstOrDefault()?.Target?.Model is not MyPortModel dst)
+		if (Links.FirstOrDefault()?.Target?.Model is not PpNodePort dst)
 		{
 			return;
 		}
@@ -51,7 +60,6 @@ public class MyPortModel : PortModel, INodeProperty
 			return;
 		}
 
-		// dstNodeInput.Table = srcNodeOutput.Table;
 		dstNodeInput.Output = srcNodeOutput;
 
 		Console.WriteLine($"Connected {src} to {dst}");

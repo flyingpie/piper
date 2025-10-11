@@ -8,12 +8,12 @@ public partial class PpNodePort : ComponentBase
 {
 	[EditorRequired]
 	[Parameter]
-	public MyPortModel Port { get; set; } = null!;
+	public Core.PpNodePort NodePort { get; set; } = null!;
 
-	private bool IsPortSelected => SelectedThingyService.Instance.IsNodePortSelected(Port);
+	private bool IsPortSelected => SelectedThingyService.Instance.IsNodePortSelected(NodePort);
 
 	public void OnClickShowData()
 	{
-		SelectedThingyService.Instance.SelectPort(Port);
+		SelectedThingyService.Instance.SelectPort(NodePort);
 	}
 }

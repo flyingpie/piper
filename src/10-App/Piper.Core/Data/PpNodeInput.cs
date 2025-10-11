@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Piper.Core.Data;
 
-public class PpNodeInput(PpNodeBase node, string name)
+public class PpNodeInput(PpNode node, string name)
 {
-	public PpNodeBase Node { get; } = Guard.Against.Null(node);
+	public PpNode Node { get; } = Guard.Against.Null(node);
 
 	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
 

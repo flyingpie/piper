@@ -4,14 +4,14 @@
 
 	@foreach (var prop in Node.NodeProps)
 	{
-		if (prop is MyParam param)
+		if (prop is Core.PpNodeParam param)
 		{
 			<PpNodeParam Param="param" />
 		}
 
-		else if (prop is MyPortModel port)
+		else if (prop is Core.PpNodePort port)
 		{
-			<PpNodePort Port="port"/>
+			<PpNodePort NodePort="port"/>
 		}
 	}
 
