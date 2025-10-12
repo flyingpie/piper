@@ -35,8 +35,8 @@ public static class BlazorDiagramConfiguration
 	{
 		var path = "/home/marco/Downloads/graph.json";
 
-		// var graph = CreateGraph();
-		// var jsonOut = SerializeGraphJson(graph);
+		// var graph1 = CreateGraph();
+		// var jsonOut = SerializeGraphJson(graph1);
 		// File.WriteAllText(path, jsonOut);
 
 		var desJsonStr = File.ReadAllText(path);
