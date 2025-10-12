@@ -2,13 +2,9 @@ using Blazor.Diagrams.Core.Geometry;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
 using System.Globalization;
-using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
-using YamlDotNet.Core;
-using YamlDotNet.Core.Events;
-using YamlDotNet.Serialization;
 
 namespace Piper.Core.Serialization;
 
@@ -33,20 +29,6 @@ public static class PpNodeSerializer
 		IndentSize = 1,
 		WriteIndented = true,
 	};
-
-	public static string SerializeGraphYaml(PpGraph graph)
-	{
-		// var json = SerializeGraphJson(graph);
-		// var j = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JArray>(json);
-		var s = new SerializerBuilder()
-			.WithTypeConverter(new PpNodeYamlTypeConverter())
-			.WithTypeConverter(new PpNodeParamYamlTypeConverter())
-			.Build();
-
-		var yaml = s.Serialize(graph);
-
-		return null;
-	}
 
 	public static string SerializeGraphJson(PpGraph graph)
 	{
@@ -78,13 +60,12 @@ public static class PpNodeSerializer
 					var v = prop.GetValue(n);
 					if (v is int vInt)
 					{
-						// jsonNode.Params[prop.Name] = new PpJsonParam() { IntValue = vInt };
 						jsonNode.Params ??= new();
 						jsonNode.Params[prop.Name] = vInt.ToString(CultureInfo.InvariantCulture);
 					}
+
 					if (v is string vStr)
 					{
-						// jsonNode.Params[prop.Name] = new PpJsonParam() { StrValue = vStr };
 						jsonNode.Params ??= new();
 						jsonNode.Params[prop.Name] = vStr;
 					}
@@ -95,20 +76,11 @@ public static class PpNodeSerializer
 				{
 					if (attrPort.Direction == PpPortDirection.In)
 					{
-						// jsonNode.Ports[prop.Name] = null;
-
 						if (prop.GetValue(n) is PpNodeInput { Output.Node: not null } inPort)
 						{
 							jsonNode.Ports ??= new();
 							jsonNode.Ports[prop.Name] = new(inPort.Output.Node.NodeId, inPort.Output.Name);
 						}
-					}
-					else
-					{
-						// jsonNode.Ports[prop.Name] = null;
-
-						// if(prop.GetValue(n) is PpNodeOutput {}
-						// jsonNode[prop.Name] = prop.GetValue(n);
 					}
 				}
 			}
@@ -223,139 +195,5 @@ public static class PpNodeSerializer
 		}
 
 		return graph;
-	}
-}
-
-public class Vector2JsonConverter : JsonConverter<Vector2>
-{
-	public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		var str = reader.GetString();
-		var spl = str.Split(',');
-		var x = float.Parse(spl[0]);
-		var y = float.Parse(spl[1]);
-
-		return new(x, y);
-	}
-
-	public override void Write(Utf8JsonWriter writer, Vector2 value, JsonSerializerOptions options)
-	{
-		writer.WriteStringValue($"{(int)value.X},{(int)value.Y}");
-	}
-}
-
-public class PpJsonPortJsonConverter : JsonConverter<PpJsonPort>
-{
-	public override PpJsonPort? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		var str = reader.GetString();
-		var spl = str.Split(':');
-		var nodeId = spl[0];
-		var portName = spl[1];
-
-		return new PpJsonPort(nodeId, portName);
-	}
-
-	public override void Write(Utf8JsonWriter writer, PpJsonPort value, JsonSerializerOptions options)
-	{
-		writer.WriteStringValue($"{value.Node}:{value.Port}");
-	}
-}
-
-public class PpJsonParamJsonConverter : JsonConverter<PpJsonParam>
-{
-	public override PpJsonParam? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		var str = reader.GetString();
-		var spl = str.Split(':', 2);
-		var type = spl[0];
-		var val = spl[1];
-
-		switch(type.ToLowerInvariant())
-		{
-			case "int":
-				return new PpJsonParam() { IntValue = int.Parse(val) };
-			case "str":
-				return new PpJsonParam() { StrValue = val };
-			default:
-				throw new InvalidOperationException($"Invalid param type '{type}'.");
-		}
-	}
-
-	public override void Write(Utf8JsonWriter writer, PpJsonParam value, JsonSerializerOptions options)
-	{
-		if (value.IntValue != null)
-		{
-			writer.WriteStringValue($"int:{value.IntValue}");
-		}
-
-		if (value.StrValue != null)
-		{
-			writer.WriteStringValue($"str:{value.StrValue}");
-		}
-	}
-}
-
-public class PpJsonNodeIdJsonConverter : JsonConverter<PpJsonNodeId>
-{
-	public override PpJsonNodeId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		var str = reader.GetString();
-		var spl = str.Split(':', 3);
-		var id = spl[0];
-		var type = spl[1];
-		var name = spl[2];
-
-		return new(id, type, name);
-	}
-
-	public override void Write(Utf8JsonWriter writer, PpJsonNodeId value, JsonSerializerOptions options)
-	{
-		writer.WriteStringValue($"{value.Id}:{value.Type}:{value.Name}");
-	}
-}
-
-public class PpNodeYamlTypeConverter : IYamlTypeConverter
-{
-	public bool Accepts(Type type) => type.IsAssignableTo(typeof(PpNode));
-
-	public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
-	{
-		// parser.
-		return null;
-	}
-
-	public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
-	{
-		var node = (PpNode)value;
-
-		emitter.Emit(new MappingStart());
-		emitter.Emit(new Scalar("id"));
-		emitter.Emit(new Scalar(node.NodeId));
-		emitter.Emit(new MappingEnd());
-
-		emitter.Emit(new Scalar("params"));
-		// serializer(node.NodeParams);
-
-	}
-}
-
-public class PpNodeParamYamlTypeConverter : IYamlTypeConverter
-{
-	public bool Accepts(Type type) => type.IsAssignableTo(typeof(PpNodeParam));
-
-	public object? ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
-	{
-		return null;
-	}
-
-	public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
-	{
-		var port = (PpNodeParam)value;
-
-		emitter.Emit(new MappingStart());
-		emitter.Emit(new Scalar(port.Name));
-		emitter.Emit(new Scalar(port.ValueAsString));
-		emitter.Emit(new MappingEnd());
 	}
 }
