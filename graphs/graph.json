@@ -1,0 +1,21 @@
+[
+	{
+		"id": "x6mRWgU4J:PpListFilesNode:Node 2",
+		"pos": "50,200",
+		"params": {
+			"InPath": "/home/marco/Downloads",
+			"InPattern": "*.txt"
+		}
+	},
+	{
+		"id": "PchUJ05HWE02:PpReadFilesNode:Node 3",
+		"pos": "400,200",
+		"params": {
+			"InAttr": "path",
+			"MaxFileSize": "12345"
+		},
+		"ports": {
+			"InFiles": "x6mRWgU4J:OutFiles"
+		}
+	}
+]

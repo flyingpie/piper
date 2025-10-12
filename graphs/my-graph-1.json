@@ -1,0 +1,40 @@
+[
+	{
+		"id": "x6mRWgU4J:PpListFilesNode:Node 2",
+		"pos": "283,48",
+		"params": {
+			"InPath": "/home/marco/Downloads",
+			"InPattern": "*.txt"
+		}
+	},
+	{
+		"id": "PchUJ05HWE02:PpReadFilesNode:Node 3",
+		"pos": "654,84",
+		"params": {
+			"InAttr": "path",
+			"MaxFileSize": "12345"
+		},
+		"ports": {
+			"InFiles": "x6mRWgU4J:OutFiles"
+		}
+	},
+	{
+		"id": "t8BQwoUD:PpListFilesNode:Node 3",
+		"pos": "1077,227",
+		"params": {
+			"InPath": "/home/marco/workspace/flyingpie",
+			"InPattern": "*.cs"
+		}
+	},
+	{
+		"id": "dvy3ALd8T7wbv:PpReadFilesNode:Read Files 02",
+		"pos": "1406,250",
+		"params": {
+			"InAttr": "path",
+			"MaxFileSize": "2000000"
+		},
+		"ports": {
+			"InFiles": "t8BQwoUD:OutFiles"
+		}
+	}
+]

@@ -5,13 +5,16 @@ using static Piper.Core.Data.PpPortDirection;
 
 namespace Piper.Core.Nodes;
 
-public class PpListFilesNode : PpNodeBase
+public class PpListFilesNode : PpNode
 {
 	private readonly PpTable _files = new("listfiles");
 
 	public PpListFilesNode()
 	{
-		OutFiles = new(this, nameof(OutFiles)) { Table = () => _files, };
+		OutFiles = new(this, nameof(OutFiles))
+		{
+			Table = () => _files,
+		};
 	}
 
 	public override string NodeType => "List Files";
@@ -29,13 +32,13 @@ public class PpListFilesNode : PpNodeBase
 	{
 		if (string.IsNullOrWhiteSpace(InPath))
 		{
-			LogWarning($"Missing value for param '{nameof(InPath)}'.");
+			Logs.Warning($"Missing value for param '{nameof(InPath)}'.");
 			return;
 		}
 
 		if (string.IsNullOrWhiteSpace(InPattern))
 		{
-			LogWarning($"Missing value for param '{nameof(InPattern)}'.");
+			Logs.Warning($"Missing value for param '{nameof(InPattern)}'.");
 			return;
 		}
 

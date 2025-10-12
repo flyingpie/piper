@@ -5,7 +5,7 @@ using static Piper.Core.Data.PpPortDirection;
 
 namespace Piper.Core.Nodes;
 
-public class PpReadFilesNode : PpNodeBase
+public class PpReadFilesNode : PpNode
 {
 	private readonly PpTable _outLines = new("readlines");
 
@@ -33,13 +33,13 @@ public class PpReadFilesNode : PpNodeBase
 	{
 		if (!InFiles.IsConnected)
 		{
-			LogWarning($"Port '{InFiles}' not connected");
+			Logs.Warning($"Port '{InFiles}' not connected");
 			return;
 		}
 
 		if (string.IsNullOrWhiteSpace(InAttr))
 		{
-			LogWarning($"Param '{InAttr}' not set");
+			Logs.Warning($"Param '{InAttr}' not set");
 			return;
 		}
 
@@ -63,7 +63,7 @@ public class PpReadFilesNode : PpNodeBase
 
 			if (string.IsNullOrWhiteSpace(field.Value?.ValueAsString))
 			{
-				LogWarning($"Record does not have an attribute with name '{InAttr}'");
+				Logs.Warning($"Record does not have an attribute with name '{InAttr}'");
 				await _outLines.AddAsync(CreateRecord(file, -1, string.Empty));
 				continue;
 			}
@@ -72,17 +72,17 @@ public class PpReadFilesNode : PpNodeBase
 			var path = field.Value.ValueAsString;
 			if (!File.Exists(path))
 			{
-				LogWarning($"File at path '{path}' does not exist");
+				Logs.Warning($"File at path '{path}' does not exist");
 				await _outLines.AddAsync(CreateRecord(file, -1, string.Empty));
 				continue;
 			}
 
-			Log($"({i++}/{9999}) Reading file at path {path}");
+			Logs.Info($"({i++}/{9999}) Reading file at path {path}");
 
 			var fileInfo = new FileInfo(path);
 			if (fileInfo.Length > MaxFileSize)
 			{
-				LogWarning($"File at path '{path}' exceeds max size, skipping. Increase '{MaxFileSize}' to include larger files.");
+				Logs.Warning($"File at path '{path}' exceeds max size, skipping. Increase '{MaxFileSize}' to include larger files.");
 				continue;
 			}
 
