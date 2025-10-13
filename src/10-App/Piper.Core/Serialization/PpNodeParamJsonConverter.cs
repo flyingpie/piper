@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Piper.Core.Serialization;
 
-public class PpJsonParamJsonConverter : JsonConverter<PpJsonParam>
+public class PpNodeParamJsonConverter : JsonConverter<PpJsonParam>
 {
 	public override PpJsonParam? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
