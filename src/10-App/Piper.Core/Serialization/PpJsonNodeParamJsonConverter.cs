@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Piper.Core.Serialization;
 
-public class PpNodeParamJsonConverter : JsonConverter<PpJsonParam>
+public class PpJsonNodeParamJsonConverter : JsonConverter<PpJsonNodeParam>
 {
-	public override PpJsonParam? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	public override PpJsonNodeParam? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var str = reader.GetString();
 		var spl = str.Split(':', 2);
@@ -15,15 +15,15 @@ public class PpNodeParamJsonConverter : JsonConverter<PpJsonParam>
 		switch (type.ToLowerInvariant())
 		{
 			case "int":
-				return new PpJsonParam() { IntValue = int.Parse(val) };
+				return new PpJsonNodeParam() { IntValue = int.Parse(val) };
 			case "str":
-				return new PpJsonParam() { StrValue = val };
+				return new PpJsonNodeParam() { StrValue = val };
 			default:
 				throw new InvalidOperationException($"Invalid param type '{type}'.");
 		}
 	}
 
-	public override void Write(Utf8JsonWriter writer, PpJsonParam value, JsonSerializerOptions options)
+	public override void Write(Utf8JsonWriter writer, PpJsonNodeParam value, JsonSerializerOptions options)
 	{
 		if (value.IntValue != null)
 		{

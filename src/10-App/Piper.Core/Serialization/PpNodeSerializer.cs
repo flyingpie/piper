@@ -15,7 +15,7 @@ public static class PpNodeSerializer
 		Converters =
 		{
 			new PpJsonNodeIdJsonConverter(),
-			new PpNodeParamJsonConverter(),
+			new PpJsonNodeParamJsonConverter(),
 			new PpJsonPortJsonConverter(),
 			new Vector2JsonConverter(),
 		},
