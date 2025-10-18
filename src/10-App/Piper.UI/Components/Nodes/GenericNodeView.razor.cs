@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components;
 using Piper.Core;
-using Piper.Core.Nodes;
 using Piper.UI.Services;
 
 namespace Piper.UI.Components.Nodes;

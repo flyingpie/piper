@@ -7,6 +7,7 @@ using Piper.Core;
 using Piper.Core.Nodes;
 using Piper.Core.Serialization;
 using Piper.UI.Components.Nodes;
+using System.IO;
 
 namespace Piper.UI;
 
@@ -20,8 +21,8 @@ public static class BlazorDiagramConfiguration
 		// var jsonOut = SerializeGraphJson(graph1);
 		// File.WriteAllText(path, jsonOut);
 
-		var desJsonStr = File.ReadAllText(path);
-		var graph = DeserializeGraph(desJsonStr);
+		// var desJsonStr = File.ReadAllText(path);
+		// var graph = PpNodeSerializer.DeserializeGraph(desJsonStr);
 
 		return services
 			.AddSingleton(p => CreateDiagram());

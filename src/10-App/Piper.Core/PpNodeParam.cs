@@ -2,39 +2,39 @@ namespace Piper.Core;
 
 public class PpNodeParam : IPpNodeProperty
 {
-	private object? _value;
-
 	public string Name { get; set; }
 
 	public object? Value
 	{
-		get => _value;
+		get => Getter();
 		set
 		{
-			_value = value;
-			OnSet?.Invoke(this);
+			Value = value;
+			Setter?.Invoke(this);
 		}
 	}
 
-	public Action<PpNodeParam> OnSet { get; set; }
+	public Func<object?> Getter { get; set; }
+
+	public Action<PpNodeParam> Setter { get; set; }
 
 	public int ValueAsInt
 	{
-		get => _value as int? ?? 0;
+		get => Value as int? ?? 0;
 		set
 		{
-			_value = value;
-			OnSet?.Invoke(this);
+			Value = value;
+			Setter?.Invoke(this);
 		}
 	}
 
 	public string ValueAsString
 	{
-		get => _value as string ?? string.Empty;
+		get => Value as string ?? string.Empty;
 		set
 		{
-			_value = value;
-			OnSet?.Invoke(this);
+			Value = value;
+			Setter?.Invoke(this);
 		}
 	}
 }

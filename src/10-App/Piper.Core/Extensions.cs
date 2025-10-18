@@ -73,11 +73,9 @@ public static class Extensions
 				yield return new PpNodeParam()
 				{
 					Name = prop.Name,
-					Value = prop.GetValue(node),
-					OnSet = v =>
-					{
-						prop.SetValue(node, v.Value);
-					},
+					// Value = prop.GetValue(node),
+					Getter = () => prop.GetValue(node),
+					Setter = v => prop.SetValue(node, v.Value),
 				};
 				continue;
 			}
@@ -86,21 +84,32 @@ public static class Extensions
 			var inAttr = prop.GetCustomAttribute<PpPortAttribute>();
 			if (inAttr != null)
 			{
-				if (prop.GetValue(node) is PpNodeInput nodeInput)
+				if (prop.PropertyType == typeof(PpNodeInput))
 				{
 					var pp = new PpNodePort(node, PortAlignment.Left);
 					pp.PortAttribute = inAttr;
-					pp.GetNodeInput = () => nodeInput;
+					pp.GetNodeInput = () => (PpNodeInput)prop.GetValue(node)!;
 					yield return pp;
 				}
-
-				if (prop.GetValue(node) is PpNodeOutput nodeOutput)
+				else if (prop.PropertyType == typeof(PpNodeOutput))
 				{
 					var pp = new PpNodePort(node, PortAlignment.Right);
 					pp.PortAttribute = inAttr;
-					pp.GetNodeOutput = () => nodeOutput;
+					pp.GetNodeOutput = () => (PpNodeOutput)prop.GetValue(node)!;
 					yield return pp;
 				}
+				else
+				{
+					Console.WriteLine($"No node port type found port '{node.Name}.{prop.Name}'");
+				}
+
+				// if (prop.GetValue(node) is PpNodeInput nodeInput)
+				// {
+				// }
+				//
+				// if (prop.GetValue(node) is PpNodeOutput nodeOutput)
+				// {
+				// }
 			}
 		}
 	}
