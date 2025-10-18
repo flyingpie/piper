@@ -89,6 +89,7 @@ public static class Extensions
 					var pp = new PpNodePort(node, PortAlignment.Left);
 					pp.PortAttribute = inAttr;
 					pp.GetNodeInput = () => (PpNodeInput)prop.GetValue(node)!;
+					node.AddPort(pp);
 					yield return pp;
 				}
 				else if (prop.PropertyType == typeof(PpNodeOutput))
@@ -96,6 +97,7 @@ public static class Extensions
 					var pp = new PpNodePort(node, PortAlignment.Right);
 					pp.PortAttribute = inAttr;
 					pp.GetNodeOutput = () => (PpNodeOutput)prop.GetValue(node)!;
+					node.AddPort(pp);
 					yield return pp;
 				}
 				else

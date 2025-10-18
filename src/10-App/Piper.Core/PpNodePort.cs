@@ -14,17 +14,18 @@ public class PpNodePort : PortModel, IPpNodeProperty
 		Size? size = null)
 		: base(parent, alignment, position, size)
 	{
+		Console.WriteLine($"PORT:{parent.Id}");
 	}
 
-	public PpNodePort(
-		string id,
-		NodeModel parent,
-		PortAlignment alignment = PortAlignment.Bottom,
-		Point? position = null,
-		Size? size = null)
-		: base(id, parent, alignment, position, size)
-	{
-	}
+	// public PpNodePort(
+	// 	string id,
+	// 	NodeModel parent,
+	// 	PortAlignment alignment = PortAlignment.Bottom,
+	// 	Point? position = null,
+	// 	Size? size = null)
+	// 	: base(id, parent, alignment, position, size)
+	// {
+	// }
 
 	public string Name => PortAttribute.Name;
 
@@ -34,8 +35,11 @@ public class PpNodePort : PortModel, IPpNodeProperty
 
 	public Func<PpNodeOutput>? GetNodeOutput { get; set; }
 
+
 	public override void Refresh()
 	{
+		Console.WriteLine($"Position: {Position}");
+
 		base.Refresh();
 
 		if (Links.FirstOrDefault()?.Source?.Model is not PpNodePort src)

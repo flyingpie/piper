@@ -8,9 +8,9 @@
 		<PackageReference Include="BlazorMonaco"/>
 		<PackageReference Include="Newtonsoft.Json"/>
 		<PackageReference Include="Radzen.Blazor"/>
-		<PackageReference Include="Z.Blazor.Diagrams"/>
-		<PackageReference Include="Z.Blazor.Diagrams.Algorithms"/>
-		<PackageReference Include="Z.Blazor.Diagrams.Core"/>
+<!--		<PackageReference Include="Z.Blazor.Diagrams"/>-->
+<!--		<PackageReference Include="Z.Blazor.Diagrams.Algorithms"/>-->
+<!--		<PackageReference Include="Z.Blazor.Diagrams.Core"/>-->
 	</ItemGroup>
 
 	<ItemGroup>
