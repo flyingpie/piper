@@ -16,18 +16,6 @@ public class PpNodePort : PortModel, IPpNodeProperty
 		Size? size = null)
 		: base(parent, alignment, position, size)
 	{
-		foreach (var l in this.Links)
-		{
-			l.SourceChanged += (a, b, c) =>
-			{
-				var dbg = 2;
-			};
-
-			l.TargetChanged += (a, b, c) =>
-			{
-				var dbg = 2;
-			};
-		}
 	}
 
 	public void OnChange(Action<PpNodePort> onChange)
