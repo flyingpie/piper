@@ -7,6 +7,8 @@ public class PpTable(string tableName)
 {
 	private Action<PpTable>? _onChange;
 
+	public long Count { get; set; }
+
 	public string TableName { get; } = Guard.Against.NullOrWhiteSpace(tableName);
 
 	public List<PpColumn> Columns { get; set; } = [];
@@ -37,8 +39,18 @@ public class PpTable(string tableName)
 		var db = PpDb.Instance;
 
 		await db.InsertDataAsync(TableName, records);
+	}
+
+	public async Task DoneAsync()
+	{
+		Count = await CountAsync();
 
 		_onChange?.Invoke(this);
+	}
+
+	public async Task<long> CountAsync()
+	{
+		return await PpDb.Instance.CountAsync($"select count(1) from {TableName}");
 	}
 
 	public IAsyncEnumerable<PpRecord> QueryAllAsync()

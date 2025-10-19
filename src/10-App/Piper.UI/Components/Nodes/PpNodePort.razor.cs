@@ -11,6 +11,11 @@ public partial class PpNodePort : ComponentBase
 
 	private bool IsPortSelected => SelectedThingyService.Instance.IsNodePortSelected(NodePort);
 
+	protected override void OnParametersSet()
+	{
+		NodePort.OnChange(_ => InvokeAsync(StateHasChanged));
+	}
+
 	public void OnClickShowData()
 	{
 		SelectedThingyService.Instance.SelectPort(NodePort);

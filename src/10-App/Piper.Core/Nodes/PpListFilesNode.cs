@@ -76,5 +76,6 @@ public class PpListFilesNode : PpNode
 			.ToList();
 
 		await _files.AddAsync(records);
+		await _files.DoneAsync();
 	}
 }

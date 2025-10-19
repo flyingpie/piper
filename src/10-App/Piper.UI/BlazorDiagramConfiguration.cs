@@ -1,4 +1,7 @@
 using Blazor.Diagrams;
+using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.PathGenerators;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
@@ -70,6 +73,7 @@ public static class BlazorDiagramConfiguration
 				DefaultRouter = new NormalRouter(),
 				EnableSnapping = true,
 				SnappingRadius = 15,
+				// Factory =
 			},
 			Zoom = { Enabled = true, },
 		};
@@ -83,3 +87,30 @@ public static class BlazorDiagramConfiguration
 		return diagram;
 	}
 }
+
+// public class PpLink : LinkModel
+// {
+// 	public PpLink(Anchor source, Anchor target) : base(source, target)
+// 	{
+// 	}
+//
+// 	public PpLink(string id, Anchor source, Anchor target) : base(id, source, target)
+// 	{
+// 	}
+//
+// 	public PpLink(PortModel sourcePort, PortModel targetPort) : base(sourcePort, targetPort)
+// 	{
+// 	}
+//
+// 	public PpLink(NodeModel sourceNode, NodeModel targetNode) : base(sourceNode, targetNode)
+// 	{
+// 	}
+//
+// 	public PpLink(string id, PortModel sourcePort, PortModel targetPort) : base(id, sourcePort, targetPort)
+// 	{
+// 	}
+//
+// 	public PpLink(string id, NodeModel sourceNode, NodeModel targetNode) : base(id, sourceNode, targetNode)
+// 	{
+// 	}
+// }

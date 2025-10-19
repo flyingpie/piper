@@ -10,7 +10,7 @@
 	void ShowContextMenuWithContent(MouseEventArgs args) => ContextMenuService.Open(
 		args,
 		ds =>
-			@<RadzenMenu Click="a => OnMenuItemClick(a)">
+			@<RadzenMenu Click="a => OnMenuItemClick(args, a)">
 				<RadzenMenuItem Text="List Files" Value="@("PP_NODE_LIST_FILES")"></RadzenMenuItem>
 				<RadzenMenuItem Text="Read Files" Value="@("PP_NODE_READ_FILES")"></RadzenMenuItem>
 				<RadzenMenuItem Text="Item2" Value="2"></RadzenMenuItem>

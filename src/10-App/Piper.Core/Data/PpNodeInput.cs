@@ -1,4 +1,3 @@
-using Piper.Core.Nodes;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Piper.Core.Data;
@@ -13,6 +12,4 @@ public class PpNodeInput(PpNode node, string name)
 	public bool IsConnected => Output != null;
 
 	public PpNodeOutput? Output { get; set; }
-
-	// public Func<PpTable>? Table { get; set; }
 }

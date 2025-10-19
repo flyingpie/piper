@@ -12,6 +12,11 @@ public abstract class PpNode : NodeModel
 		NodeProps = this.GetNodeProps().ToList();
 		NodeParams = NodeProps.OfType<PpNodeParam>().ToList();
 		NodePorts = NodeProps.OfType<PpNodePort>().ToList();
+
+		// foreach (var link in Links)
+		// {
+		//
+		// }
 	}
 
 	public string NodeId { get; set; }
@@ -43,7 +48,11 @@ public abstract class PpNode : NodeModel
 
 		try
 		{
-			await OnExecuteAsync();
+			await Task.Run(
+				async () =>
+				{
+					await OnExecuteAsync();
+				});
 		}
 		catch (Exception ex)
 		{
@@ -56,5 +65,4 @@ public abstract class PpNode : NodeModel
 	}
 
 	protected abstract Task OnExecuteAsync();
-
 }

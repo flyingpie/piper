@@ -4,30 +4,41 @@
 <div class="pp-field">
 	<PortRenderer @key="NodePort" Port="NodePort"/>
 
-	<RadzenStack
-		Orientation="Orientation.Horizontal"
-		JustifyContent="JustifyContent.SpaceBetween"
-		AlignItems="AlignItems.Center"
-		Gap="1em"
-	>
-		<RadzenButton
-			ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"
-			Click="() => OnClickShowData()"
-			Icon="list"
-			Size="ButtonSize.ExtraSmall"
-			Visible="@(NodePort.Alignment == PortAlignment.Left)"
-		/>
-		<RadzenLabel Visible="@(NodePort.Alignment == PortAlignment.Right)" />
+	@if (NodePort.Alignment == PortAlignment.Left)
+	{
+		<RadzenStack
+			Orientation="Orientation.Horizontal"
+			JustifyContent="JustifyContent.Left"
+			AlignItems="AlignItems.Center"
+			Gap="1em"
+		>
+			<RadzenButton
+				ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"
+				Click="() => OnClickShowData()"
+				Icon="list"
+				Size="ButtonSize.ExtraSmall"
+			/>
 
-		<RadzenLabel Text="@NodePort.Name" />
+			<RadzenLabel Text="@($"{NodePort.GetNodeInput?.Invoke()?.Output?.Table?.Invoke()?.Count ?? 0} {NodePort.Name}")" />
+		</RadzenStack>
+	}
 
-		<RadzenButton
-			ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"
-			Click="() => OnClickShowData()"
-			Icon="list"
-			Size="ButtonSize.ExtraSmall"
-			Visible="@(NodePort.Alignment == PortAlignment.Right)"
-		/>
-		<RadzenLabel Visible="@(NodePort.Alignment == PortAlignment.Left)" />
-	</RadzenStack>
+	@if (NodePort.Alignment == PortAlignment.Right)
+	{
+		<RadzenStack
+			Orientation="Orientation.Horizontal"
+			JustifyContent="JustifyContent.Right"
+			AlignItems="AlignItems.Center"
+			Gap="1em"
+		>
+			<RadzenLabel Text="@($"{NodePort.GetNodeOutput?.Invoke()?.Table?.Invoke()?.Count ?? 0} {NodePort.Name}")" />
+
+			<RadzenButton
+				ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"
+				Click="() => OnClickShowData()"
+				Icon="list"
+				Size="ButtonSize.ExtraSmall"
+			/>
+		</RadzenStack>
+	}
 </div>

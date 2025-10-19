@@ -1,5 +1,6 @@
 using Blazor.Diagrams;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Piper.Core;
 using Piper.Core.Nodes;
 using Piper.Core.Serialization;
@@ -35,7 +36,7 @@ public partial class PpDiagram : ComponentBase
 			.ToList();
 	}
 
-	private void OnMenuItemClick(MenuItemEventArgs args)
+	private void OnMenuItemClick(MouseEventArgs a1, MenuItemEventArgs args)
 	{
 		Console.WriteLine($"VALUE:{args.Value}");
 
@@ -48,7 +49,7 @@ public partial class PpDiagram : ComponentBase
 						Name = $"List Files {++_idx:00}",
 						InPath = "/home/marco/Downloads",
 						InPattern = "*.txt",
-						Position = new BD.Point(args.ClientX, args.ClientY),
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
 					});
 				break;
 
@@ -58,7 +59,7 @@ public partial class PpDiagram : ComponentBase
 					{
 						Name = $"Read Files {++_idx:00}",
 						InAttr = "path",
-						Position = new BD.Point(args.ClientX, args.ClientY),
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
 					});
 				// var node = Diagram.Nodes.Add(
 				// 	new PpReadFilesNode()

@@ -90,6 +90,8 @@ public class PpReadFilesNode : PpNode
 
 			await _outLines.AddAsync(lines.Select((line, idx) => CreateRecord(file, idx, line)));
 		}
+
+		await _outLines.DoneAsync();
 	}
 
 	public PpRecord CreateRecord(PpRecord file, int idx, string line) =>

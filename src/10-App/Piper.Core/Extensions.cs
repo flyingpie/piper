@@ -75,7 +75,7 @@ public static class Extensions
 					Name = prop.Name,
 					// Value = prop.GetValue(node),
 					Getter = () => prop.GetValue(node),
-					Setter = v => prop.SetValue(node, v.Value),
+					Setter = v => prop.SetValue(node, v),
 				};
 				continue;
 			}

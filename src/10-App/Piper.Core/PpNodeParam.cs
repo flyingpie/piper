@@ -4,19 +4,21 @@ public class PpNodeParam : IPpNodeProperty
 {
 	public string Name { get; set; }
 
+	// private object? _value;
+
 	public object? Value
 	{
 		get => Getter();
 		set
 		{
-			Value = value;
-			Setter?.Invoke(this);
+			// _value = value;
+			Setter?.Invoke(value);
 		}
 	}
 
 	public Func<object?> Getter { get; set; }
 
-	public Action<PpNodeParam> Setter { get; set; }
+	public Action<object?> Setter { get; set; }
 
 	public int ValueAsInt
 	{
@@ -24,7 +26,7 @@ public class PpNodeParam : IPpNodeProperty
 		set
 		{
 			Value = value;
-			Setter?.Invoke(this);
+			// Setter?.Invoke(this);
 		}
 	}
 
@@ -34,7 +36,7 @@ public class PpNodeParam : IPpNodeProperty
 		set
 		{
 			Value = value;
-			Setter?.Invoke(this);
+			// Setter?.Invoke(this);
 		}
 	}
 }
