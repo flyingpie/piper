@@ -20,9 +20,6 @@
 		<PackageReference Include="shortid"/>
 		<PackageReference Include="System.Linq.AsyncEnumerable"/>
 		<PackageReference Include="YamlDotNet"/>
-<!--		<PackageReference Include="Z.Blazor.Diagrams"/>-->
-<!--		<PackageReference Include="Z.Blazor.Diagrams.Algorithms"/>-->
-<!--		<PackageReference Include="Z.Blazor.Diagrams.Core"/>-->
 	</ItemGroup>
 
 	<ItemGroup>
