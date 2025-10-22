@@ -81,6 +81,7 @@ public static class BlazorDiagramConfiguration
 		var diagram = new BlazorDiagram(options);
 		diagram.RegisterComponent<PpListFilesNode, GenericNodeView>();
 		diagram.RegisterComponent<PpReadFilesNode, GenericNodeView>();
+		diagram.RegisterComponent<PpDuckNode, GenericNodeView>();
 
 		// diagram.LoadGraph(graph);
 

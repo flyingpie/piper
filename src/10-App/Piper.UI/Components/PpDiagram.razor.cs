@@ -69,6 +69,17 @@ public partial class PpDiagram : ComponentBase
 				// 	});
 				break;
 
+			case "PP_NODE_QUERY":
+				Diagram.Nodes.Add(
+					new PpDuckNode()
+					{
+						Name = $"List Files {++_idx:00}",
+						// InPath = "/home/marco/Downloads",
+						// InPattern = "*.txt",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					});
+				break;
+
 			default:
 				Console.WriteLine($"Unknown context value '{args.Value}'");
 				break;
