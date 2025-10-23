@@ -44,11 +44,12 @@ public class PpListFilesNode : PpNode
 
 		_files.Columns =
 		[
-			new("uuid", PpString),
-			new("path", PpString),
-			new("dir", PpString),
-			new("file", PpString),
-			new("ext", PpString),
+			new("rec__uuid", PpString),
+			new("file__path", PpString),
+			// new("file.dir", PpString),
+			// new("file.name", PpString),
+			// new("file.name_without_ext", PpString),
+			// new("file.ext", PpString),
 		];
 
 		await _files.ClearAsync();
@@ -66,11 +67,11 @@ public class PpListFilesNode : PpNode
 			{
 				Fields =
 				{
-					{ "uuid", new(Guid.CreateVersion7()) },
-					{ "path", new(d) },
-					{ "dir", new(Path.GetDirectoryName((string?)d)) },
-					{ "file", new(Path.GetFileName((string?)d)) },
-					{ "ext", new(Path.GetExtension((string?)d)) },
+					{ "rec__uuid", new(Guid.CreateVersion7()) },
+					{ "file__path", new(d) },
+					// { "dir", new(Path.GetDirectoryName((string?)d)) },
+					// { "file", new(Path.GetFileName((string?)d)) },
+					// { "ext", new(Path.GetExtension((string?)d)) },
 				},
 			})
 			.ToList();

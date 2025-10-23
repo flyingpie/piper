@@ -1,41 +1,18 @@
 using Blazor.Diagrams.Core.Geometry;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
+using Piper.Core.Utils;
 using System.Globalization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 
 namespace Piper.Core.Serialization;
 
 public static class PpNodeSerializer
 {
-	private static JsonSerializerOptions jsonOpts = new()
-	{
-		Converters =
-		{
-			new PpJsonNodeIdJsonConverter(),
-			new PpJsonNodeParamJsonConverter(),
-			new PpJsonPortJsonConverter(),
-			new Vector2JsonConverter(),
-		},
-		IncludeFields = true,
-		PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower,
-		ReferenceHandler = ReferenceHandler.IgnoreCycles,
-		TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
-		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-
-		IndentCharacter = '\t',
-		IndentSize = 1,
-		WriteIndented = true,
-	};
-
 	public static string SerializeGraphJson(PpGraph graph)
 	{
 		var jsonGraph = SerializeGraph(graph);
-		var json = JsonSerializer.Serialize(jsonGraph, jsonOpts);
 
-		return json;
+		return PpJson.SerializeToString(jsonGraph);
 	}
 
 	public static List<PpJsonNode> SerializeGraph(PpGraph graph)
@@ -93,7 +70,7 @@ public static class PpNodeSerializer
 
 	public static PpGraph DeserializeGraph(string json)
 	{
-		var nodes = JsonSerializer.Deserialize<List<PpJsonNode>>(json, jsonOpts);
+		var nodes = PpJson.DeserializeRequired<List<PpJsonNode>>(json);
 
 		return DeserializeGraph(nodes);
 	}

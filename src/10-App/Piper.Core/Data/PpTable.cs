@@ -3,15 +3,20 @@ using System.Threading;
 
 namespace Piper.Core.Data;
 
-public class PpTable(string tableName)
+public class PpTable(string tableName, ICollection<PpColumn> columns)
 {
 	private Action<PpTable>? _onChange;
+
+	public PpTable(string tableName)
+		: this(tableName, [])
+	{
+	}
 
 	public long Count { get; set; }
 
 	public string TableName { get; } = Guard.Against.NullOrWhiteSpace(tableName);
 
-	public List<PpColumn> Columns { get; set; } = [];
+	public List<PpColumn> Columns { get; set; } = Guard.Against.Null(columns).ToList();
 
 	public void OnChange(Action<PpTable> onChange)
 	{
