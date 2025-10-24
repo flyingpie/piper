@@ -127,8 +127,8 @@ public class ScriptingTest
 		var res = await PpDb.Instance.V_QueryAsync(table, "select * from $table").ToListAsync();
 
 		// Meta
-		var table2 = new PpTable("my_table_1");
-		await PpDb.Instance.V_InitTableAsync(table2);
+		// var table2 = new PpTable("my_table_1");
+		// await PpDb.Instance.V_InitTableAsync(table2);
 
 		var json = PpJson.SerializeToString(res);
 

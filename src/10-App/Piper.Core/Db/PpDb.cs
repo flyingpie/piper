@@ -1,9 +1,6 @@
 using DuckDB.NET.Data;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Piper.Core.Data;
-using System.Data;
-using Dapper;
 using DuckDB.NET.Native;
+using Piper.Core.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Piper.Core.Db;
@@ -94,39 +91,39 @@ public class PpDb : IPpDb
 		public DuckDBType column_type { get; set; }
 	}
 
-	public async Task V_InitTableAsync(PpTable table)
-	{
-		await using var db = await CreateConnectionAsync();
-
-		// Dapper.SqlMapper.SetTypeMap
-
-		IEnumerable<DuckDbTableDescription> res = null!;
-
-		try
-		{
-			res = await db.QueryAsync<DuckDbTableDescription>($"describe {table.TableName}");
-		}
-		catch (DuckDBException ex) when (ex.Message?.Contains("does not exist", StringComparison.OrdinalIgnoreCase) ?? false)
-		{
-			// return null;
-		}
-
-		// // var res = await db.GetSchemaAsync(name);
-		// var cmd = db.CreateCommand();
-		// cmd.CommandText = $"DESCRIBE {name}";
-		// var reader = await cmd.ExecuteReaderAsync();
-
-		// var table = new PpTable(name);
-
-		foreach (var col in res)
-		{
-			table.Columns.Add(new(col.column_name, ToPpDataType(col.column_type)));
-		}
-
-		var dbg = 2;
-
-		// return table;
-	}
+	// public async Task V_InitTableAsync(PpTable table)
+	// {
+	// 	await using var db = await CreateConnectionAsync();
+	//
+	// 	// Dapper.SqlMapper.SetTypeMap
+	//
+	// 	IEnumerable<DuckDbTableDescription> res = null!;
+	//
+	// 	try
+	// 	{
+	// 		res = await db.QueryAsync<DuckDbTableDescription>($"describe {table.TableName}");
+	// 	}
+	// 	catch (DuckDBException ex) when (ex.Message?.Contains("does not exist", StringComparison.OrdinalIgnoreCase) ?? false)
+	// 	{
+	// 		// return null;
+	// 	}
+	//
+	// 	// // var res = await db.GetSchemaAsync(name);
+	// 	// var cmd = db.CreateCommand();
+	// 	// cmd.CommandText = $"DESCRIBE {name}";
+	// 	// var reader = await cmd.ExecuteReaderAsync();
+	//
+	// 	// var table = new PpTable(name);
+	//
+	// 	foreach (var col in res)
+	// 	{
+	// 		table.Columns.Add(new(col.column_name, ToPpDataType(col.column_type)));
+	// 	}
+	//
+	// 	var dbg = 2;
+	//
+	// 	// return table;
+	// }
 
 	public async Task V_InsertDataAsync(PpTable table, IEnumerable<PpRecord> records)
 	{
