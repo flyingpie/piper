@@ -16,8 +16,11 @@ public enum PpDataType
 	[JsonStringEnumMemberName("guid")]
 	PpGuid,
 
-	[JsonStringEnumMemberName("int")]
-	PpInt,
+	[JsonStringEnumMemberName("i32")]
+	PpInt32,
+
+	[JsonStringEnumMemberName("i64")]
+	PpInt64,
 
 	[JsonStringEnumMemberName("string")]
 	PpString,

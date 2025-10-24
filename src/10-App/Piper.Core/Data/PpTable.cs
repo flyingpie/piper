@@ -25,7 +25,8 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 
 	public async Task ClearAsync(CancellationToken ct = default)
 	{
-		await PpDb.Instance.CreateTableAsync(this);
+		// await PpDb.Instance.CreateTableAsync(this);
+		await PpDb.Instance.V_CreateTableAsync(this);
 
 		_onChange?.Invoke(this);
 	}
@@ -43,7 +44,8 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 
 		var db = PpDb.Instance;
 
-		await db.InsertDataAsync(TableName, records);
+		// await db.InsertDataAsync(TableName, records);
+		await db.V_InsertDataAsync(this, records);
 	}
 
 	public async Task DoneAsync()
@@ -60,11 +62,13 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 
 	public IAsyncEnumerable<PpRecord> QueryAllAsync()
 	{
-		return PpDb.Instance.QueryAsync($"select * from {TableName}");
+		// return PpDb.Instance.QueryAsync($"select * from {TableName}");
+		return PpDb.Instance.V_QueryAsync(this, "select * from $table");
 	}
 
 	public IAsyncEnumerable<PpRecord> QueryAsync(string sql)
 	{
-		return PpDb.Instance.QueryAsync(sql);
+		// return PpDb.Instance.QueryAsync(sql);
+		return PpDb.Instance.V_QueryAsync(this, sql);
 	}
 }

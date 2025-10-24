@@ -1,0 +1,20 @@
+[
+	{
+		"id": "GgRKvMPM:PpListFilesNode:List Files 01",
+		"pos": "373,181",
+		"params": {
+			"InPath": "/home/marco/Downloads",
+			"InPattern": "*"
+		}
+	},
+	{
+		"id": "9yqDeyuw5akb:PpDuckNode:List Files 02",
+		"pos": "842,192",
+		"params": {
+			"Query": "select count(1) as cnt, file__ext from $table group by file__ext order by count(1) desc"
+		},
+		"ports": {
+			"InRecords": "GgRKvMPM:OutFiles"
+		}
+	}
+]

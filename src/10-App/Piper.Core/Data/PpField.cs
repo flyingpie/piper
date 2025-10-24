@@ -49,5 +49,5 @@ public class PpField
 
 	public static implicit operator PpField(string str) => new(str);
 
-	public override string ToString() => Value2?.ToString() ?? "(empty)";
+	public override string ToString() => Value?.ToString() ?? "(empty)";
 }

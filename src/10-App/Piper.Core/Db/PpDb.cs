@@ -72,8 +72,11 @@ public class PpDb : IPpDb
 			case PpDataType.PpGuid:
 				return $"{column.Name} UUID NULL";
 
-			case PpDataType.PpInt:
+			case PpDataType.PpInt32:
 				return $"{column.Name} INTEGER NULL";
+
+			case PpDataType.PpInt64:
+				return $"{column.Name} BIGINT NULL";
 
 			case PpDataType.PpString:
 				return $"{column.Name} TEXT NULL";
@@ -179,6 +182,10 @@ public class PpDb : IPpDb
 							row.AppendValue(asInt);
 							break;
 
+						case long asLong:
+							row.AppendValue(asLong);
+							break;
+
 						case string asString:
 							row.AppendValue(asString);
 							break;
@@ -247,7 +254,8 @@ public class PpDb : IPpDb
 		{ typeof(DateTime),			PpDataType.PpDateTime },
 		{ typeof(float),			PpDataType.PpFloat },
 		{ typeof(Guid),				PpDataType.PpGuid },
-		{ typeof(int),				PpDataType.PpInt },
+		{ typeof(int),				PpDataType.PpInt32 },
+		{ typeof(long),				PpDataType.PpInt64 },
 		{ typeof(string),			PpDataType.PpString },
 	};
 
@@ -257,7 +265,8 @@ public class PpDb : IPpDb
 		{ DuckDBType.Timestamp,		PpDataType.PpDateTime },
 		{ DuckDBType.Float,			PpDataType.PpFloat },
 		{ DuckDBType.Uuid,			PpDataType.PpGuid },
-		{ DuckDBType.Integer,		PpDataType.PpInt },
+		{ DuckDBType.Integer,		PpDataType.PpInt32 },
+		{ DuckDBType.BigInt,		PpDataType.PpInt64 },
 		{ DuckDBType.Varchar,		PpDataType.PpString },
 	};
 

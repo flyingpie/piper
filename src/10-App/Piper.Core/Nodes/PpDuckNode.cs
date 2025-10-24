@@ -36,11 +36,12 @@ public class PpDuckNode : PpNode
 
 		var isCleared = false;
 
+		// await foreach (var rec in inTable.QueryAsync(Query))
 		await foreach (var rec in inTable.QueryAsync(Query))
 		{
 			if (!isCleared)
 			{
-				_outLines.Columns.AddRange(rec.Fields.Select(kv => new PpColumn(kv.Key, PpString)));
+				_outLines.Columns = rec.Fields.Select(kv => new PpColumn(kv.Key, kv.Value.DataType)).ToList();
 
 				await _outLines.ClearAsync();
 

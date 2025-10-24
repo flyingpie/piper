@@ -73,7 +73,7 @@ public class ScriptingTest
 				new("prop0_datetime",		PpDataType.PpDateTime),
 				new("prop0_float",			PpDataType.PpFloat),
 				new("prop0_guid",			PpDataType.PpGuid),
-				new("prop0_int",			PpDataType.PpInt),
+				new("prop0_int",			PpDataType.PpInt32),
 				new("prop0_string",			PpDataType.PpString)
 			]);
 
@@ -127,7 +127,8 @@ public class ScriptingTest
 		var res = await PpDb.Instance.V_QueryAsync(table, "select * from $table").ToListAsync();
 
 		// Meta
-		var table2 = await PpDb.Instance.V_InitTableAsync("my_table_11");
+		var table2 = new PpTable("my_table_1");
+		await PpDb.Instance.V_InitTableAsync(table2);
 
 		var json = PpJson.SerializeToString(res);
 
@@ -135,7 +136,7 @@ public class ScriptingTest
 	}
 
 	[TestMethod]
-	public async Task Test1()
+	public async Task PpListFilesNodeTest()
 	{
 		var node = new PpListFilesNode()
 		{
