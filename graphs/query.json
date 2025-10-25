@@ -1,20 +1,73 @@
 [
 	{
 		"id": "GgRKvMPM:PpListFilesNode:List Files 01",
-		"pos": "373,181",
+		"pos": "361,170",
 		"params": {
 			"InPath": "/home/marco/Downloads",
-			"InPattern": "*"
+			"InPattern": "*",
+			"MaxFiles": "10000"
 		}
 	},
 	{
 		"id": "9yqDeyuw5akb:PpDuckNode:List Files 02",
-		"pos": "842,192",
+		"pos": "776,51",
 		"params": {
-			"Query": "select count(1) as cnt, file__ext from $table group by file__ext order by count(1) desc"
+			"Query": "select file__ext, count(1) cnt from $table group by file__ext order by count(1) desc"
 		},
 		"ports": {
 			"InRecords": "GgRKvMPM:OutFiles"
+		}
+	},
+	{
+		"id": "Jbo7bGym3D:PpDuckNode:List Files 01",
+		"pos": "789,279",
+		"params": {
+			"Query": "select * from $table where file__path ilike \u0027%wtq%\u0027"
+		},
+		"ports": {
+			"InRecords": "GgRKvMPM:OutFiles"
+		}
+	},
+	{
+		"id": "WG64J9FTdvE:PpReadFilesNode:Read Files 02",
+		"pos": "817,553",
+		"params": {
+			"InAttr": "file__path",
+			"MaxFileSize": "20000"
+		},
+		"ports": {
+			"InFiles": "GgRKvMPM:OutFiles"
+		}
+	},
+	{
+		"id": "yNahTQCovG:PpDuckNode:List Files 01",
+		"pos": "1249,612",
+		"params": {
+			"Query": "select * from $table order by file__createdutc desc, idx desc"
+		},
+		"ports": {
+			"InRecords": "WG64J9FTdvE:OutLines"
+		}
+	},
+	{
+		"id": "aHjs3wGLLxLe:PpReadFilesNode:Read Files 01",
+		"pos": "1247,230",
+		"params": {
+			"InAttr": "file__path",
+			"MaxFileSize": "2000000"
+		},
+		"ports": {
+			"InFiles": "Jbo7bGym3D:OutRecords"
+		}
+	},
+	{
+		"id": "cqwbjJga8ubF:PpDuckNode:List Files 02",
+		"pos": "1710,193",
+		"params": {
+			"Query": ""
+		},
+		"ports": {
+			"InRecords": "aHjs3wGLLxLe:OutLines"
 		}
 	}
 ]

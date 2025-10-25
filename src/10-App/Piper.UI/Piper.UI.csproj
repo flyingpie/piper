@@ -5,6 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Blazorise.Icons.FontAwesome"/>
 		<PackageReference Include="BlazorMonaco"/>
 		<PackageReference Include="Newtonsoft.Json"/>
 		<PackageReference Include="Radzen.Blazor"/>

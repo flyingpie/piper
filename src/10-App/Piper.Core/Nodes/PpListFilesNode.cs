@@ -1,4 +1,3 @@
-using MoreLinq;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
 using static Piper.Core.Data.PpDataType;
@@ -12,7 +11,7 @@ public class PpListFilesNode : PpNode
 
 	public PpListFilesNode()
 	{
-		_files = new("listfiles");
+		_files = new(PpTable.GetTableName(this, nameof(OutFiles)));
 
 		OutFiles = new(this, nameof(OutFiles))
 		{
@@ -22,11 +21,16 @@ public class PpListFilesNode : PpNode
 
 	public override string NodeType => "List Files";
 
+	public override bool SupportsProgress => false;
+
 	[PpParam("Path")]
 	public string? InPath { get; set; }
 
 	[PpParam("Pattern")]
 	public string? InPattern { get; set; }
+
+	[PpParam("Max Files")]
+	public int MaxFiles { get; set; } = 10_000;
 
 	[PpPort(Out, "Files")]
 	public PpNodeOutput OutFiles { get; }
@@ -49,9 +53,10 @@ public class PpListFilesNode : PpNode
 		[
 			new("rec__uuid", PpGuid),
 			new("file__name", PpString),
+			new("file__path", PpString),
 			new("file__ext", PpString),
 			new("file__size", PpInt32),
-			// new("file__createdutc", PpDateTime),
+			new("file__createdutc", PpDateTime),
 
 			// new("file.dir", PpString),
 			// new("file.name", PpString),
@@ -88,46 +93,49 @@ public class PpListFilesNode : PpNode
 		// 	})
 		// 	.ToList();
 
-		// var it = Directory.EnumerateFiles(
-		// 	path: InPath,
-		// 	searchPattern: InPattern,
-		// 	enumerationOptions: new EnumerationOptions()
-		// 	{
-		// 		RecurseSubdirectories = true,
-		// 	});
-
-		var files = Directory.GetFiles(
+		var it = Directory.EnumerateFiles(
 			path: InPath,
 			searchPattern: InPattern,
-			new EnumerationOptions()
+			enumerationOptions: new EnumerationOptions()
 			{
-				RecurseSubdirectories = true, // TODO: Use glob instead
+				RecurseSubdirectories = true,
 			});
+
+		// var files = Directory.GetFiles(
+		// 	path: InPath,
+		// 	searchPattern: InPattern,
+		// 	new EnumerationOptions()
+		// 	{
+		// 		RecurseSubdirectories = true, // TODO: Use glob instead
+		// 	});
 
 		var i = 0;
 
-		// foreach (var path in it)
-		foreach (var path in files)
 		{
-			if (++i > 100)
-			{
-				break;
-			}
+			await using var appender = await _files.CreateAppenderAsync();
 
-			// var fi = new FileInfo(path);
-
-			await _files.AddAsync([new()
+			foreach (var path in it)
 			{
-				Fields =
+				if (++i > MaxFiles)
 				{
-					{ "rec__uuid", new(PpGuid, Guid.CreateVersion7()) },
-					{ "file__name", new(PpString, Path.GetFileName(path)) },
-					{ "file__ext", new(PpString, Path.GetExtension(path)) },
-					// { "file__size", new(PpInt32, fi.Length) },
-					{ "file__size", new(PpInt32, 0) },
-					// { "file__createdutc", new(PpDateTime, fi.CreationTimeUtc) },
-				},
-			}]);
+					break;
+				}
+
+				var fi = new FileInfo(path);
+
+				appender.Add(new()
+				{
+					Fields =
+					{
+						{ "rec__uuid", new(PpGuid, Guid.CreateVersion7()) },
+						{ "file__name", new(PpString, Path.GetFileName(path)) },
+						{ "file__path", new(PpString, Path.GetFullPath(path)) },
+						{ "file__ext", new(PpString, Path.GetExtension(path)) },
+						{ "file__size", new(PpInt32, (int)fi.Length) },
+						{ "file__createdutc", new(PpDateTime, fi.CreationTimeUtc) },
+					},
+				});
+			}
 		}
 
 		await _files.DoneAsync();

@@ -8,6 +8,17 @@ namespace Piper.Core;
 
 public static class Extensions
 {
+	// extension (PpNodePort port)
+	// {
+	// 	public long? InCount => port.GetNodeInput?.Invoke()?.Output?.Table?.Invoke()?.Count;
+	//
+	// 	public long? OutCount => port.GetNodeOutput?.Invoke()?.Table?.Invoke()?.Count;
+	// }
+
+	public static long? GetInCount(this PpNodePort port) => port.GetNodeInput?.Invoke()?.Output?.Table?.Invoke()?.Count;
+
+	public static long? GetOutCount(this PpNodePort port) => port.GetNodeOutput?.Invoke()?.Table?.Invoke()?.Count;
+
 	public static PpGraph GetGraph(this BlazorDiagram diagram)
 	{
 		var graph = new PpGraph()

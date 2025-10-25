@@ -1,5 +1,6 @@
 @using Blazor.Diagrams.Core.Models
 @using Blazor.Diagrams.Components.Renderers
+@using Piper.Core
 
 <div class="pp-field">
 	<PortRenderer @key="NodePort" Port="NodePort"/>
@@ -19,7 +20,12 @@
 				Size="ButtonSize.ExtraSmall"
 			/>
 
-			<RadzenLabel Text="@($"{NodePort.GetNodeInput?.Invoke()?.Output?.Table?.Invoke()?.Count ?? 0} {NodePort.Name}")" />
+			@* <RadzenLabel Text="@($"{NodePort.GetNodeInput?.Invoke()?.Output?.Table?.Invoke()?.Count ?? 0} {NodePort.Name}")" /> *@
+			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
+				<RadzenIcon Icon="numbers" />
+				<RadzenLabel Text="@(NodePort.GetInCount()?.ToString("N0"))" />
+				<RadzenLabel Text="@NodePort.Name" />
+			</RadzenStack>
 		</RadzenStack>
 	}
 
@@ -31,7 +37,12 @@
 			AlignItems="AlignItems.Center"
 			Gap="1em"
 		>
-			<RadzenLabel Text="@($"{NodePort.GetNodeOutput?.Invoke()?.Table?.Invoke()?.Count ?? 0} {NodePort.Name}")" />
+			@* <RadzenLabel Text="@($"{NodePort.GetNodeOutput?.Invoke()?.Table?.Invoke()?.Count ?? 0} {NodePort.Name}")" /> *@
+			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
+				<RadzenIcon Icon="numbers" />
+				<RadzenLabel Text="@(NodePort.GetOutCount()?.ToString("N0"))" />
+				<RadzenLabel Text="@NodePort.Name" />
+			</RadzenStack>
 
 			<RadzenButton
 				ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"

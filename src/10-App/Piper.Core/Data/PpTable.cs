@@ -5,7 +5,7 @@ namespace Piper.Core.Data;
 
 public class PpTable(string tableName, ICollection<PpColumn> columns)
 {
-	private Action<PpTable>? _onChange;
+	private Action<PpTable>? _onChange = _ => { };
 
 	public PpTable(string tableName)
 		: this(tableName, [])
@@ -18,8 +18,15 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 
 	public List<PpColumn> Columns { get; set; } = Guard.Against.Null(columns).ToList();
 
+	public static string GetTableName(PpNode node, string propName)
+	{
+		return $"{node.GetType().Name}_{node.NodeId}_{propName}";
+	}
+
 	public void OnChange(Action<PpTable> onChange)
 	{
+		Guard.Against.Null(onChange);
+
 		_onChange = onChange;
 	}
 
@@ -31,21 +38,26 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 		_onChange?.Invoke(this);
 	}
 
-	public async Task AddAsync(PpRecord record)
+	// public async Task AddAsync(PpRecord record)
+	// {
+	// 	Guard.Against.Null(record);
+	//
+	// 	await AddAsync([record]);
+	// }
+
+	// public async Task AddAsync(IEnumerable<PpRecord> records)
+	// {
+	// 	ArgumentNullException.ThrowIfNull(records);
+	//
+	// 	var db = PpDb.Instance;
+	//
+	// 	// await db.InsertDataAsync(TableName, records);
+	// 	await db.V_InsertDataAsync(this, records);
+	// }
+
+	public Task<PpDbAppender> CreateAppenderAsync()
 	{
-		Guard.Against.Null(record);
-
-		await AddAsync([record]);
-	}
-
-	public async Task AddAsync(IEnumerable<PpRecord> records)
-	{
-		ArgumentNullException.ThrowIfNull(records);
-
-		var db = PpDb.Instance;
-
-		// await db.InsertDataAsync(TableName, records);
-		await db.V_InsertDataAsync(this, records);
+		return PpDb.Instance.CreateAppenderAsync(this);
 	}
 
 	public async Task DoneAsync()
@@ -57,7 +69,7 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 
 	public async Task<long> CountAsync()
 	{
-		return await PpDb.Instance.CountAsync($"select count(1) from {TableName}");
+		return await PpDb.Instance.CountAsync($"select count(1) from \"{TableName}\"");
 	}
 
 	public IAsyncEnumerable<PpRecord> QueryAllAsync()

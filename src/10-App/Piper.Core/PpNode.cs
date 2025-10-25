@@ -7,16 +7,13 @@ namespace Piper.Core;
 
 public abstract class PpNode : NodeModel
 {
+	private Action<PpNode> _onChange = _ => { };
+
 	protected PpNode()
 	{
 		NodeProps = this.GetNodeProps().ToList();
 		NodeParams = NodeProps.OfType<PpNodeParam>().ToList();
 		NodePorts = NodeProps.OfType<PpNodePort>().ToList();
-
-		// foreach (var link in Links)
-		// {
-		//
-		// }
 	}
 
 	public string NodeId { get; set; }
@@ -27,7 +24,17 @@ public abstract class PpNode : NodeModel
 
 	public string Name { get; set; }
 
+	public virtual string Icon { get; } = "fa-solid fa-circle-nodes";
+
+	public virtual string Color { get; } = "#2a3c68";
+
 	public bool IsExecuting { get; set; }
+
+	public abstract bool SupportsProgress { get; }
+
+	public double Progress { get; set; } // 0-1
+
+	public TimeSpan? Duration { get; set; }
 
 	public PpLogs Logs { get; } = new();
 
@@ -36,6 +43,15 @@ public abstract class PpNode : NodeModel
 	public IReadOnlyCollection<PpNodeParam> NodeParams { get; }
 
 	public IReadOnlyCollection<PpNodePort> NodePorts { get; }
+
+	public void OnChange(Action<PpNode> onChange)
+	{
+		Guard.Against.Null(onChange);
+
+		_onChange = onChange;
+	}
+
+	protected void Changed() => _onChange.Invoke(this);
 
 	public async Task ExecuteAsync()
 	{
@@ -48,16 +64,16 @@ public abstract class PpNode : NodeModel
 
 		try
 		{
-			await Task.Run(
-				async () =>
-				{
-					await OnExecuteAsync();
-				});
+			// await OnExecuteAsync();
+
+			await Task.Run(OnExecuteAsync);
 		}
 		catch (Exception ex)
 		{
 			Logs.Error($"Error executing node '{GetType().FullName}': {ex.Message}");
 		}
+
+		Duration = sw.Elapsed;
 
 		IsExecuting = false;
 

@@ -7,15 +7,19 @@ namespace Piper.Core.Nodes;
 
 public class PpReadFilesNode : PpNode
 {
-	private readonly PpTable _outLines = new("readlines");
+	private readonly PpTable _outLines;
 
 	public PpReadFilesNode()
 	{
+		_outLines = new(PpTable.GetTableName(this, nameof(OutLines)));
+
 		InFiles = new(this, nameof(InFiles));
 		OutLines = new(this, nameof(OutLines)) { Table = () => _outLines, };
 	}
 
 	public override string NodeType => "Read Files";
+
+	public override bool SupportsProgress => true;
 
 	[PpPort(In, "File Paths")]
 	public PpNodeInput InFiles { get; }
@@ -55,16 +59,25 @@ public class PpReadFilesNode : PpNode
 		_outLines.Columns = cols;
 
 		await _outLines.ClearAsync();
+		await using var appender = await _outLines.CreateAppenderAsync();
+
 		var i = 0;
 		await foreach (var file in inTable.QueryAllAsync())
 		{
+			Progress = ((float)i) / inTable.Count;
+
+			if (i % 1000 == 0)
+			{
+				Changed();
+			}
+
 			// Get attribute
 			var field = file.Fields.FirstOrDefault(f => f.Key?.Equals(InAttr, StringComparison.OrdinalIgnoreCase) ?? false);
 
 			if (string.IsNullOrWhiteSpace(field.Value?.ValueAsString))
 			{
 				Logs.Warning($"Record does not have an attribute with name '{InAttr}'");
-				await _outLines.AddAsync(CreateRecord(file, -1, string.Empty));
+				appender.Add(CreateRecord(file, -1, string.Empty));
 				continue;
 			}
 
@@ -73,7 +86,7 @@ public class PpReadFilesNode : PpNode
 			if (!File.Exists(path))
 			{
 				Logs.Warning($"File at path '{path}' does not exist");
-				await _outLines.AddAsync(CreateRecord(file, -1, string.Empty));
+				appender.Add(CreateRecord(file, -1, string.Empty));
 				continue;
 			}
 
@@ -87,8 +100,11 @@ public class PpReadFilesNode : PpNode
 			}
 
 			var lines = await File.ReadAllLinesAsync(path);
-
-			await _outLines.AddAsync(lines.Select((line, idx) => CreateRecord(file, idx, line)));
+			for (var j = 0; j < lines.Length; j++)
+			{
+				var line = lines[j];
+				appender.Add(CreateRecord(file, j, line));
+			}
 		}
 
 		await _outLines.DoneAsync();

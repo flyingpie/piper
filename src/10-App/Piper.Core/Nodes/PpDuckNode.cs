@@ -1,25 +1,32 @@
 using Piper.Core.Attributes;
 using Piper.Core.Data;
-using static Piper.Core.Data.PpDataType;
 using static Piper.Core.Data.PpPortDirection;
 
 namespace Piper.Core.Nodes;
 
 public class PpDuckNode : PpNode
 {
-	private PpTable _outLines = new("todo");
+	private readonly PpTable _outLines;
 
 	public PpDuckNode()
 	{
+		_outLines = new(PpTable.GetTableName(this, nameof(OutRecords)));
+
 		InRecords = new(this, nameof(InRecords));
 		OutRecords = new(this, nameof(OutRecords)) { Table = () => _outLines };
 	}
 
-	[PpParam("Query")]
-	public string Query { get; set; } = "";
+	public override string Icon => "fa-solid fa-database";
+
+	public override string Color => "#fff100";
+
+	public override bool SupportsProgress => false;
 
 	[PpPort(In, "Records")]
 	public PpNodeInput InRecords { get; set; }
+
+	[PpParam("Query")]
+	public string Query { get; set; } = "";
 
 	[PpPort(Out, "Records")]
 	public PpNodeOutput OutRecords { get; }
@@ -34,21 +41,25 @@ public class PpDuckNode : PpNode
 
 		var inTable = InRecords.Output.Table();
 
-		var isCleared = false;
+		PpDbAppender? appender = null;
 
-		// await foreach (var rec in inTable.QueryAsync(Query))
-		await foreach (var rec in inTable.QueryAsync(Query))
+		try
 		{
-			if (!isCleared)
+			await foreach (var rec in inTable.QueryAsync(Query))
 			{
-				_outLines.Columns = rec.Fields.Select(kv => new PpColumn(kv.Key, kv.Value.DataType)).ToList();
+				if (appender == null)
+				{
+					_outLines.Columns = rec.Fields.Select(kv => new PpColumn(kv.Key, kv.Value.DataType)).ToList();
+					await _outLines.ClearAsync();
+					appender = await _outLines.CreateAppenderAsync();
+				}
 
-				await _outLines.ClearAsync();
-
-				isCleared = true;
+				appender.Add(rec);
 			}
-
-			await _outLines.AddAsync(rec);
+		}
+		finally
+		{
+			await (appender?.DisposeAsync() ?? ValueTask.CompletedTask);
 		}
 
 		await _outLines.DoneAsync();

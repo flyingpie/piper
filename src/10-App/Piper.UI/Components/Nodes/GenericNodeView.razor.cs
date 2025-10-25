@@ -18,6 +18,8 @@ public partial class GenericNodeView : ComponentBase
 
 	protected override Task OnParametersSetAsync()
 	{
+		Node?.OnChange(_ => InvokeAsync(StateHasChanged));
+
 		return base.OnInitializedAsync();
 	}
 

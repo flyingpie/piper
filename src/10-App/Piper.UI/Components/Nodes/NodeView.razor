@@ -6,12 +6,14 @@
 
 	<RadzenStack Orientation="Orientation.Vertical" Gap="1em">
 		<RadzenStack
+			class="pp-node-header"
 			Orientation="Orientation.Horizontal"
 			AlignItems="AlignItems.Center"
 			JustifyContent="JustifyContent.SpaceBetween"
-			Style="background-color: var(--rz-secondary); margin: -10px -10px 0 -10px; padding: .6em;"
+			Style="@($"background-color: {Node.Color}")"
 		>
-			<h3 style="margin: 0;">@Node.NodeType</h3>
+
+			<h3 style="margin: 0;"><span class="@Node.Icon"></span>&nbsp;@Node.NodeType</h3>
 
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
 				<RadzenProgressBarCircular
@@ -42,3 +44,10 @@
 	</RadzenStack>
 
 </div>
+
+<style>
+	.pp-node-header {
+		margin: -10px -10px 0 -10px;
+		padding: .6em;
+	}
+</style>

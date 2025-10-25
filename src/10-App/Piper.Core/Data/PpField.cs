@@ -18,7 +18,7 @@ public class PpField
 
 	public PpField(string? valueAsString)
 	{
-		ValueAsString = valueAsString;
+		// ValueAsString = valueAsString;
 	}
 
 	public PpField(PpDataType type, object? value)
@@ -41,13 +41,13 @@ public class PpField
 
 	public int? ValueAsInt { get; set; }
 
-	public string? ValueAsString { get; set; }
+	public string? ValueAsString => Value as string;
 
 	public object? Value2 => ValueAsInt?.ToString() ?? ValueAsString;
 
 	public static implicit operator PpField(int? valueAsInt) => new(valueAsInt);
 
-	public static implicit operator PpField(string str) => new(str);
+	public static implicit operator PpField(string str) => new(PpDataType.PpString, str);
 
 	public override string ToString() => Value?.ToString() ?? "(empty)";
 }

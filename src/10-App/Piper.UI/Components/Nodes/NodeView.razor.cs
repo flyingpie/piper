@@ -1,3 +1,4 @@
+using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Components;
 using Piper.Core;
 using Piper.Core.Nodes;

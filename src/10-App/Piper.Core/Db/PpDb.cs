@@ -27,8 +27,8 @@ public class PpDb : IPpDb
 		var sb1 = new StringBuilder();
 		sb1.Append(
 			$"""
-			DROP TABLE IF EXISTS {table.TableName};
-			CREATE TABLE {table.TableName}
+			DROP TABLE IF EXISTS "{table.TableName}";
+			CREATE TABLE "{table.TableName}"
 			(
 			""");
 
@@ -125,27 +125,17 @@ public class PpDb : IPpDb
 	// 	// return table;
 	// }
 
+	public async Task<PpDbAppender> CreateAppenderAsync(PpTable table)
+	{
+		var db = await CreateConnectionAsync();
+		var appender = db.CreateAppender(table.TableName);
+
+		return new PpDbAppender(db, appender, table);
+	}
+
 	public async Task V_InsertDataAsync(PpTable table, IEnumerable<PpRecord> records)
 	{
 		await using var db = await CreateConnectionAsync();
-
-// 		var sb1 = new StringBuilder();
-// 		sb1.Append(
-// 			$"""
-// 			INSERT INTO my_table_1 (col1)
-// 			VALUES
-// 			(
-// 				(true, 1234, 'abc')
-// 			)
-// 			""");
-//
-// 		await using var cmd = db.CreateCommand();
-//
-// 		cmd.CommandText = sb1.ToString();
-//
-// 		await cmd.ExecuteNonQueryAsync();
-//
-// 		var xx = await QueryAsync2("SELECT * FROM my_table_1").ToListAsync();
 
 		using var appender = db.CreateAppender(table.TableName);
 
@@ -155,60 +145,51 @@ public class PpDb : IPpDb
 
 			foreach (var col in table.Columns)
 			{
-				if (rec.Fields.TryGetValue(col.Name, out var val))
-				{
-					switch (val.Value)
-					{
-						case bool asBool:
-							row.AppendValue(asBool);
-							break;
-
-						case DateTime asDt:
-							row.AppendValue(asDt.ToUniversalTime());
-							break;
-
-						case float asFloat:
-							row.AppendValue(asFloat);
-							break;
-
-						case Guid asGuid:
-							row.AppendValue(asGuid);
-							break;
-
-						case int asInt:
-							row.AppendValue(asInt);
-							break;
-
-						case long asLong:
-							row.AppendValue(asLong);
-							break;
-
-						case string asString:
-							row.AppendValue(asString);
-							break;
-
-						case null:
-							row.AppendNullValue();
-							break;
-
-						default:
-							// row.AppendNullValue();
-							throw new InvalidOperationException($"Unsupported data type '{val.Value.GetType().FullName}'.");
-							break;
-					}
-				}
-				else
+				if (!rec.Fields.TryGetValue(col.Name, out var val))
 				{
 					row.AppendNullValue();
+					continue;
+				}
+
+				switch (val.Value)
+				{
+					case bool asBool:
+						row.AppendValue(asBool);
+						break;
+
+					case DateTime asDt:
+						row.AppendValue(asDt.ToUniversalTime());
+						break;
+
+					case float asFloat:
+						row.AppendValue(asFloat);
+						break;
+
+					case Guid asGuid:
+						row.AppendValue(asGuid);
+						break;
+
+					case int asInt:
+						row.AppendValue(asInt);
+						break;
+
+					case long asLong:
+						row.AppendValue(asLong);
+						break;
+
+					case string asString:
+						row.AppendValue(asString);
+						break;
+
+					case null:
+						row.AppendNullValue();
+						break;
+
+					default:
+						throw new InvalidOperationException($"Unsupported data type '{val.Value.GetType().FullName}'.");
+						break;
 				}
 			}
-
-			// row.AppendValue(new Dictionary<string, object>()
-			// {
-			// 	{ "prop0", true },
-			// 	{ "prop1", 1234 },
-			// 	{ "prop2", "a-string" },
-			// });
 
 			row.EndRow();
 		}
@@ -220,7 +201,7 @@ public class PpDb : IPpDb
 		await using var cmd = db.CreateCommand();
 
 		cmd.CommandText = query
-			.Replace("$table", table.TableName);
+			.Replace("$table", $"\"{table.TableName}\"");
 
 		var reader = await cmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
@@ -306,8 +287,8 @@ public class PpDb : IPpDb
 		var sb1 = new StringBuilder();
 		sb1.Append(
 			$"""
-			DROP TABLE IF EXISTS {table.TableName};
-			CREATE TABLE {table.TableName}
+			DROP TABLE IF EXISTS "{table.TableName}";
+			CREATE TABLE "{table.TableName}"
 			(
 			""");
 
@@ -388,7 +369,7 @@ public class PpDb : IPpDb
 
 	private static async Task<DuckDBConnection> CreateConnectionAsync()
 	{
-		var db = new DuckDBConnection("data source=piper.db");
+		var db = new DuckDBConnection("data source=/home/marco/Downloads/piper.db");
 		await db.OpenAsync();
 
 		return db;

@@ -13,4 +13,24 @@
 		}
 	}
 
+	@if (Node.IsExecuting)
+	{
+		if (Node.SupportsProgress)
+		{
+			<RadzenProgressBar Min="0" Max="1" @bind-Value="Node.Progress" ShowValue="false" />
+		}
+		else
+		{
+			<RadzenProgressBar Mode="ProgressBarMode.Indeterminate" Value="100" ShowValue="false" />
+		}
+	}
+
+	@if (Node.Duration != null)
+	{
+		<RadzenStack Orientation="Orientation.Horizontal">
+			<RadzenIcon Icon="timer" />
+			@(Node.Duration.Value.ToString("g"))
+		</RadzenStack>
+	}
+
 </NodeView>
