@@ -8,4 +8,14 @@
 		<ProjectReference Include="..\..\10-App\Piper.Core\Piper.Core.csproj" />
 		<ProjectReference Include="..\..\10-App\Piper.UI\Piper.UI.csproj"/>
 	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="wwwroot\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="wwwroot\fonts\Michroma-Regular.ttf" />
+	</ItemGroup>
 </Project>
