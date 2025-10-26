@@ -43,7 +43,7 @@
 		"id": "yNahTQCovG:PpDuckNode:List Files 01",
 		"pos": "1249,612",
 		"params": {
-			"Query": "select * from $table order by file__createdutc desc, idx desc"
+			"Query": "select      *\nfrom        $table\nwhere       file__size \u003E 1500\norder by    file__createdutc desc, idx desc\n"
 		},
 		"ports": {
 			"InRecords": "WG64J9FTdvE:OutLines"

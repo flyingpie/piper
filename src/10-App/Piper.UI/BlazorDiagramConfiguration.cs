@@ -66,16 +66,24 @@ public static class BlazorDiagramConfiguration
 		{
 			AllowPanning = true,
 			AllowMultiSelection = true,
+			Groups =
+			{
+				Enabled = true,
+			},
 			Links =
 			{
-				DefaultColor = "#ffffff",
+				DefaultColor = "#aaaaaa",
 				DefaultPathGenerator = new SmoothPathGenerator(),
 				DefaultRouter = new NormalRouter(),
 				EnableSnapping = true,
 				SnappingRadius = 15,
 				// Factory =
 			},
-			Zoom = { Enabled = true, },
+			Zoom =
+			{
+				Enabled = true,
+				Inverse = true,
+			},
 		};
 
 		var diagram = new BlazorDiagram(options);

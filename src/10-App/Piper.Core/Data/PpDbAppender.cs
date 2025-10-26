@@ -8,9 +8,17 @@ public sealed class PpDbAppender(DuckDBConnection conn, DuckDBAppender appender,
 	private readonly DuckDBAppender _appender = Guard.Against.Null(appender);
 	private readonly PpTable _table = Guard.Against.Null(table);
 
+	private int _i;
+
 	public void Add(PpRecord record)
 	{
 		Guard.Against.Null(record);
+
+		if (++_i >= 1000)
+		{
+			// _table.Changed();
+			_i = 0;
+		}
 
 		var row = appender.CreateRow();
 

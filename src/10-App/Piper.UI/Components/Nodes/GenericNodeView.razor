@@ -17,19 +17,19 @@
 	{
 		if (Node.SupportsProgress)
 		{
-			<RadzenProgressBar Min="0" Max="1" @bind-Value="Node.Progress" ShowValue="false" />
+			<RadzenProgressBar Min="0" Max="1" @bind-Value="Node.Progress" ShowValue="false" ProgressBarStyle="ProgressBarStyle.Light" />
 		}
 		else
 		{
-			<RadzenProgressBar Mode="ProgressBarMode.Indeterminate" Value="100" ShowValue="false" />
+			<RadzenProgressBar Mode="ProgressBarMode.Indeterminate" Value="100" ShowValue="false" ProgressBarStyle="ProgressBarStyle.Light" />
 		}
 	}
 
 	@if (Node.Duration != null)
 	{
-		<RadzenStack Orientation="Orientation.Horizontal">
+		<RadzenStack Orientation="Orientation.Horizontal" class="rz-color-base-500">
 			<RadzenIcon Icon="timer" />
-			@(Node.Duration.Value.ToString("g"))
+			@(Node.Duration.Value.ToString(@"mm\:hh\:ss\.fff"))
 		</RadzenStack>
 	}
 

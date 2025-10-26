@@ -1,5 +1,20 @@
 @using Piper.UI.Services
 
+@inject ContextMenuService ContextMenuService
+
+@code
+{
+	void ShowContextMenuWithContent(MouseEventArgs args) => ContextMenuService.Open(
+		args,
+		ds =>
+			@<RadzenMenu>
+				<RadzenMenuItem Icon="play_arrow" Text="Execute"></RadzenMenuItem>
+				<RadzenMenuItem Text="Do Thing"></RadzenMenuItem>
+				<RadzenMenuItem Text="Delete"></RadzenMenuItem>
+				<RadzenMenuItem Text="Copy"></RadzenMenuItem>
+			</RadzenMenu>);
+}
+
 <div
 	class="diagram-node pp-node @((SelectedThingyService.Instance.IsNodeSelected(Node) ? "selected" : ""))"
 	style="background-color: var(--rz-base-800); border-radius: .3em;" @onmousedown="() => SelectedThingyService.Instance.SelectNode(Node)">
@@ -13,29 +28,32 @@
 			Style="@($"background-color: {Node.Color}")"
 		>
 
-			<h3 style="margin: 0;"><span class="@Node.Icon"></span>&nbsp;@Node.NodeType</h3>
+			<h3 style="margin: 0;"><span class="@Node.Icon" style="margin-right: .5em;"></span>@Node.NodeType</h3>
 
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
 				<RadzenProgressBarCircular
-					ProgressBarStyle="ProgressBarStyle.Primary"
-					Value="100"
-					ShowValue="false"
-					Visible="@Node.IsExecuting"
 					Mode="ProgressBarMode.Indeterminate"
+					ProgressBarStyle="ProgressBarStyle.Light"
+					ShowValue="false"
 					Size="ProgressBarCircularSize.ExtraSmall"
+					Value="100"
+					Visible="@Node.IsExecuting"
 				/>
 				<RadzenButton
-					Click="async () => await Node.ExecuteAsync()"
-					ButtonStyle="ButtonStyle.Secondary"
-					Size="ButtonSize.ExtraSmall"
+					ButtonStyle="ButtonStyle.Light"
+					Click="a => ShowContextMenuWithContent(a)"
 					Icon="menu"
+					Size="ButtonSize.ExtraSmall"
 					Style="height: 2em; width: 3em;"
+					Variant="Variant.Outlined"
 				/>
 				<RadzenButton
+					ButtonStyle="ButtonStyle.Light"
 					Click="async () => await Node.ExecuteAsync()"
-					Size="ButtonSize.ExtraSmall"
 					Icon="play_arrow"
+					Size="ButtonSize.ExtraSmall"
 					Style="height: 2em; width: 3em;"
+					Variant="Variant.Outlined"
 				/>
 			</RadzenStack>
 		</RadzenStack>

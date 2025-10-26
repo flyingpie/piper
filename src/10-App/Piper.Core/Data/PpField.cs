@@ -37,6 +37,8 @@ public class PpField
 		set;
 	}
 
+	public DateTime? ValueAsDateTime => Value as DateTime?;
+
 	public Guid? ValueAsGuid { get; set; }
 
 	public int? ValueAsInt { get; set; }

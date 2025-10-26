@@ -19,6 +19,10 @@ public class PpListFilesNode : PpNode
 		};
 	}
 
+	public override string Color => "#8a2828";
+
+	public override string Icon => "fa-regular fa-folder";
+
 	public override string NodeType => "List Files";
 
 	public override bool SupportsProgress => false;

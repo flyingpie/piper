@@ -17,6 +17,10 @@ public class PpReadFilesNode : PpNode
 		OutLines = new(this, nameof(OutLines)) { Table = () => _outLines, };
 	}
 
+	public override string Color => "#8a2828";
+
+	public override string Icon => "fa-regular fa-file-lines";
+
 	public override string NodeType => "Read Files";
 
 	public override bool SupportsProgress => true;

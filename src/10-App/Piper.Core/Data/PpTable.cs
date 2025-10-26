@@ -5,7 +5,7 @@ namespace Piper.Core.Data;
 
 public class PpTable(string tableName, ICollection<PpColumn> columns)
 {
-	private Action<PpTable>? _onChange = _ => { };
+	private Action<PpTable> _onChange = _ => { };
 
 	public PpTable(string tableName)
 		: this(tableName, [])
@@ -21,6 +21,11 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 	public static string GetTableName(PpNode node, string propName)
 	{
 		return $"{node.GetType().Name}_{node.NodeId}_{propName}";
+	}
+
+	public void Changed()
+	{
+		_onChange(this);
 	}
 
 	public void OnChange(Action<PpTable> onChange)

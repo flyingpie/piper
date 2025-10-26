@@ -43,6 +43,40 @@ public partial class DataViewer : ComponentBase
 		}
 	}
 
+	private TextAlign GetAlign(PpColumn col)
+	{
+		switch (col.PpDataType)
+		{
+			case PpDataType.PpFloat:
+			case PpDataType.PpInt32:
+			case PpDataType.PpInt64:
+				return TextAlign.Right;
+
+			default:
+				return TextAlign.Left;
+		}
+	}
+
+	private string GetWidth(PpColumn col)
+	{
+		switch (col.PpDataType)
+		{
+			case PpDataType.PpDateTime:
+				return "12em";
+
+			case PpDataType.PpFloat:
+			case PpDataType.PpInt32:
+			case PpDataType.PpInt64:
+				return "8em";
+
+			case PpDataType.PpGuid:
+				return "20em";
+
+			default:
+				return "auto";
+		}
+	}
+
 	private async Task LoadDataAsync(LoadDataArgs args)
 	{
 		Console.WriteLine("LoadDataAsync");

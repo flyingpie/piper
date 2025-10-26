@@ -1,0 +1,19 @@
+@using Piper.UI.Components.CodeEditor
+
+@if (Param.Value is int)
+{
+	<RadzenFormField Text="@Param.Name" Style="width: 100%;">
+
+		<RadzenNumeric
+			@bind-Value="@Param.ValueAsInt"
+			@onmousedown:stopPropagation
+			@onmousemove:stopPropagation
+		/>
+
+	</RadzenFormField>
+}
+
+@if (Param.Value is string)
+{
+	<PpCodeEditor Language="sql" @bind-Text="Param.ValueAsString" />
+}

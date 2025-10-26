@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Piper.UI.Components.Nodes;
 
-public partial class PpNodeParam : ComponentBase
+public partial class PpNodeParamLarge : ComponentBase
 {
 	[EditorRequired]
 	[Parameter]

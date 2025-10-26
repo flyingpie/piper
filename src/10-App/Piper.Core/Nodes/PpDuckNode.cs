@@ -16,9 +16,11 @@ public class PpDuckNode : PpNode
 		OutRecords = new(this, nameof(OutRecords)) { Table = () => _outLines };
 	}
 
+	public override string NodeType => "SQL Query";
+
 	public override string Icon => "fa-solid fa-database";
 
-	public override string Color => "#fff100";
+	public override string Color => "#326590";
 
 	public override bool SupportsProgress => false;
 

@@ -35,9 +35,20 @@
 				<RadzenDataGridColumn
 					TItem="PpRecord"
 					Title="@field.Name"
+					Width="@GetWidth(field)"
+					TextAlign="@(GetAlign(field))"
 				>
 					<Template Context="item">
-						@(item.Fields.TryGetValue(field.Name, out var v) ? v : null)
+						@switch (field.PpDataType)
+						{
+							case PpDataType.PpDateTime:
+								@(item.Fields.TryGetValue(field.Name, out var v1) ? v1.ValueAsDateTime.Value.ToString("s") : null)
+								break;
+
+							default:
+								@(item.Fields.TryGetValue(field.Name, out var v) ? v : null)
+								break;
+						}
 					</Template>
 				</RadzenDataGridColumn>
 			}

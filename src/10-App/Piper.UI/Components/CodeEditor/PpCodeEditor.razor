@@ -4,15 +4,22 @@
 		new()
 		{
 			AutomaticLayout = true,
+			InsertSpaces = false,
+			Language = Language,
 			Minimap = new EditorMinimapOptions()
 			{
 				Autohide = true,
 				Enabled = false,
 			},
-			Theme = "vs-dark",
-			Language = Language,
 			RenderWhitespace = "boundary",
+			Theme = "vs-dark",
 			Value = _text,
+
+			// Disable gutter TODO: Make configurable
+			// GlyphMargin = false,
+			// LineDecorationsWidth = 0,
+			// LineNumbers = "off",
+			// LineNumbersMinChars = 0,
 		};
 
 	private StandaloneCodeEditor? _monaco;

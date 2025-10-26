@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Piper.Core;
 using Piper.Core.Nodes;
 using Piper.Core.Serialization;
+using Piper.UI.Services;
 using Radzen;
 using System.IO;
 using BD = Blazor.Diagrams.Core.Geometry;
@@ -25,8 +26,12 @@ public partial class PpDiagram : ComponentBase
 	// 	new() { Name = "Format some stuff" },
 	// ];
 
+	private PpNode? SelectedNode => SelectedThingyService.Instance.SelectedNode;
+
 	protected override async Task OnInitializedAsync()
 	{
+		SelectedThingyService.Instance.OnChanged(() => InvokeAsync(StateHasChanged));
+
 		// var pp = Path.GetDirectoryName(new Uri(GetType().Assembly.Location).AbsolutePath);
 		var dir = "/home/marco/workspace/flyingpie/piper_1/graphs";
 

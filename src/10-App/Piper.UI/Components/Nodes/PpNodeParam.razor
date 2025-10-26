@@ -1,21 +1,34 @@
-<RadzenFormField Text="@Param.Name" Style="width: 100%;">
+@if (Param.Value is int)
+{
+	<RadzenFormField Text="@Param.Name" Style="width: 100%;">
 
-	@if (Param.Value is int)
-	{
 		<RadzenNumeric
 			@bind-Value="@Param.ValueAsInt"
 			@onmousedown:stopPropagation
 			@onmousemove:stopPropagation
 		/>
-	}
+	</RadzenFormField>
+}
 
-	@if (Param.Value is string)
-	{
+@if (Param.Value is string)
+{
+	<RadzenFormField Text="@Param.Name" Style="width: 100%;">
 		<RadzenTextBox
 			@bind-Value="@Param.ValueAsString"
 			@onmousedown:stopPropagation
 			@onmousemove:stopPropagation
 		/>
-	}
 
-</RadzenFormField>
+	</RadzenFormField>
+}
+
+@if (Param.Value is string)
+{
+	@* <PpCodeEditor Language="sql" @bind-Text="Param.ValueAsString" /> *@
+}
+
+<style>
+	.monaco-editor-container {
+		/*height: 150px !important;*/
+	}
+</style>

@@ -14,13 +14,14 @@
 			Gap="1em"
 		>
 			<RadzenButton
-				ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"
+				ButtonStyle="ButtonStyle.Light"
 				Click="() => OnClickShowData()"
 				Icon="list"
+				Shade="@(IsPortSelected ? Shade.Default : Shade.Darker)"
 				Size="ButtonSize.ExtraSmall"
+				Variant="Variant.Outlined"
 			/>
 
-			@* <RadzenLabel Text="@($"{NodePort.GetNodeInput?.Invoke()?.Output?.Table?.Invoke()?.Count ?? 0} {NodePort.Name}")" /> *@
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
 				<RadzenIcon Icon="numbers" />
 				<RadzenLabel Text="@(NodePort.GetInCount()?.ToString("N0"))" />
@@ -37,7 +38,6 @@
 			AlignItems="AlignItems.Center"
 			Gap="1em"
 		>
-			@* <RadzenLabel Text="@($"{NodePort.GetNodeOutput?.Invoke()?.Table?.Invoke()?.Count ?? 0} {NodePort.Name}")" /> *@
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
 				<RadzenIcon Icon="numbers" />
 				<RadzenLabel Text="@(NodePort.GetOutCount()?.ToString("N0"))" />
@@ -45,10 +45,12 @@
 			</RadzenStack>
 
 			<RadzenButton
-				ButtonStyle="@(IsPortSelected ? ButtonStyle.Info : ButtonStyle.Secondary)"
+				ButtonStyle="ButtonStyle.Light"
 				Click="() => OnClickShowData()"
 				Icon="list"
+				Shade="@(IsPortSelected ? Shade.Default : Shade.Darker)"
 				Size="ButtonSize.ExtraSmall"
+				Variant="Variant.Outlined"
 			/>
 		</RadzenStack>
 	}
