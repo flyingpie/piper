@@ -27,7 +27,7 @@ public class PpDuckNode : PpNode
 	[PpPort(In, "Records")]
 	public PpNodeInput InRecords { get; set; }
 
-	[PpParam("Query")]
+	[PpParam("Query", Hint = PpParamHint.Code)]
 	public string Query { get; set; } = "";
 
 	[PpPort(Out, "Records")]

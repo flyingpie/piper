@@ -1,10 +1,19 @@
 namespace Piper.Core;
 
+public enum PpParamHint
+{
+	None = 0,
+
+	Code,
+}
+
 public class PpNodeParam : IPpNodeProperty
 {
 	public string Name { get; set; }
 
 	// private object? _value;
+
+	public PpParamHint Hint { get; set; }
 
 	public object? Value
 	{

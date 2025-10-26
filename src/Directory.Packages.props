@@ -4,6 +4,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageVersion Include="Ardalis.GuardClauses" Version="5.0.0"/>
+		<PackageVersion Include="CsvHelper" Version="33.1.0"/>
 		<PackageVersion Include="Blazorise.Icons.FontAwesome" Version="1.8.5"/>
 		<PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0"/>
 		<PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.10"/>

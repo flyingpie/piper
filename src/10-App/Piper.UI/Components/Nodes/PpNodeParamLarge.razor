@@ -1,3 +1,4 @@
+@using Piper.Core
 @using Piper.UI.Components.CodeEditor
 
 @if (Param.Value is int)
@@ -15,5 +16,25 @@
 
 @if (Param.Value is string)
 {
-	<PpCodeEditor Language="sql" @bind-Text="Param.ValueAsString" />
+	switch (Param.Hint)
+	{
+		case PpParamHint.Code:
+			<PpCodeEditor Language="sql" @bind-Text="Param.ValueAsString" />
+			break;
+		default:
+			<RadzenFormField Text="@Param.Name" Style="width: 100%;">
+				<RadzenTextBox
+					@bind-Value="@Param.ValueAsString"
+					@onmousedown:stopPropagation
+					@onmousemove:stopPropagation
+				/>
+			</RadzenFormField>
+			break;
+	}
 }
+
+<style>
+	.pp-node .monaco-editor-container {
+		height: 150px !important;
+	}
+</style>

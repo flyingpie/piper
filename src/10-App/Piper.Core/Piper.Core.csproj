@@ -6,6 +6,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Ardalis.GuardClauses"/>
+		<PackageReference Include="CsvHelper"/>
 		<PackageReference Include="Dapper"/>
 		<PackageReference Include="DuckDB.NET.Data.Full"/>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting"/>

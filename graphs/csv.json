@@ -4,7 +4,7 @@
 		"pos": "500,356",
 		"params": {
 			"InPath": "/home/marco/Downloads",
-			"InPattern": "*",
+			"InPattern": "*.csv",
 			"MaxFiles": "10000"
 		}
 	},
@@ -68,6 +68,17 @@
 		},
 		"ports": {
 			"InRecords": "aHjs3wGLLxLe:OutLines"
+		}
+	},
+	{
+		"id": "Gx8RfeKpP5:PpReadCsvNode:Read CSV 01",
+		"pos": "974,1105",
+		"params": {
+			"InAttr": "file__path",
+			"MaxFileSize": "2000000"
+		},
+		"ports": {
+			"InFiles": "GgRKvMPM:OutFiles"
 		}
 	}
 ]

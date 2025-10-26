@@ -14,8 +14,4 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <_ContentIncludedByDefault Remove="wwwroot\fonts\Michroma-Regular.ttf" />
-	</ItemGroup>
 </Project>

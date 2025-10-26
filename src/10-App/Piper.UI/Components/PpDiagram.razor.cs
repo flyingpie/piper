@@ -74,6 +74,16 @@ public partial class PpDiagram : ComponentBase
 				// 	});
 				break;
 
+			case "PP_NODE_READ_CSV":
+				Diagram.Nodes.Add(
+					new PpReadCsvNode()
+					{
+						Name = $"Read CSV {++_idx:00}",
+						PathPattern = "/home/marco/Downloads/**/*.csv",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					});
+				break;
+
 			case "PP_NODE_QUERY":
 				Diagram.Nodes.Add(
 					new PpDuckNode()

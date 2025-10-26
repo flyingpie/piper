@@ -40,6 +40,10 @@ public sealed class PpDbAppender(DuckDBConnection conn, DuckDBAppender appender,
 					row.AppendValue(asDt.ToUniversalTime());
 					break;
 
+				case double asDouble:
+					row.AppendValue(asDouble);
+					break;
+
 				case float asFloat:
 					row.AppendValue(asFloat);
 					break;

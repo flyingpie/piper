@@ -84,6 +84,7 @@ public static class Extensions
 				yield return new PpNodeParam()
 				{
 					Name = prop.Name,
+					Hint = paramAttr.Hint,
 					// Value = prop.GetValue(node),
 					Getter = () => prop.GetValue(node),
 					Setter = v => prop.SetValue(node, v),

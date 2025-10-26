@@ -43,6 +43,13 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 		_onChange?.Invoke(this);
 	}
 
+	public async Task InitAsync()
+	{
+		await PpDb.Instance.V_InitTableAsync(this);
+
+		await DoneAsync();
+	}
+
 	// public async Task AddAsync(PpRecord record)
 	// {
 	// 	Guard.Against.Null(record);

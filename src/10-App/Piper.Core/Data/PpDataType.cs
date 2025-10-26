@@ -10,6 +10,9 @@ public enum PpDataType
 	[JsonStringEnumMemberName("datetime")]
 	PpDateTime,
 
+	[JsonStringEnumMemberName("double")]
+	PpDouble,
+
 	[JsonStringEnumMemberName("float")]
 	PpFloat,
 

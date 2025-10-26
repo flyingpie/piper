@@ -1,3 +1,4 @@
+using Dapper;
 using DuckDB.NET.Data;
 using DuckDB.NET.Native;
 using Piper.Core.Data;
@@ -55,28 +56,33 @@ public class PpDb : IPpDb
 
 	private static string GetColThing(PpColumn column)
 	{
+		var name = $"\"{column.Name.Replace(" ", "_")}\"";
+
 		switch (column.PpDataType)
 		{
 			case PpDataType.PpBool:
-				return $"{column.Name} BOOLEAN NULL";
+				return $"{name} BOOLEAN NULL";
 
 			case PpDataType.PpDateTime:
-				return $"{column.Name} TIMESTAMP NULL";
+				return $"{name} TIMESTAMP NULL";
+
+			case PpDataType.PpDouble:
+				return $"{name} DOUBLE NULL";
 
 			case PpDataType.PpFloat:
-				return $"{column.Name} REAL NULL";
+				return $"{name} REAL NULL";
 
 			case PpDataType.PpGuid:
-				return $"{column.Name} UUID NULL";
+				return $"{name} UUID NULL";
 
 			case PpDataType.PpInt32:
-				return $"{column.Name} INTEGER NULL";
+				return $"{name} INTEGER NULL";
 
 			case PpDataType.PpInt64:
-				return $"{column.Name} BIGINT NULL";
+				return $"{name} BIGINT NULL";
 
 			case PpDataType.PpString:
-				return $"{column.Name} TEXT NULL";
+				return $"{name} TEXT NULL";
 
 			default:
 				throw new InvalidOperationException($"Unsupported column '{column.PpDataType}'");
@@ -91,39 +97,39 @@ public class PpDb : IPpDb
 		public DuckDBType column_type { get; set; }
 	}
 
-	// public async Task V_InitTableAsync(PpTable table)
-	// {
-	// 	await using var db = await CreateConnectionAsync();
-	//
-	// 	// Dapper.SqlMapper.SetTypeMap
-	//
-	// 	IEnumerable<DuckDbTableDescription> res = null!;
-	//
-	// 	try
-	// 	{
-	// 		res = await db.QueryAsync<DuckDbTableDescription>($"describe {table.TableName}");
-	// 	}
-	// 	catch (DuckDBException ex) when (ex.Message?.Contains("does not exist", StringComparison.OrdinalIgnoreCase) ?? false)
-	// 	{
-	// 		// return null;
-	// 	}
-	//
-	// 	// // var res = await db.GetSchemaAsync(name);
-	// 	// var cmd = db.CreateCommand();
-	// 	// cmd.CommandText = $"DESCRIBE {name}";
-	// 	// var reader = await cmd.ExecuteReaderAsync();
-	//
-	// 	// var table = new PpTable(name);
-	//
-	// 	foreach (var col in res)
-	// 	{
-	// 		table.Columns.Add(new(col.column_name, ToPpDataType(col.column_type)));
-	// 	}
-	//
-	// 	var dbg = 2;
-	//
-	// 	// return table;
-	// }
+	public async Task V_InitTableAsync(PpTable table)
+	{
+		await using var db = await CreateConnectionAsync();
+
+		// Dapper.SqlMapper.SetTypeMap
+
+		IEnumerable<DuckDbTableDescription> res = null!;
+
+		try
+		{
+			res = await db.QueryAsync<DuckDbTableDescription>($"describe {table.TableName}");
+		}
+		catch (DuckDBException ex) when (ex.Message?.Contains("does not exist", StringComparison.OrdinalIgnoreCase) ?? false)
+		{
+			// return null;
+		}
+
+		// // var res = await db.GetSchemaAsync(name);
+		// var cmd = db.CreateCommand();
+		// cmd.CommandText = $"DESCRIBE {name}";
+		// var reader = await cmd.ExecuteReaderAsync();
+
+		// var table = new PpTable(name);
+
+		foreach (var col in res)
+		{
+			table.Columns.Add(new(col.column_name, ToPpDataType(col.column_type)));
+		}
+
+		var dbg = 2;
+
+		// return table;
+	}
 
 	public async Task<PpDbAppender> CreateAppenderAsync(PpTable table)
 	{
@@ -195,6 +201,51 @@ public class PpDb : IPpDb
 		}
 	}
 
+	public async Task V_NonQueryRawAsync(string query)
+	{
+		await using var db = await CreateConnectionAsync();
+		await using var cmd = db.CreateCommand();
+
+		cmd.CommandText = query;
+
+		await cmd.ExecuteNonQueryAsync();
+	}
+
+	public async IAsyncEnumerable<PpRecord> V_QueryRawAsync(string query)
+	{
+		await using var db = await CreateConnectionAsync();
+		await using var cmd = db.CreateCommand();
+
+		cmd.CommandText = query;
+
+		var reader = await cmd.ExecuteReaderAsync();
+		while (await reader.ReadAsync())
+		{
+			var dict = new Dictionary<string, PpField>();
+
+			for (var i = 0; i < reader.FieldCount; i++)
+			{
+				var name = reader.GetName(i);
+				var type = reader.GetFieldType(i);
+				// var isNull = reader.IsDBNull(i);
+				var val2 = reader.GetValue(i);
+				// var val = isNull ? null : reader.GetString(i);
+
+				if (val2 == DBNull.Value)
+				{
+					val2 = null;
+				}
+
+				dict[name] = new(ToPpDataType(type), val2);
+			}
+
+			yield return new PpRecord()
+			{
+				Fields = dict,
+			};
+		}
+	}
+
 	public async IAsyncEnumerable<PpRecord> V_QueryAsync(PpTable table, string query)
 	{
 		await using var db = await CreateConnectionAsync();
@@ -230,6 +281,7 @@ public class PpDb : IPpDb
 	{
 		{ typeof(bool),				PpDataType.PpBool },
 		{ typeof(DateTime),			PpDataType.PpDateTime },
+		{ typeof(double),			PpDataType.PpDouble },
 		{ typeof(float),			PpDataType.PpFloat },
 		{ typeof(Guid),				PpDataType.PpGuid },
 		{ typeof(int),				PpDataType.PpInt32 },
@@ -241,6 +293,7 @@ public class PpDb : IPpDb
 	{
 		{ DuckDBType.Boolean,		PpDataType.PpBool },
 		{ DuckDBType.Timestamp,		PpDataType.PpDateTime },
+		{ DuckDBType.Double,		PpDataType.PpDouble },
 		{ DuckDBType.Float,			PpDataType.PpFloat },
 		{ DuckDBType.Uuid,			PpDataType.PpGuid },
 		{ DuckDBType.Integer,		PpDataType.PpInt32 },

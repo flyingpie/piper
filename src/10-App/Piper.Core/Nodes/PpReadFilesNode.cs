@@ -63,51 +63,54 @@ public class PpReadFilesNode : PpNode
 		_outLines.Columns = cols;
 
 		await _outLines.ClearAsync();
-		await using var appender = await _outLines.CreateAppenderAsync();
 
-		var i = 0;
-		await foreach (var file in inTable.QueryAllAsync())
 		{
-			Progress = ((float)i) / inTable.Count;
+			await using var appender = await _outLines.CreateAppenderAsync();
 
-			if (i % 1000 == 0)
+			var i = 0;
+			await foreach (var file in inTable.QueryAllAsync())
 			{
-				Changed();
-			}
+				Progress = ((float)i) / inTable.Count;
 
-			// Get attribute
-			var field = file.Fields.FirstOrDefault(f => f.Key?.Equals(InAttr, StringComparison.OrdinalIgnoreCase) ?? false);
+				if (i % 1000 == 0)
+				{
+					Changed();
+				}
 
-			if (string.IsNullOrWhiteSpace(field.Value?.ValueAsString))
-			{
-				Logs.Warning($"Record does not have an attribute with name '{InAttr}'");
-				appender.Add(CreateRecord(file, -1, string.Empty));
-				continue;
-			}
+				// Get attribute
+				var field = file.Fields.FirstOrDefault(f => f.Key?.Equals(InAttr, StringComparison.OrdinalIgnoreCase) ?? false);
 
-			// Read file
-			var path = field.Value.ValueAsString;
-			if (!File.Exists(path))
-			{
-				Logs.Warning($"File at path '{path}' does not exist");
-				appender.Add(CreateRecord(file, -1, string.Empty));
-				continue;
-			}
+				if (string.IsNullOrWhiteSpace(field.Value?.ValueAsString))
+				{
+					Logs.Warning($"Record does not have an attribute with name '{InAttr}'");
+					appender.Add(CreateRecord(file, -1, string.Empty));
+					continue;
+				}
 
-			Logs.Info($"({i++}/{9999}) Reading file at path {path}");
+				// Read file
+				var path = field.Value.ValueAsString;
+				if (!File.Exists(path))
+				{
+					Logs.Warning($"File at path '{path}' does not exist");
+					appender.Add(CreateRecord(file, -1, string.Empty));
+					continue;
+				}
 
-			var fileInfo = new FileInfo(path);
-			if (fileInfo.Length > MaxFileSize)
-			{
-				Logs.Warning($"File at path '{path}' exceeds max size, skipping. Increase '{MaxFileSize}' to include larger files.");
-				continue;
-			}
+				Logs.Info($"({i++}/{9999}) Reading file at path {path}");
 
-			var lines = await File.ReadAllLinesAsync(path);
-			for (var j = 0; j < lines.Length; j++)
-			{
-				var line = lines[j];
-				appender.Add(CreateRecord(file, j, line));
+				var fileInfo = new FileInfo(path);
+				if (fileInfo.Length > MaxFileSize)
+				{
+					Logs.Warning($"File at path '{path}' exceeds max size, skipping. Increase '{MaxFileSize}' to include larger files.");
+					continue;
+				}
+
+				var lines = await File.ReadAllLinesAsync(path);
+				for (var j = 0; j < lines.Length; j++)
+				{
+					var line = lines[j];
+					appender.Add(CreateRecord(file, j, line));
+				}
 			}
 		}
 

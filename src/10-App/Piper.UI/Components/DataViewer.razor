@@ -42,7 +42,7 @@
 						@switch (field.PpDataType)
 						{
 							case PpDataType.PpDateTime:
-								@(item.Fields.TryGetValue(field.Name, out var v1) ? v1.ValueAsDateTime.Value.ToString("s") : null)
+								@(item.Fields.TryGetValue(field.Name, out var v1) ? v1.ValueAsDateTime?.ToString("s") : null)
 								break;
 
 							default:

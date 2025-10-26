@@ -16,7 +16,7 @@ public partial class DataViewer : ComponentBase
 
 	public List<PpColumn> Columns = [];
 
-	public List<PpRecord> Records { get; set; } = [];
+	public IEnumerable<PpRecord> Records { get; set; } = [];
 
 	public int RecordCount { get; set; }
 
