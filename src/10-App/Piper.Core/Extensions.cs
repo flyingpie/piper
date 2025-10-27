@@ -1,7 +1,9 @@
 using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Models;
+using Microsoft.Extensions.Logging;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
+using Piper.Core.Utils;
 using System.Reflection;
 
 namespace Piper.Core;
@@ -31,6 +33,9 @@ public static class Extensions
 
 	public static void LoadGraph(this BlazorDiagram diagram, PpGraph graph)
 	{
+		var log = Log.For(typeof(Extensions));
+		log.LogInformation("Loading graph '{Graph}'", graph);
+
 		diagram.Links.Clear();
 		diagram.Nodes.Clear();
 
@@ -99,7 +104,8 @@ public static class Extensions
 				if (prop.PropertyType == typeof(PpNodeInput))
 				{
 					var pp = new PpNodePort(node, PortAlignment.Left);
-					pp.PortAttribute = inAttr;
+					// pp.PortAttribute = inAttr;
+					pp.Name = inAttr.Name;
 					pp.GetNodeInput = () => (PpNodeInput)prop.GetValue(node)!;
 					node.AddPort(pp);
 					yield return pp;
@@ -107,7 +113,8 @@ public static class Extensions
 				else if (prop.PropertyType == typeof(PpNodeOutput))
 				{
 					var pp = new PpNodePort(node, PortAlignment.Right);
-					pp.PortAttribute = inAttr;
+					// pp.PortAttribute = inAttr;
+					pp.Name = inAttr.Name;
 					pp.GetNodeOutput = () => (PpNodeOutput)prop.GetValue(node)!;
 					node.AddPort(pp);
 					yield return pp;

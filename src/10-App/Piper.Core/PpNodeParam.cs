@@ -29,6 +29,12 @@ public class PpNodeParam : IPpNodeProperty
 
 	public Action<object?> Setter { get; set; }
 
+	public bool ValueAsBool
+	{
+		get => Value as bool? ?? false;
+		set => Value = value;
+	}
+
 	public int ValueAsInt
 	{
 		get => Value as int? ?? 0;

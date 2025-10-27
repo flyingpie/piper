@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Piper.Core.Utils;
 using Piper.UI;
+using Piper.UI.Components.Logs;
 
 namespace Piper.Host.BlazorServer;
 
@@ -15,7 +18,11 @@ internal static class Program
 		builder.Services.AddRazorPages();
 		builder.Services.AddServerSideBlazor();
 
+		builder.Logging.AddProvider(BlazorLoggerProvider.Instance);
+
 		var app = builder.Build();
+
+		Log.Factory = app.Services.GetRequiredService<ILoggerFactory>();
 
 		app.UseStaticFiles();
 

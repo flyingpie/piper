@@ -2,6 +2,7 @@
 @using Blazor.Diagrams.Components.Widgets
 @using Piper.Core
 @using Piper.UI.Components.CodeEditor
+@using Piper.UI.Components.Logs
 @using Piper.UI.Components.Nodes
 @using Piper.UI.Services
 
@@ -156,10 +157,9 @@
 						<PpCodeEditor/>
 					</RadzenStack>
 				</RadzenTabsItem>
-				@*
-				<RadzenTabsItem Text="Graphs" Icon="graph_2">
+				<RadzenTabsItem Text="Logs" Icon="graph_2">
+					<LogsPanel />
 				</RadzenTabsItem>
-				*@
 			</Tabs>
 		</RadzenTabs>
 

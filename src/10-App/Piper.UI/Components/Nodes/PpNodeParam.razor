@@ -1,9 +1,20 @@
 @using Piper.Core
 @using Piper.UI.Components.CodeEditor
+
+@if (Param.Value is bool)
+{
+	<RadzenFormField Text="@Param.Name" Style="width: 100%;">
+		<RadzenCheckBox
+			@bind-Value="@Param.ValueAsBool"
+			@onmousedown:stopPropagation
+			@onmousemove:stopPropagation
+		/>
+	</RadzenFormField>
+}
+
 @if (Param.Value is int)
 {
 	<RadzenFormField Text="@Param.Name" Style="width: 100%;">
-
 		<RadzenNumeric
 			@bind-Value="@Param.ValueAsInt"
 			@onmousedown:stopPropagation

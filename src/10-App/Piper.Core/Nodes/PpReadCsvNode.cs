@@ -1,3 +1,4 @@
+using Blazor.Diagrams.Core.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Piper.Core.Attributes;
@@ -44,6 +45,9 @@ public class PpReadCsvNode : PpNode
 	[PpParam("Max File Size")]
 	public int MaxFileSize { get; set; } = 2_000_000; // 2MB
 
+	[PpParam("Max Schemas")]
+	public int MaxSchemas { get; set; } = 10;
+
 	[PpPort(Out, "Lines")]
 	public PpNodeOutput OutLines { get; }
 
@@ -66,10 +70,10 @@ public class PpReadCsvNode : PpNode
 		// var paths = await GetFilePathsAsync(inTable);
 		// var pathsStr = string.Join(", ", paths.Select(p => $"'{p}'"));
 
-		await PpDb.Instance.V_NonQueryRawAsync($"create table \"{_outLines.TableName}\" as select * from read_csv('{PathPattern}', union_by_name = true)");
+		// await PpDb.Instance.V_NonQueryRawAsync($"create table \"{_outLines.TableName}\" as select * from read_csv('{PathPattern}', union_by_name = true)");
+		// await _outLines.InitAsync();
 
-		// await _outLines.DoneAsync();
-		await _outLines.InitAsync();
+		_dynNodeProps.Add(new PpNodePort(this, PortAlignment.Right) { Name = $"Dyn Port {_dynNodeProps.Count}" });
 	}
 
 	// private async Task<List<string>> GetFilePathsAsync(PpTable table)

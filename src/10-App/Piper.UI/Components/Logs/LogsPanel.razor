@@ -1,0 +1,36 @@
+<RadzenDataGrid
+	AllowColumnResize="true"
+	Data="@EventsFiltered"
+	Density="Density.Compact">
+	<Columns>
+		<RadzenDataGridColumn
+			Property="@nameof(BlazorLogEvent.Timestamp)"
+			Title="Timestamp"
+			Width="200px"
+			TextAlign="TextAlign.Center"/>
+
+		<RadzenDataGridColumn
+			Property="@nameof(BlazorLogEvent.Level)"
+			Title="Level"
+			Width="160px">
+			<Template Context="data">
+				<span class="@GetBackgroundClass(data.Level)">_</span>
+				@data.Level
+			</Template>
+		</RadzenDataGridColumn>
+
+		<RadzenDataGridColumn
+			Title="Exception Type"
+			Width="200px">
+			<Template Context="data">
+				@(data.Exception?.GetType().FullName)
+			</Template>
+		</RadzenDataGridColumn>
+
+		<RadzenDataGridColumn Title="Message">
+			<Template Context="data">
+				<pre style="font-size: .9em; margin: 0; white-space: break-spaces;">@(data.Exception?.ToString() ?? data.Message)</pre>
+			</Template>
+		</RadzenDataGridColumn>
+	</Columns>
+</RadzenDataGrid>

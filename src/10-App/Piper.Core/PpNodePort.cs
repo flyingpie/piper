@@ -23,9 +23,9 @@ public class PpNodePort : PortModel, IPpNodeProperty
 		_onChange = onChange;
 	}
 
-	public string Name => PortAttribute.Name;
+	public string Name { get; set; } //=> PortAttribute.Name;
 
-	public PpPortAttribute PortAttribute { get; set; }
+	// public PpPortAttribute PortAttribute { get; set; }
 
 	public Func<PpNodeInput>? GetNodeInput { get; set; }
 

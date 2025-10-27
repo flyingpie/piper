@@ -9,9 +9,12 @@ public abstract class PpNode : NodeModel
 {
 	private Action<PpNode> _onChange = _ => { };
 
+	private readonly List<IPpNodeProperty> _fixedNodeProps;
+	protected readonly List<IPpNodeProperty> _dynNodeProps = [];
+
 	protected PpNode()
 	{
-		NodeProps = this.GetNodeProps().ToList();
+		_fixedNodeProps = this.GetNodeProps().ToList();
 		NodeParams = NodeProps.OfType<PpNodeParam>().ToList();
 		NodePorts = NodeProps.OfType<PpNodePort>().ToList();
 	}
@@ -38,7 +41,7 @@ public abstract class PpNode : NodeModel
 
 	public PpLogs Logs { get; } = new();
 
-	public IReadOnlyCollection<IPpNodeProperty> NodeProps { get; }
+	public IEnumerable<IPpNodeProperty> NodeProps => _fixedNodeProps.Concat(_dynNodeProps);
 
 	public IReadOnlyCollection<PpNodeParam> NodeParams { get; }
 

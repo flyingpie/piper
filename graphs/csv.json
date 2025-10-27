@@ -43,7 +43,7 @@
 		"id": "yNahTQCovG:PpDuckNode:List Files 01",
 		"pos": "1356,780",
 		"params": {
-			"Query": "select      *\nfrom        $table\nwhere       file__size \u003E 1500\norder by    file__createdutc desc, idx desc\n"
+			"Query": "select\t\t*\nfrom\t\t$table\nwhere\t\tfile__size \u003E 1500\norder by\tfile__createdutc desc\n,\t\t\tidx desc\n"
 		},
 		"ports": {
 			"InRecords": "WG64J9FTdvE:OutLines"
@@ -74,11 +74,8 @@
 		"id": "Gx8RfeKpP5:PpReadCsvNode:Read CSV 01",
 		"pos": "974,1105",
 		"params": {
-			"InAttr": "file__path",
+			"PathPattern": "",
 			"MaxFileSize": "2000000"
-		},
-		"ports": {
-			"InFiles": "GgRKvMPM:OutFiles"
 		}
 	}
 ]
