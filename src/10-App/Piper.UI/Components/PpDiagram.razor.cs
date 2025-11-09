@@ -79,7 +79,7 @@ public partial class PpDiagram : ComponentBase
 					new PpReadCsvNode()
 					{
 						Name = $"Read CSV {++_idx:00}",
-						PathPattern = "/home/marco/Downloads/**/*.csv",
+						// PathPattern = "/home/marco/Downloads/**/*.csv",
 						Position = new BD.Point(a1.ClientX, a1.ClientY),
 					});
 				break;
