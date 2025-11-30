@@ -91,6 +91,7 @@ public static class Extensions
 					Name = prop.Name,
 					Hint = paramAttr.Hint,
 					// Value = prop.GetValue(node),
+					Type = prop.PropertyType,
 					Getter = () => prop.GetValue(node),
 					Setter = v => prop.SetValue(node, v),
 				};

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Piper.Core;
 using Piper.Core.Nodes;
+using Piper.Core.Nodes.Unix;
 using Piper.Core.Serialization;
 using Piper.UI.Services;
 using Radzen;
@@ -84,6 +85,15 @@ public partial class PpDiagram : ComponentBase
 					});
 				break;
 
+			case "PP_NODE_READ_XSLX":
+				Diagram.Nodes.Add(
+					new PpReadXlsxNode()
+					{
+						Name = $"Read XSLX {++_idx:00}",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					});
+				break;
+
 			case "PP_NODE_QUERY":
 				Diagram.Nodes.Add(
 					new PpDuckNode()
@@ -91,6 +101,16 @@ public partial class PpDiagram : ComponentBase
 						Name = $"List Files {++_idx:00}",
 						// InPath = "/home/marco/Downloads",
 						// InPattern = "*.txt",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					});
+				break;
+
+			case "PP_NODE_SMAP":
+				Diagram.Nodes.Add(
+					new PpSMapNode()
+					{
+						Name = $"SMAP {++_idx:00}",
+						// PathPattern = "/home/marco/Downloads/**/*.csv",
 						Position = new BD.Point(a1.ClientX, a1.ClientY),
 					});
 				break;

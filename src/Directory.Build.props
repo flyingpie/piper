@@ -1,6 +1,7 @@
 <Project>
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
+		<LangVersion>14</LangVersion>
 		<Nullable>enable</Nullable>
 
 		<!-- Include debug symbols in the assemblies themselves, makes debugging so much easier -->

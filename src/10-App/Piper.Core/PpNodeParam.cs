@@ -13,6 +13,8 @@ public class PpNodeParam : IPpNodeProperty
 
 	// private object? _value;
 
+	public Type Type { get; set; }
+
 	public PpParamHint Hint { get; set; }
 
 	public object? Value

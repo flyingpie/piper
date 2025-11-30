@@ -1,7 +1,7 @@
 @using Piper.Core
 @using Piper.UI.Components.CodeEditor
 
-@if (Param.Value is bool)
+@if (Param.Type == typeof(bool))
 {
 	<RadzenFormField Text="@Param.Name" Style="width: 100%;">
 		<RadzenCheckBox
@@ -12,7 +12,7 @@
 	</RadzenFormField>
 }
 
-@if (Param.Value is int)
+@if (Param.Type == typeof(int))
 {
 	<RadzenFormField Text="@Param.Name" Style="width: 100%;">
 		<RadzenNumeric
@@ -23,7 +23,7 @@
 	</RadzenFormField>
 }
 
-@if (Param.Value is string)
+@if (Param.Type == typeof(string))
 {
 	switch (Param.Hint)
 	{
@@ -42,7 +42,7 @@
 	}
 }
 
-@if (Param.Value is string)
+@if (Param.Type == typeof(string))
 {
 	@* <PpCodeEditor Language="sql" @bind-Text="Param.ValueAsString" /> *@
 }

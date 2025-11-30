@@ -1,4 +1,8 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Photino.Blazor;
+using Piper.Core.Utils;
+using Piper.UI.Components.Logs;
 using System.Drawing;
 
 namespace Piper.UI;
@@ -7,13 +11,17 @@ internal static class Program
 {
 	public static void Main(string[] args)
 	{
-		var appBuilder = PhotinoBlazorAppBuilder.CreateDefault();
+		var builder = PhotinoBlazorAppBuilder.CreateDefault();
 
-		appBuilder.Services.AddPiper();
 
-		appBuilder.RootComponents.Add<App>("app");
+		builder.Services.AddPiper();
+		builder.Services.AddSingleton<ILoggerProvider>(BlazorLoggerProvider.Instance);
 
-		var app = appBuilder.Build();
+		builder.RootComponents.Add<App>("app");
+
+		var app = builder.Build();
+
+		Log.Factory = app.Services.GetRequiredService<ILoggerFactory>();
 
 		app.MainWindow.SetLogVerbosity(0)
 			.SetSize(new Size(1920, 900))

@@ -5,6 +5,8 @@ namespace Piper.Core.Logging;
 
 public class PpLogs
 {
+	private readonly ILogger _log = global::Piper.Core.Utils.Log.For<PpLogs>();
+
 	private readonly ConcurrentQueue<PpLog> _logs = [];
 
 	public IReadOnlyCollection<PpLog> Logs => _logs;
@@ -12,7 +14,11 @@ public class PpLogs
 	public void Clear() => _logs.Clear();
 
 	public void Log(LogLevel level, string message)
-		=> _logs.Enqueue(new(level, message));
+	{
+		_log.Log(level, message);
+
+		_logs.Enqueue(new(level, message));
+	}
 
 	public void Debug(string message)
 		=> Log(LogLevel.Debug, message);

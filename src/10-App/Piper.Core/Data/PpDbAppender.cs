@@ -10,6 +10,14 @@ public sealed class PpDbAppender(DuckDBConnection conn, DuckDBAppender appender,
 
 	private int _i;
 
+	public void AddRange(IEnumerable<PpRecord> records)
+	{
+		foreach (var record in records)
+		{
+			Add(record);
+		}
+	}
+
 	public void Add(PpRecord record)
 	{
 		Guard.Against.Null(record);

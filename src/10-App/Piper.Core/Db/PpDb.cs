@@ -1,7 +1,9 @@
 using Dapper;
 using DuckDB.NET.Data;
 using DuckDB.NET.Native;
+using Microsoft.Extensions.Logging;
 using Piper.Core.Data;
+using Piper.Core.Utils;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Piper.Core.Db;
@@ -19,6 +21,8 @@ public interface IPpDb
 
 public class PpDb : IPpDb
 {
+	private readonly ILogger _log = Log.For<PpDb>();
+
 	public static PpDb Instance { get; } = new();
 
 	public async Task V_CreateTableAsync(PpTable table)
@@ -120,6 +124,8 @@ public class PpDb : IPpDb
 		// var reader = await cmd.ExecuteReaderAsync();
 
 		// var table = new PpTable(name);
+
+		table.Columns.Clear();
 
 		foreach (var col in res)
 		{
@@ -248,6 +254,8 @@ public class PpDb : IPpDb
 
 	public async IAsyncEnumerable<PpRecord> V_QueryAsync(PpTable table, string query)
 	{
+		_log.LogInformation("Executing query '{Query}' on table '{Table}'", query, table);
+
 		await using var db = await CreateConnectionAsync();
 		await using var cmd = db.CreateCommand();
 

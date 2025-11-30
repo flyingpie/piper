@@ -13,12 +13,12 @@ internal static class Program
 	{
 		var builder = WebApplication.CreateBuilder(args);
 
+		builder.Logging.AddProvider(BlazorLoggerProvider.Instance);
+
 		// Add services to the container.
 		builder.Services.AddPiper();
 		builder.Services.AddRazorPages();
 		builder.Services.AddServerSideBlazor();
-
-		builder.Logging.AddProvider(BlazorLoggerProvider.Instance);
 
 		var app = builder.Build();
 

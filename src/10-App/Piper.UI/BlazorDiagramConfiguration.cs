@@ -8,6 +8,7 @@ using Blazor.Diagrams.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Piper.Core;
 using Piper.Core.Nodes;
+using Piper.Core.Nodes.Unix;
 using Piper.Core.Serialization;
 using Piper.UI.Components.Nodes;
 using System.IO;
@@ -91,6 +92,9 @@ public static class BlazorDiagramConfiguration
 		diagram.RegisterComponent<PpReadFilesNode, GenericNodeView>();
 		diagram.RegisterComponent<PpDuckNode, GenericNodeView>();
 		diagram.RegisterComponent<PpReadCsvNode, GenericNodeView>();
+		diagram.RegisterComponent<PpReadXlsxNode, GenericNodeView>();
+
+		diagram.RegisterComponent<PpSMapNode, GenericNodeView>();
 
 		// diagram.LoadGraph(graph);
 
