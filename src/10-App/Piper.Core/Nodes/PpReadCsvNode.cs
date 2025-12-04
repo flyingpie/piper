@@ -110,11 +110,11 @@ public class PpReadCsvNode : PpNode
 
 		// var paths = await GetFilePathsAsync(inTable);
 		// var pathsStr = string.Join(", ", paths.Select(p => $"'{p}'"));
-		await PpDb.Instance.V_NonQueryRawAsync($"""
-			create or replace table "{_outLines.TableName}"
-				as select * from read_csv('{Path}', union_by_name = true)
-			""");
-		await _outLines.InitAsync();
+// 		await PpDb.Instance.NonQueryRawAsync($"""
+// 			create or replace table "{_outLines.TableName}"
+// 				as select * from read_csv('{Path}', union_by_name = true)
+// 			""");
+// 		await _outLines.InitAsync();
 
 		// _dynNodeProps.Add(new PpNodePort(this, PortAlignment.Right) { Name = $"Dyn Port {_dynNodeProps.Count}" });
 	}

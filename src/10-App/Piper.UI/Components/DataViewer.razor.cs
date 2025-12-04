@@ -113,7 +113,7 @@ public partial class DataViewer : ComponentBase
 
 		RecordCount = (int)await PpDb.Instance.CountAsync(sqlCount);
 		// Records = await PpDb.Instance.QueryAsync(sql).ToListAsync();
-		Records = await PpDb.Instance.V_QueryAsync(table, sql).ToListAsync();
+		Records = await PpDb.Instance.QueryAsync(table, sql).ToListAsync();
 
 		Console.WriteLine($"Data reload took {sw.Elapsed}");
 	}

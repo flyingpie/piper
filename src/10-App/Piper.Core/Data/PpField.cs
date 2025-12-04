@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Piper.Core.Data;
 
 public class PpField
@@ -27,6 +29,7 @@ public class PpField
 		Value = value;
 	}
 
+	// [JsonIgnore]
 	public PpDataType DataType { get; set; }
 
 	public object? Value { get; set; }

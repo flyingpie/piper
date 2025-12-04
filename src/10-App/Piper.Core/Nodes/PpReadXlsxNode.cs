@@ -52,10 +52,10 @@ public class PpReadXlsxNode : PpNode
 			return;
 		}
 
-		await PpDb.Instance.V_NonQueryRawAsync($"""
-			create or replace table "{_outLines.TableName}"
-				as select * from read_xlsx('{Path}', header = {HasHeaderRow.ToString().ToUpperInvariant()}, all_varchar = {AllVarchar.ToString().ToUpperInvariant()})
-			""");
-		await _outLines.InitAsync();
+// 		await PpDb.Instance.NonQueryRawAsync($"""
+// 			create or replace table "{_outLines.TableName}"
+// 				as select * from read_xlsx('{Path}', header = {HasHeaderRow.ToString().ToUpperInvariant()}, all_varchar = {AllVarchar.ToString().ToUpperInvariant()})
+// 			""");
+// 		await _outLines.InitAsync();
 	}
 }

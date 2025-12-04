@@ -82,7 +82,7 @@ public class ScriptingTest
 			]);
 
 		// Create Table
-		await PpDb.Instance.V_CreateTableAsync(table);
+		await PpDb.Instance.CreateTableAsync(table);
 
 		// Insert
 		var data = new PpRecord[]
@@ -125,10 +125,10 @@ public class ScriptingTest
 			},
 		};
 
-		await PpDb.Instance.V_InsertDataAsync(table, data);
+		await PpDb.Instance.InsertDataAsync(table, data);
 
 		// Query
-		var res = await PpDb.Instance.V_QueryAsync(table, "select * from $table").ToListAsync();
+		var res = await PpDb.Instance.QueryAsync(table, "select * from $table").ToListAsync();
 
 		// Meta
 		// var table2 = new PpTable("my_table_1");
