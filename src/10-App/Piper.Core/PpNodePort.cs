@@ -9,14 +9,8 @@ public class PpNodePort : PortModel, IPpNodeProperty
 {
 	private Action<PpNodePort>? _onChange;
 
-	public PpNodePort(
-		NodeModel parent,
-		PortAlignment alignment = PortAlignment.Bottom,
-		Point? position = null,
-		Size? size = null)
-		: base(parent, alignment, position, size)
-	{
-	}
+	public PpNodePort(NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, Size? size = null)
+		: base(parent, alignment, position, size) { }
 
 	public void OnChange(Action<PpNodePort> onChange)
 	{

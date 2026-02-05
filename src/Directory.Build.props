@@ -1,7 +1,6 @@
 <Project>
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<LangVersion>14</LangVersion>
 		<Nullable>enable</Nullable>
 
 		<!-- Include debug symbols in the assemblies themselves, makes debugging so much easier -->
@@ -19,15 +18,6 @@
 
 		<!-- Put any generated stuff (including "bin" and  "obj" folders, and NuGet packages) in an "artifacts" folder, instead of spread out across the source. -->
 		<ArtifactsPath>$(MSBuildThisFileDirectory)/../artifacts</ArtifactsPath>
-	</PropertyGroup>
-
-	<!-- All projects -->
-	<PropertyGroup>
-		<!--
-			Set compiler in "strict" mode, which enables some checks that weren't enabled by default, due to them being
-			breaking changes (i.e. compiling some code fine one version, and then no longer compiling the next).
-		-->
-		<Features>strict</Features>
 
 		<!--
 			Faster NuGet restores
@@ -37,7 +27,7 @@
 	</PropertyGroup>
 
 	<!-- Test projects -->
-	<PropertyGroup Condition=" $(MSBuildProjectName.EndsWith('Test')) ">
+	<PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Test'))">
 		<EnableNETAnalyzers>false</EnableNETAnalyzers>
 		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
 		<RunAnalyzers>false</RunAnalyzers>
@@ -49,17 +39,30 @@
 		<TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
 	</PropertyGroup>
 
-	<ItemGroup Condition=" $(MSBuildProjectName.EndsWith('Test')) ">
-		<PackageReference Include="coverlet.collector"/>
-		<PackageReference Include="Moq"/>
-		<PackageReference Include="MSTest"/>
-		<PackageReference Include="SystemTextJson.JsonDiffPatch.MSTest"/>
+	<ItemGroup Condition="$(MSBuildProjectName.EndsWith('Test'))">
+		<PackageReference Include="coverlet.collector" />
+		<PackageReference Include="Moq" />
+		<PackageReference Include="MSTest" />
+		<PackageReference Include="SystemTextJson.JsonDiffPatch.MSTest" />
 	</ItemGroup>
 
 	<!-- Analyzers -->
 	<ItemGroup>
-		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers"			PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
-		<PackageReference Include="SonarAnalyzer.CSharp"								PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
-		<PackageReference Include="StyleCop.Analyzers.Unstable"							PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+		<PackageReference Include="CSharpier.MSBuild" />
+		<PackageReference
+			Include="Microsoft.VisualStudio.Threading.Analyzers"
+			PrivateAssets="All"
+			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
+		/>
+		<PackageReference
+			Include="SonarAnalyzer.CSharp"
+			PrivateAssets="All"
+			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
+		/>
+		<PackageReference
+			Include="StyleCop.Analyzers.Unstable"
+			PrivateAssets="All"
+			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
+		/>
 	</ItemGroup>
 </Project>

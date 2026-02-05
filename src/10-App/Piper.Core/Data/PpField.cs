@@ -4,9 +4,7 @@ namespace Piper.Core.Data;
 
 public class PpField
 {
-	public PpField()
-	{
-	}
+	public PpField() { }
 
 	public PpField(Guid? valueAsGuid)
 	{
@@ -34,11 +32,7 @@ public class PpField
 
 	public object? Value { get; set; }
 
-	public bool ValueAsBool
-	{
-		get;
-		set;
-	}
+	public bool ValueAsBool { get; set; }
 
 	public DateTime? ValueAsDateTime => Value as DateTime?;
 

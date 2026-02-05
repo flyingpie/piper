@@ -6,12 +6,20 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\10-App\Piper.Core\Piper.Core.csproj" />
-		<ProjectReference Include="..\..\10-App\Piper.UI\Piper.UI.csproj"/>
+		<ProjectReference Include="..\..\10-App\Piper.UI\Piper.UI.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Content Update="wwwroot\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference
+			Update="SonarAnalyzer.CSharp"
+			PrivateAssets="all"
+			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
+		/>
 	</ItemGroup>
 </Project>

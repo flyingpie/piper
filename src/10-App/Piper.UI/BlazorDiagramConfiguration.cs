@@ -1,3 +1,4 @@
+using System.IO;
 using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Models;
@@ -11,7 +12,6 @@ using Piper.Core.Nodes;
 using Piper.Core.Nodes.Unix;
 using Piper.Core.Serialization;
 using Piper.UI.Components.Nodes;
-using System.IO;
 
 namespace Piper.UI;
 
@@ -28,8 +28,7 @@ public static class BlazorDiagramConfiguration
 		// var desJsonStr = File.ReadAllText(path);
 		// var graph = PpNodeSerializer.DeserializeGraph(desJsonStr);
 
-		return services
-			.AddSingleton(p => CreateDiagram());
+		return services.AddSingleton(p => CreateDiagram());
 	}
 
 	public static PpGraph CreateGraph()
@@ -51,14 +50,7 @@ public static class BlazorDiagramConfiguration
 			Position = new(400, 200),
 		};
 
-		return new PpGraph()
-		{
-			Nodes =
-			[
-				listFilesNode,
-				readFilesNode,
-			],
-		};
+		return new PpGraph() { Nodes = [listFilesNode, readFilesNode] };
 	}
 
 	private static BlazorDiagram CreateDiagram()
@@ -67,10 +59,7 @@ public static class BlazorDiagramConfiguration
 		{
 			AllowPanning = true,
 			AllowMultiSelection = true,
-			Groups =
-			{
-				Enabled = true,
-			},
+			Groups = { Enabled = true },
 			Links =
 			{
 				DefaultColor = "#aaaaaa",
@@ -80,11 +69,7 @@ public static class BlazorDiagramConfiguration
 				SnappingRadius = 15,
 				// Factory =
 			},
-			Zoom =
-			{
-				Enabled = true,
-				Inverse = true,
-			},
+			Zoom = { Enabled = true, Inverse = true },
 		};
 
 		var diagram = new BlazorDiagram(options);

@@ -1,5 +1,5 @@
-using Piper.Core.Db;
 using System.Threading;
+using Piper.Core.Db;
 
 namespace Piper.Core.Data;
 
@@ -8,9 +8,7 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 	private Action<PpTable> _onChange = _ => { };
 
 	public PpTable(string tableName)
-		: this(tableName, [])
-	{
-	}
+		: this(tableName, []) { }
 
 	public long Count { get; set; }
 

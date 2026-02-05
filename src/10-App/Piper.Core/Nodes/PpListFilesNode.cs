@@ -13,10 +13,7 @@ public class PpListFilesNode : PpNode
 	{
 		_files = new(PpTable.GetTableName(this, nameof(OutFiles)));
 
-		OutFiles = new(this, nameof(OutFiles))
-		{
-			Table = () => _files,
-		};
+		OutFiles = new(this, nameof(OutFiles)) { Table = () => _files };
 	}
 
 	public override string Color => "#8a2828";
@@ -61,7 +58,6 @@ public class PpListFilesNode : PpNode
 			new("file__ext", PpString),
 			new("file__size", PpInt32),
 			new("file__createdutc", PpDateTime),
-
 			// new("file.dir", PpString),
 			// new("file.name", PpString),
 			// new("file.name_without_ext", PpString),
@@ -100,10 +96,8 @@ public class PpListFilesNode : PpNode
 		var it = Directory.EnumerateFiles(
 			path: InPath,
 			searchPattern: InPattern,
-			enumerationOptions: new EnumerationOptions()
-			{
-				RecurseSubdirectories = true,
-			});
+			enumerationOptions: new EnumerationOptions() { RecurseSubdirectories = true }
+		);
 
 		// var files = Directory.GetFiles(
 		// 	path: InPath,
@@ -127,18 +121,20 @@ public class PpListFilesNode : PpNode
 
 				var fi = new FileInfo(path);
 
-				appender.Add(new()
-				{
-					Fields =
+				appender.Add(
+					new()
 					{
-						{ "rec__uuid", new(PpGuid, Guid.CreateVersion7()) },
-						{ "file__name", new(PpString, Path.GetFileName(path)) },
-						{ "file__path", new(PpString, Path.GetFullPath(path)) },
-						{ "file__ext", new(PpString, Path.GetExtension(path)) },
-						{ "file__size", new(PpInt32, (int)fi.Length) },
-						{ "file__createdutc", new(PpDateTime, fi.CreationTimeUtc) },
-					},
-				});
+						Fields =
+						{
+							{ "rec__uuid", new(PpGuid, Guid.CreateVersion7()) },
+							{ "file__name", new(PpString, Path.GetFileName(path)) },
+							{ "file__path", new(PpString, Path.GetFullPath(path)) },
+							{ "file__ext", new(PpString, Path.GetExtension(path)) },
+							{ "file__size", new(PpInt32, (int)fi.Length) },
+							{ "file__createdutc", new(PpDateTime, fi.CreationTimeUtc) },
+						},
+					}
+				);
 			}
 		}
 

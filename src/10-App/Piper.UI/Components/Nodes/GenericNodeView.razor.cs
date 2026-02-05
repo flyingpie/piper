@@ -23,7 +23,5 @@ public partial class GenericNodeView : ComponentBase
 		return base.OnInitializedAsync();
 	}
 
-	private void OnNodeMouseDown()
-	{
-	}
+	private void OnNodeMouseDown() { }
 }

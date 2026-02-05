@@ -1,8 +1,8 @@
+using System.Globalization;
 using Blazor.Diagrams.Core.Geometry;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
 using Piper.Core.Utils;
-using System.Globalization;
 
 namespace Piper.Core.Serialization;
 
@@ -80,8 +80,7 @@ public static class PpNodeSerializer
 		var graph = new PpGraph();
 
 		var nodeTypes = typeof(PpNode) // TODO: Pull from all loaded assemblies
-			.Assembly
-			.GetTypes()
+			.Assembly.GetTypes()
 			.Where(t => !t.IsAbstract)
 			.Where(t => t.IsAssignableTo(typeof(PpNode)))
 			.ToDictionary(t => t.Name, t => t, StringComparer.OrdinalIgnoreCase);

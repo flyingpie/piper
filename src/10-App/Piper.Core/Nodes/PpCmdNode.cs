@@ -15,10 +15,7 @@ public class PpCmdNode : PpNode
 
 		InInputs = new(this, nameof(InInputs));
 
-		OutResults = new(this, nameof(OutResults))
-		{
-			Table = () => _results,
-		};
+		OutResults = new(this, nameof(OutResults)) { Table = () => _results };
 	}
 
 	public override bool SupportsProgress => true;
@@ -58,6 +55,5 @@ public class PpCmdNode : PpNode
 
 			proc.ArgumentList.Add(".");
 		}
-
 	}
 }

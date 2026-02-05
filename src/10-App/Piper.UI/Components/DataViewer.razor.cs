@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Components;
 using Piper.Core;
 using Piper.Core.Data;
@@ -5,7 +6,6 @@ using Piper.Core.Db;
 using Piper.UI.Services;
 using Radzen;
 using Radzen.Blazor;
-using System.Diagnostics;
 
 namespace Piper.UI.Components;
 
@@ -95,21 +95,17 @@ public partial class DataViewer : ComponentBase
 		Columns = table.Columns;
 
 		// Select
-		var sql =
-				$"""
-				select		*
-				from		{table.TableName}
-				offset		{args.Skip}
-				limit		{args.Top}
-				"""
-			;
+		var sql = $"""
+			select		*
+			from		{table.TableName}
+			offset		{args.Skip}
+			limit		{args.Top}
+			""";
 
-		var sqlCount =
-				$"""
-				select		count(1)
-				from		{table.TableName}
-				"""
-			;
+		var sqlCount = $"""
+			select		count(1)
+			from		{table.TableName}
+			""";
 
 		RecordCount = (int)await PpDb.Instance.CountAsync(sqlCount);
 		// Records = await PpDb.Instance.QueryAsync(sql).ToListAsync();

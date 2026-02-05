@@ -1,10 +1,10 @@
+using System.Reflection;
 using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.Extensions.Logging;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
 using Piper.Core.Utils;
-using System.Reflection;
 
 namespace Piper.Core;
 
@@ -23,10 +23,7 @@ public static class Extensions
 
 	public static PpGraph GetGraph(this BlazorDiagram diagram)
 	{
-		var graph = new PpGraph()
-		{
-			Nodes = diagram.Nodes.Cast<PpNode>().ToList(),
-		};
+		var graph = new PpGraph() { Nodes = diagram.Nodes.Cast<PpNode>().ToList() };
 
 		return graph;
 	}
@@ -71,14 +68,11 @@ public static class Extensions
 		}
 	}
 
-	public static IReadOnlyCollection<IPpNodeProperty> GetNodeProps(this PpNode node)
-		=> node.GetNodePropsInternal().ToList();
+	public static IReadOnlyCollection<IPpNodeProperty> GetNodeProps(this PpNode node) => node.GetNodePropsInternal().ToList();
 
 	private static IEnumerable<IPpNodeProperty> GetNodePropsInternal(this PpNode node)
 	{
-		var props = node
-			.GetType()
-			.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+		var props = node.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
 		foreach (var prop in props)
 		{

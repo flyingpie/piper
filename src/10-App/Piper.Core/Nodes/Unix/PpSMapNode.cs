@@ -11,7 +11,7 @@ public class PpSMapNode : PpNode
 	public PpSMapNode()
 	{
 		_outProcesses = new(PpTable.GetTableName(this, nameof(OutProcesses)));
-		OutProcesses = new(this, nameof(OutProcesses)) { Table = () => _outProcesses, };
+		OutProcesses = new(this, nameof(OutProcesses)) { Table = () => _outProcesses };
 	}
 
 	[PpParam("Process Name")]
@@ -24,10 +24,9 @@ public class PpSMapNode : PpNode
 
 	protected override async Task OnExecuteAsync()
 	{
-		var pids = Process
-				.GetProcesses()
-			// .Take(5)
-			;
+		var pids = Process.GetProcesses()
+		// .Take(5)
+		;
 
 		var isInit = false;
 
@@ -79,7 +78,9 @@ public class PpSMapNode : PpNode
 
 		var lines = await File.ReadAllLinesAsync(smapPath);
 
-		var headerRegex = new Regex(@"^(?<addr_from>[0-9a-f]+)-(?<addr_to>[0-9a-f]+) (?<perm>[^ ]+) (?<offset>[0-9a-f]+) (?<device>[0-9a-f]{2}:[0-9a-f]{2}) (?<inode>[0-9]+) +(?<module>.+)$");
+		var headerRegex = new Regex(
+			@"^(?<addr_from>[0-9a-f]+)-(?<addr_to>[0-9a-f]+) (?<perm>[^ ]+) (?<offset>[0-9a-f]+) (?<device>[0-9a-f]{2}:[0-9a-f]{2}) (?<inode>[0-9]+) +(?<module>.+)$"
+		);
 		var propRegex = new Regex(@"^(?<name>.+): +(?<val>.+)$");
 
 		PpRecord? rec = null;

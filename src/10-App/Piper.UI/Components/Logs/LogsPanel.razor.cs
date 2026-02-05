@@ -34,12 +34,12 @@ public partial class LogsPanel
 	private static string GetBackgroundClass(LogLevel level) =>
 		level switch
 		{
-			LogLevel.Critical		=> "rz-background-color-danger-dark",
-			LogLevel.Error			=> "rz-background-color-danger",
-			LogLevel.Warning		=> "rz-background-color-warning",
-			LogLevel.Information	=> "rz-background-color-primary-light",
-			LogLevel.Debug			=> "rz-background-color-base-700",
-			LogLevel.Trace			=> "rz-background-color-base-800",
+			LogLevel.Critical => "rz-background-color-danger-dark",
+			LogLevel.Error => "rz-background-color-danger",
+			LogLevel.Warning => "rz-background-color-warning",
+			LogLevel.Information => "rz-background-color-primary-light",
+			LogLevel.Debug => "rz-background-color-base-700",
+			LogLevel.Trace => "rz-background-color-base-800",
 			_ => string.Empty,
 		};
 }

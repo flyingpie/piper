@@ -12,7 +12,7 @@ public class PpReadXlsxNode : PpNode
 	public PpReadXlsxNode()
 	{
 		_outLines = new(PpTable.GetTableName(this, nameof(OutRows)));
-		OutRows = new(this, nameof(OutRows)) { Table = () => _outLines, };
+		OutRows = new(this, nameof(OutRows)) { Table = () => _outLines };
 	}
 
 	public override string Color => "#8a2828";
@@ -52,10 +52,10 @@ public class PpReadXlsxNode : PpNode
 			return;
 		}
 
-// 		await PpDb.Instance.NonQueryRawAsync($"""
-// 			create or replace table "{_outLines.TableName}"
-// 				as select * from read_xlsx('{Path}', header = {HasHeaderRow.ToString().ToUpperInvariant()}, all_varchar = {AllVarchar.ToString().ToUpperInvariant()})
-// 			""");
-// 		await _outLines.InitAsync();
+		// 		await PpDb.Instance.NonQueryRawAsync($"""
+		// 			create or replace table "{_outLines.TableName}"
+		// 				as select * from read_xlsx('{Path}', header = {HasHeaderRow.ToString().ToUpperInvariant()}, all_varchar = {AllVarchar.ToString().ToUpperInvariant()})
+		// 			""");
+		// 		await _outLines.InitAsync();
 	}
 }

@@ -1,5 +1,5 @@
-using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
+using Microsoft.Extensions.Logging;
 
 namespace Piper.Core.Logging;
 
@@ -20,15 +20,11 @@ public class PpLogs
 		_logs.Enqueue(new(level, message));
 	}
 
-	public void Debug(string message)
-		=> Log(LogLevel.Debug, message);
+	public void Debug(string message) => Log(LogLevel.Debug, message);
 
-	public void Error(string message)
-		=> Log(LogLevel.Error, message);
+	public void Error(string message) => Log(LogLevel.Error, message);
 
-	public void Info(string message)
-		=> Log(LogLevel.Information, message);
+	public void Info(string message) => Log(LogLevel.Information, message);
 
-	public void Warning(string message)
-		=> Log(LogLevel.Warning, message);
+	public void Warning(string message) => Log(LogLevel.Warning, message);
 }

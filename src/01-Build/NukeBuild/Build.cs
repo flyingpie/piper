@@ -48,7 +48,7 @@ public sealed class Build : NukeBuild
 
 	private AbsolutePath StagingDirectory => OutputDirectory / "staging";
 
-	[Solution(GenerateProjects = true, SuppressBuildProjectCheck = true)]
+	[Solution(GenerateProjects = true)]
 	private readonly Solution Solution;
 
 	private AbsolutePath PathToLinux64FrameworkDependentZip =>
@@ -105,7 +105,7 @@ public sealed class Build : NukeBuild
 						_.SetAssemblyVersion(AssemblyVersion)
 							.SetInformationalVersion(InformationalVersion)
 							.SetConfiguration(Configuration)
-							.SetProject(Solution._0_Host.Piper_Host_Photino)
+							.SetProject(Solution.P20_Host.Piper_Host_Photino)
 							.SetOutput(st)
 					);
 

@@ -31,7 +31,6 @@ public class SelectedThingyService
 		}
 	}
 
-
 	public bool IsNodeSelected(PpNode? node) => _selectedNode != null && _selectedNode == node;
 
 	public bool IsNodePortSelected(PpNodePort port) => _selectedPort != null && _selectedPort == port;

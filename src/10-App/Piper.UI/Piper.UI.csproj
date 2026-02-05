@@ -5,10 +5,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Blazorise.Icons.FontAwesome"/>
-		<PackageReference Include="BlazorMonaco"/>
-		<PackageReference Include="Newtonsoft.Json"/>
-		<PackageReference Include="Radzen.Blazor"/>
+		<PackageReference Include="Blazorise.Icons.FontAwesome" />
+		<PackageReference Include="BlazorMonaco" />
+		<PackageReference Include="Newtonsoft.Json" />
+		<PackageReference Include="Radzen.Blazor" />
+		<PackageReference
+			Update="SonarAnalyzer.CSharp"
+			PrivateAssets="all"
+			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
+		/>
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,5 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
@@ -8,13 +15,6 @@ using Piper.Core.Data;
 using Piper.Core.Db;
 using Piper.Core.Nodes;
 using Piper.Core.Utils;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 
 namespace Piper.Core.UnitTest;
 
@@ -23,18 +23,14 @@ public class ScriptingTest
 {
 	public class MyGlobals
 	{
-		public Dictionary<string, PpField> Rec { get; set; } = new(StringComparer.OrdinalIgnoreCase)
-		{
-			{ "col1", "Val 1" },
-			{ "col2", 42 },
-		};
+		public Dictionary<string, PpField> Rec { get; set; } =
+			new(StringComparer.OrdinalIgnoreCase) { { "col1", "Val 1" }, { "col2", 42 } };
 	}
 
 	[TestMethod]
 	public async Task METHOD()
 	{
-		var codeToEval =
-			"""
+		var codeToEval = """
 			int test = 0;
 			var count = test + 15;
 			count++;
@@ -52,20 +48,20 @@ public class ScriptingTest
 		var diags = scr.Compile();
 
 		// var result = await CSharpScript.EvaluateAsync(codeToEval, options);
-		var glbs = new MyGlobals()
-		{
-		};
+		var glbs = new MyGlobals() { };
 
-		var result = await scr.RunAsync(glbs, ex =>
-		{
-			var dbg2 = 2;
+		var result = await scr.RunAsync(
+			glbs,
+			ex =>
+			{
+				var dbg2 = 2;
 
-			return false;
-		});
+				return false;
+			}
+		);
 
 		var dbg = 2;
 	}
-
 
 	[TestMethod]
 	public async Task Test2()
@@ -73,13 +69,14 @@ public class ScriptingTest
 		var table = new PpTable(
 			"my_table_1",
 			[
-				new("prop0_bool",			PpDataType.PpBool),
-				new("prop0_datetime",		PpDataType.PpDateTime),
-				new("prop0_float",			PpDataType.PpFloat),
-				new("prop0_guid",			PpDataType.PpGuid),
-				new("prop0_int",			PpDataType.PpInt32),
-				new("prop0_string",			PpDataType.PpString)
-			]);
+				new("prop0_bool", PpDataType.PpBool),
+				new("prop0_datetime", PpDataType.PpDateTime),
+				new("prop0_float", PpDataType.PpFloat),
+				new("prop0_guid", PpDataType.PpGuid),
+				new("prop0_int", PpDataType.PpInt32),
+				new("prop0_string", PpDataType.PpString),
+			]
+		);
 
 		// Create Table
 		await PpDb.Instance.CreateTableAsync(table);
@@ -91,36 +88,90 @@ public class ScriptingTest
 			{
 				Fields =
 				{
-					{ "prop0_bool",			new() { Value = true } },
-					{ "prop0_datetime",		new() { Value = new DateTime(2024, 12, 31, 23, 45, 59) } },
-					{ "prop0_float",		new() { Value = 1234.5F } },
-					{ "prop0_guid",			new() { Value = Guid.AllBitsSet } },
-					{ "prop0_int",			new() { Value = 1234 } },
-					{ "prop0_string",		new() { Value = "my-string-yo" } },
+					{
+						"prop0_bool",
+						new() { Value = true }
+					},
+					{
+						"prop0_datetime",
+						new() { Value = new DateTime(2024, 12, 31, 23, 45, 59) }
+					},
+					{
+						"prop0_float",
+						new() { Value = 1234.5F }
+					},
+					{
+						"prop0_guid",
+						new() { Value = Guid.AllBitsSet }
+					},
+					{
+						"prop0_int",
+						new() { Value = 1234 }
+					},
+					{
+						"prop0_string",
+						new() { Value = "my-string-yo" }
+					},
 				},
 			},
 			new()
 			{
 				Fields =
 				{
-					{ "prop0_bool",			new() { Value = false } },
-					{ "prop0_datetime",		new() { Value = new DateTime(2099, 12, 31, 23, 45, 59) } },
-					{ "prop0_float",		new() { Value = 5432.1F } },
-					{ "prop0_guid",			new() { Value = Guid.Empty } },
-					{ "prop0_int",			new() { Value = 4321 } },
-					{ "prop0_string",		new() { Value = "another-string" } },
+					{
+						"prop0_bool",
+						new() { Value = false }
+					},
+					{
+						"prop0_datetime",
+						new() { Value = new DateTime(2099, 12, 31, 23, 45, 59) }
+					},
+					{
+						"prop0_float",
+						new() { Value = 5432.1F }
+					},
+					{
+						"prop0_guid",
+						new() { Value = Guid.Empty }
+					},
+					{
+						"prop0_int",
+						new() { Value = 4321 }
+					},
+					{
+						"prop0_string",
+						new() { Value = "another-string" }
+					},
 				},
 			},
 			new()
 			{
 				Fields =
 				{
-					{ "prop0_bool",			new() { Value = null } },
-					{ "prop0_datetime",		new() { Value = null } },
-					{ "prop0_float",		new() { Value = null } },
-					{ "prop0_guid",			new() { Value = null } },
-					{ "prop0_int",			new() { Value = null } },
-					{ "prop0_string",		new() { Value = null } },
+					{
+						"prop0_bool",
+						new() { Value = null }
+					},
+					{
+						"prop0_datetime",
+						new() { Value = null }
+					},
+					{
+						"prop0_float",
+						new() { Value = null }
+					},
+					{
+						"prop0_guid",
+						new() { Value = null }
+					},
+					{
+						"prop0_int",
+						new() { Value = null }
+					},
+					{
+						"prop0_string",
+						new() { Value = null }
+					},
 				},
 			},
 		};
@@ -142,11 +193,7 @@ public class ScriptingTest
 	[TestMethod]
 	public async Task PpListFilesNodeTest()
 	{
-		var node = new PpListFilesNode()
-		{
-			InPath = "/home/marco/Downloads",
-			InPattern = "*.txt",
-		};
+		var node = new PpListFilesNode() { InPath = "/home/marco/Downloads", InPattern = "*.txt" };
 
 		await node.ExecuteAsync();
 
@@ -177,7 +224,9 @@ public class ScriptingTest
 
 		var lines = await File.ReadAllLinesAsync(smapPath);
 
-		var headerRegex = new Regex(@"^(?<addr_from>[0-9a-f]+)-(?<addr_to>[0-9a-f]+) (?<perm>[^ ]+) (?<offset>[0-9a-f]+) (?<device>[0-9a-f]{2}:[0-9a-f]{2}) (?<inode>[0-9]+) +(?<module>.+)$");
+		var headerRegex = new Regex(
+			@"^(?<addr_from>[0-9a-f]+)-(?<addr_to>[0-9a-f]+) (?<perm>[^ ]+) (?<offset>[0-9a-f]+) (?<device>[0-9a-f]{2}:[0-9a-f]{2}) (?<inode>[0-9]+) +(?<module>.+)$"
+		);
 		var propRegex = new Regex(@"^(?<name>.+): +(?<val>.+)$");
 
 		PpRecord? rec = null;

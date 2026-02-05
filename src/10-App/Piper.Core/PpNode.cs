@@ -19,11 +19,9 @@ public abstract class PpNode : NodeModel
 		NodePorts = NodeProps.OfType<PpNodePort>().ToList();
 	}
 
-	public string NodeId { get; set; }
-		= ShortId.Generate(new GenerationOptions(useNumbers: true, useSpecialCharacters: false));
+	public string NodeId { get; set; } = ShortId.Generate(new GenerationOptions(useNumbers: true, useSpecialCharacters: false));
 
-	public virtual string NodeType
-		=> GetType().Name;
+	public virtual string NodeType => GetType().Name;
 
 	public string Name { get; set; }
 

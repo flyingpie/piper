@@ -14,7 +14,7 @@ public class PpReadFilesNode : PpNode
 		_outLines = new(PpTable.GetTableName(this, nameof(OutLines)));
 
 		InFiles = new(this, nameof(InFiles));
-		OutLines = new(this, nameof(OutLines)) { Table = () => _outLines, };
+		OutLines = new(this, nameof(OutLines)) { Table = () => _outLines };
 	}
 
 	public override string Color => "#8a2828";
@@ -54,11 +54,7 @@ public class PpReadFilesNode : PpNode
 		var inTable = InFiles.Output.Table();
 
 		var cols = inTable.Columns.ToList();
-		cols.AddRange(
-		[
-			new("idx", PpString),
-			new("line", PpString),
-		]);
+		cols.AddRange([new("idx", PpString), new("line", PpString)]);
 
 		_outLines.Columns = cols;
 

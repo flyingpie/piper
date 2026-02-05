@@ -58,8 +58,7 @@ public class PpDb : IPpDb
 		await using var db = await CreateConnectionAsync();
 		await using var cmd = db.CreateCommand();
 
-		cmd.CommandText =
-			$"""
+		cmd.CommandText = $"""
 			DROP TABLE IF EXISTS "{table.TableName}";
 			CREATE TABLE "{table.TableName}"
 			(
