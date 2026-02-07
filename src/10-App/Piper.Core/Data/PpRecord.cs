@@ -6,6 +6,8 @@ public class PpRecord
 {
 	public IDictionary<string, PpField> Fields { get; set; } = new Dictionary<string, PpField>(StringComparer.OrdinalIgnoreCase);
 
+	public string Data { get; set; }
+
 	public static PpRecord FromJson(string json) =>
 		new PpRecord() { Fields = PpJson.DeserializeRequired<IDictionary<string, PpField>>(json) };
 

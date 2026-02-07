@@ -1,5 +1,6 @@
 using Piper.Core.Attributes;
 using Piper.Core.Data;
+using Piper.Core.Utils;
 using static Piper.Core.Data.PpDataType;
 using static Piper.Core.Data.PpPortDirection;
 
@@ -53,15 +54,13 @@ public class PpListFilesNode : PpNode
 		_files.Columns =
 		[
 			new("rec__uuid", PpGuid),
-			new("file__name", PpString),
-			new("file__path", PpString),
-			new("file__ext", PpString),
-			new("file__size", PpInt32),
 			new("file__createdutc", PpDateTime),
-			// new("file.dir", PpString),
-			// new("file.name", PpString),
-			// new("file.name_without_ext", PpString),
-			// new("file.ext", PpString),
+			new("file__dir", PpString),
+			new("file__ext", PpString),
+			new("file__name", PpString),
+			new("file__name_without_ext", PpString),
+			new("file__path", PpString),
+			new("file__size", PpInt32),
 		];
 
 		// { "rec_uuid", new(PpGuid, Guid.CreateVersion7()) },
@@ -121,17 +120,32 @@ public class PpListFilesNode : PpNode
 
 				var fi = new FileInfo(path);
 
+				// appender.Add(
+				// 	PpJson.SerializeToString(
+				// 		new
+				// 		{
+				// 			fi.Name,
+				// 			fi.DirectoryName,
+				// 			fi.FullName,
+				// 			fi.Length,
+				// 			fi.CreationTimeUtc,
+				// 		}
+				// 	)
+				// );
+
 				appender.Add(
-					new()
+					new PpRecord()
 					{
 						Fields =
 						{
 							{ "rec__uuid", new(PpGuid, Guid.CreateVersion7()) },
-							{ "file__name", new(PpString, Path.GetFileName(path)) },
-							{ "file__path", new(PpString, Path.GetFullPath(path)) },
-							{ "file__ext", new(PpString, Path.GetExtension(path)) },
-							{ "file__size", new(PpInt32, (int)fi.Length) },
 							{ "file__createdutc", new(PpDateTime, fi.CreationTimeUtc) },
+							{ "file__dir", new(PpString, Path.GetDirectoryName(path)) },
+							{ "file__ext", new(PpString, Path.GetExtension(path)) },
+							{ "file__name", new(PpString, Path.GetFileName(path)) },
+							{ "file__name_without_ext", new(PpString, Path.GetFileNameWithoutExtension(path)) },
+							{ "file__path", new(PpString, Path.GetFullPath(path)) },
+							{ "file__size", new(PpInt32, (int)fi.Length) },
 						},
 					}
 				);

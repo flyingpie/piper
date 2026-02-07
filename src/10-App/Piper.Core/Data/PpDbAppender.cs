@@ -18,6 +18,13 @@ public sealed class PpDbAppender(DuckDBConnection conn, DuckDBAppender appender,
 		}
 	}
 
+	public void Add(string json)
+	{
+		var row = appender.CreateRow();
+		row.AppendValue(json);
+		row.EndRow();
+	}
+
 	public void Add(PpRecord record)
 	{
 		Guard.Against.Null(record);
