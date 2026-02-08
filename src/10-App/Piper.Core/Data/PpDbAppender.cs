@@ -79,6 +79,10 @@ public sealed class PpDbAppender(DuckDBConnection conn, DuckDBAppender appender,
 					row.AppendValue(asString);
 					break;
 
+				case string[] asStringArray:
+					row.AppendValue(asStringArray);
+					break;
+
 				case null:
 					row.AppendNullValue();
 					break;

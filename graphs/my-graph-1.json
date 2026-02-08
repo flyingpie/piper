@@ -4,14 +4,15 @@
 		"pos": "283,48",
 		"params": {
 			"InPath": "/home/marco/Downloads",
-			"InPattern": "*.txt"
+			"InPattern": "**/logs*.csv",
+			"MaxFiles": "10000"
 		}
 	},
 	{
 		"id": "PchUJ05HWE02:PpReadFilesNode:Node 3",
 		"pos": "654,84",
 		"params": {
-			"InAttr": "path",
+			"InAttr": "file__path",
 			"MaxFileSize": "12345"
 		},
 		"ports": {
@@ -23,7 +24,8 @@
 		"pos": "1077,227",
 		"params": {
 			"InPath": "/home/marco/workspace/flyingpie",
-			"InPattern": "*.cs"
+			"InPattern": "*.cs",
+			"MaxFiles": "10000"
 		}
 	},
 	{

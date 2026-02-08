@@ -1,9 +1,10 @@
-@using Piper.Core
 @using Piper.Core.Data
+
+@inject TooltipService Tooltips
 
 <RadzenStack Orientation="Orientation.Vertical">
 
-	<RadzenTextBox @bind-Value="SearchTerm" />
+	@* <RadzenTextBox @bind-Value="SearchTerm" /> *@
 
 	<RadzenDataGrid
 
@@ -14,8 +15,10 @@
 		AllowAlternatingRows="true"
 		AllowColumnResize="true"
 		AllowFiltering="true"
+		AllowMultiColumnSorting="true"
 		AllowPaging="true"
 		AllowSorting="true"
+
 		FilterMode="FilterMode.SimpleWithMenu"
 		LogicalFilterOperator="LogicalFilterOperator.Or"
 		PagerHorizontalAlign="HorizontalAlign.Left"
@@ -37,27 +40,24 @@
 					Title="@field.Name"
 					Width="@GetWidth(field)"
 					TextAlign="@(GetAlign(field))"
+					Property="@field.Name"
 				>
 					<Template Context="item">
 						@switch (field.PpDataType)
 						{
 							case PpDataType.PpDateTime:
-								@(item.Fields.TryGetValue(field.Name, out var v1) ? v1.ValueAsDateTime?.ToString("s") : null)
+								@item.GetValue(field.Name)
 								break;
 
 							default:
-								@(item.Fields.TryGetValue(field.Name, out var v) ? v : null)
+								<Tooltip Text="@(item.GetValue(field.Name)?.ToString())">
+									@item.GetValue(field.Name)
+								</Tooltip>
 								break;
 						}
 					</Template>
 				</RadzenDataGridColumn>
 			}
-
-			@* <RadzenDataGridColumn> *@
-			@* 	<Template Context="item"> *@
-			@* 		<span>@item.Data</span> *@
-			@* 	</Template> *@
-			@* </RadzenDataGridColumn> *@
 
 		</Columns>
 	</RadzenDataGrid>

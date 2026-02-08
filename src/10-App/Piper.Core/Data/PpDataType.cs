@@ -27,4 +27,7 @@ public enum PpDataType
 
 	[JsonStringEnumMemberName("string")]
 	PpString,
+
+	[JsonStringEnumMemberName("string_array")]
+	PpStringArray,
 }

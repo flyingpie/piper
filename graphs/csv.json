@@ -20,9 +20,9 @@
 	},
 	{
 		"id": "Jbo7bGym3D:PpDuckNode:List Files 01",
-		"pos": "820,1378",
+		"pos": "740,1340",
 		"params": {
-			"Query": "select * from $table where file__path ilike \u0027%wtq%\u0027"
+			"Query": "select\t\trow_to_json(t)\n,\t\t\t*\nfrom\t\t$table as t"
 		},
 		"ports": {
 			"InRecords": "GgRKvMPM:OutFiles"
@@ -74,24 +74,26 @@
 		"id": "Gx8RfeKpP5:PpReadCsvNode:Read CSV 01",
 		"pos": "0,457",
 		"params": {
-			"Path": "/home/marco/Downloads/reptile_checklist_2025_05.csv",
-			"MaxFileSize": "99744781"
+			"InAttr": "file__path",
+			"MaxFileSize": "25000"
+		},
+		"ports": {
+			"InFiles": "47jjna6Vp:OutFiles"
 		}
 	},
 	{
 		"id": "u10olT0fx:PpReadCsvNode:Read CSV 01",
 		"pos": "-268,1538",
 		"params": {
-			"Path": "",
 			"MaxFileSize": "2000000"
 		}
 	},
 	{
 		"id": "47jjna6Vp:PpListFilesNode:List Files 02",
-		"pos": "-209,857",
+		"pos": "-349,474",
 		"params": {
 			"InPath": "/home/marco/Downloads",
-			"InPattern": "opinst*.csv",
+			"InPattern": "**/*.csv",
 			"MaxFiles": "10000"
 		}
 	},

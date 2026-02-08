@@ -9,6 +9,7 @@
 		<PackageReference Include="Dapper" />
 		<PackageReference Include="DuckDB.NET.Data.Full" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" />
+		<PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
 		<PackageReference Include="morelinq" />
 		<PackageReference Include="Newtonsoft.Json" />
@@ -23,10 +24,5 @@
 		<PackageReference Include="Z.Blazor.Diagrams" />
 		<PackageReference Include="Z.Blazor.Diagrams.Algorithms" />
 		<PackageReference Include="Z.Blazor.Diagrams.Core" />
-		<PackageReference
-			Update="SonarAnalyzer.CSharp"
-			PrivateAssets="all"
-			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
-		/>
 	</ItemGroup>
 </Project>

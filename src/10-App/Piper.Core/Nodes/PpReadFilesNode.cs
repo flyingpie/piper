@@ -34,6 +34,9 @@ public class PpReadFilesNode : PpNode
 	[PpParam("Max File Size")]
 	public int MaxFileSize { get; set; } = 2_000_000; // 2MB
 
+	[PpParam("Split Lines")]
+	public bool SplitLines { get; set; }
+
 	[PpPort(Out, "Lines")]
 	public PpNodeOutput OutLines { get; }
 
@@ -55,9 +58,7 @@ public class PpReadFilesNode : PpNode
 
 		var cols = inTable.Columns.ToList();
 		cols.AddRange([new("idx", PpString), new("line", PpString)]);
-
 		_outLines.Columns = cols;
-
 		await _outLines.ClearAsync();
 
 		{
@@ -101,11 +102,20 @@ public class PpReadFilesNode : PpNode
 					continue;
 				}
 
-				var lines = await File.ReadAllLinesAsync(path);
-				for (var j = 0; j < lines.Length; j++)
+				if (SplitLines)
 				{
-					var line = lines[j];
-					appender.Add(CreateRecord(file, j, line));
+					var lines = await File.ReadAllLinesAsync(path);
+
+					for (var j = 0; j < lines.Length; j++)
+					{
+						var line = lines[j];
+						appender.Add(CreateRecord(file, j, line));
+					}
+				}
+				else
+				{
+					var text = await File.ReadAllTextAsync(path);
+					appender.Add(CreateRecord(file, 0, text));
 				}
 			}
 		}
@@ -122,4 +132,14 @@ public class PpReadFilesNode : PpNode
 				{ "line", line },
 			},
 		};
+
+	// public PpRecord CreateRecord(PpRecord file, int idx, string[] lines) =>
+	// 	new()
+	// 	{
+	// 		Fields = new Dictionary<string, PpField>(file.Fields, StringComparer.OrdinalIgnoreCase)
+	// 		{
+	// 			{ "idx", $"{idx}" },
+	// 			{ "line", lines },
+	// 		},
+	// 	};
 }

@@ -43,24 +43,24 @@ public class PpDuckNode : PpNode
 
 		var inTable = InRecords.Output.Table();
 
-		await _outLines.ClearAsync();
+		// await _outLines.ClearAsync();
 
-		// PpDbAppender? appender = null;
-		var appender = await _outLines.CreateAppenderAsync();
+		PpDbAppender? appender = null;
+		// var appender = await _outLines.CreateAppenderAsync();
 
 		try
 		{
 			await foreach (var rec in inTable.QueryAsync(Query))
 			{
-				// if (appender == null)
-				// {
-				// 	_outLines.Columns = rec.Fields.Select(kv => new PpColumn(kv.Key, kv.Value.DataType)).ToList();
-				// 	await _outLines.ClearAsync();
-				// 	appender = await _outLines.CreateAppenderAsync();
-				// }
+				if (appender == null)
+				{
+					_outLines.Columns = rec.Fields.Select(kv => new PpColumn(kv.Key, kv.Value.DataType)).ToList();
+					await _outLines.ClearAsync();
+					appender = await _outLines.CreateAppenderAsync();
+				}
 
-				// appender.Add(rec);
-				appender.Add(rec.Data);
+				appender.Add(rec);
+				// appender.Add(rec.Data);
 			}
 		}
 		finally

@@ -1,6 +1,6 @@
+using Microsoft.Extensions.FileSystemGlobbing;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
-using Piper.Core.Utils;
 using static Piper.Core.Data.PpDataType;
 using static Piper.Core.Data.PpPortDirection;
 
@@ -29,7 +29,7 @@ public class PpListFilesNode : PpNode
 	public string? InPath { get; set; }
 
 	[PpParam("Pattern")]
-	public string? InPattern { get; set; }
+	public string InPattern { get; set; } = "*";
 
 	[PpParam("Max Files")]
 	public int MaxFiles { get; set; } = 10_000;
@@ -63,48 +63,17 @@ public class PpListFilesNode : PpNode
 			new("file__size", PpInt32),
 		];
 
-		// { "rec_uuid", new(PpGuid, Guid.CreateVersion7()) },
-		// { "file__name", new(PpString, fi.Name) },
-		// { "file__size", new(PpInt, fi.Length) },
-		// { "file__createdutc", new(PpDateTime, fi.CreationTimeUtc) },
-
 		await _files.ClearAsync();
 
-		// var dirs = Directory.GetFiles(
+		var matcher = new Matcher();
+		matcher.AddIncludePatterns([InPattern]);
+		var it = matcher.GetResultsInFullPath(InPath);
+
+		// var it = Directory.EnumerateFiles(
 		// 	path: InPath,
 		// 	searchPattern: InPattern,
-		// 	new EnumerationOptions()
-		// 	{
-		// 		RecurseSubdirectories = true, // TODO: Use glob instead
-		// 	});
-		//
-		// var records = dirs
-		// 	.Select(d => new PpRecord()
-		// 	{
-		// 		Fields =
-		// 		{
-		// 			{ "rec__uuid", new(Guid.CreateVersion7()) },
-		// 			{ "file__path", new(d) },
-		// 			// { "dir", new(Path.GetDirectoryName((string?)d)) },
-		// 			// { "file", new(Path.GetFileName((string?)d)) },
-		// 			// { "ext", new(Path.GetExtension((string?)d)) },
-		// 		},
-		// 	})
-		// 	.ToList();
-
-		var it = Directory.EnumerateFiles(
-			path: InPath,
-			searchPattern: InPattern,
-			enumerationOptions: new EnumerationOptions() { RecurseSubdirectories = true }
-		);
-
-		// var files = Directory.GetFiles(
-		// 	path: InPath,
-		// 	searchPattern: InPattern,
-		// 	new EnumerationOptions()
-		// 	{
-		// 		RecurseSubdirectories = true, // TODO: Use glob instead
-		// 	});
+		// 	enumerationOptions: new EnumerationOptions() { RecurseSubdirectories = true }
+		// );
 
 		var i = 0;
 
@@ -115,23 +84,11 @@ public class PpListFilesNode : PpNode
 			{
 				if (++i > MaxFiles)
 				{
+					Logs.Warning($"Hit max file limit {MaxFiles}, while more files are found");
 					break;
 				}
 
 				var fi = new FileInfo(path);
-
-				// appender.Add(
-				// 	PpJson.SerializeToString(
-				// 		new
-				// 		{
-				// 			fi.Name,
-				// 			fi.DirectoryName,
-				// 			fi.FullName,
-				// 			fi.Length,
-				// 			fi.CreationTimeUtc,
-				// 		}
-				// 	)
-				// );
 
 				appender.Add(
 					new PpRecord()

@@ -14,4 +14,14 @@ public class PpRecord
 	public string AsJson() => PpJson.SerializeToString(Fields);
 
 	public override string ToString() => string.Join(", ", Fields);
+
+	public object? GetValue(string name)
+	{
+		if (!Fields.TryGetValue(name, out var field))
+		{
+			return null;
+		}
+
+		return field.ToString();
+	}
 }

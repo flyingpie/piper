@@ -1,3 +1,4 @@
+using System.Threading;
 using DuckDB.NET.Data;
 using DuckDB.NET.Native;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,8 @@ namespace Piper.Core.Db;
 
 public interface IPpDb
 {
+	// IReadOnlyCollection<PpTable> Tables { get; }
+
 	/// <summary>
 	/// Returns the row count of the specified <paramref name="query"/>.
 	/// </summary>
@@ -26,6 +29,9 @@ public interface IPpDb
 	Task<PpDbAppender> CreateAppenderAsync(PpTable table);
 
 	Task InsertDataAsync(PpTable table, IEnumerable<PpRecord> records);
+
+	// Task<ICollection<PpTable>> ListTablesAsync(CancellationToken ct = default);
+	Task ExecuteNonQueryAsync(string sql);
 }
 
 public class PpDb : IPpDb
@@ -33,6 +39,8 @@ public class PpDb : IPpDb
 	private readonly ILogger _log = Log.For<PpDb>();
 
 	public static PpDb Instance { get; } = new();
+
+	// public IReadOnlyCollection<PpTable> Tables { get; private set; }
 
 	private static async Task<DuckDBConnection> CreateConnectionAsync()
 	{
@@ -104,6 +112,8 @@ public class PpDb : IPpDb
 		cmd.CommandText = sb1.ToString();
 
 		await cmd.ExecuteNonQueryAsync();
+
+		// await ListTablesAsync();
 	}
 
 	private static string GetColThing(PpColumn column)
@@ -135,6 +145,9 @@ public class PpDb : IPpDb
 
 			case PpDataType.PpString:
 				return $"{name} TEXT NULL";
+
+			case PpDataType.PpStringArray:
+				return $"{name} TEXT[] NULL";
 
 			default:
 				throw new InvalidOperationException($"Unsupported column '{column.PpDataType}'");
@@ -278,6 +291,7 @@ public class PpDb : IPpDb
 		{ typeof(int),				PpDataType.PpInt32 },
 		{ typeof(long),				PpDataType.PpInt64 },
 		{ typeof(string),			PpDataType.PpString },
+		{ typeof(string[]),			PpDataType.PpStringArray },
 	};
 	// csharpier-ignore-end
 
@@ -291,6 +305,7 @@ public class PpDb : IPpDb
 		{ DuckDBType.Integer, PpDataType.PpInt32 },
 		{ DuckDBType.BigInt, PpDataType.PpInt64 },
 		{ DuckDBType.Varchar, PpDataType.PpString },
+		{ DuckDBType.Array, PpDataType.PpStringArray },
 	};
 
 	public static PpDataType ToPpDataType(Type type)
@@ -315,5 +330,48 @@ public class PpDb : IPpDb
 		}
 
 		throw new InvalidOperationException($"Cannot convert DuckDB type '{type}' to {nameof(PpDataType)}.");
+	}
+
+	// public async Task<ICollection<PpTable>> ListTablesAsync(CancellationToken ct = default)
+	// {
+	// 	await using var db = await CreateConnectionAsync();
+	// 	await using var cmd = db.CreateCommand();
+	//
+	// 	var res = new List<PpTable>();
+	//
+	// 	cmd.CommandText = "show tables";
+	//
+	// 	var reader = await cmd.ExecuteReaderAsync(ct);
+	// 	while (await reader.ReadAsync(ct))
+	// 	{
+	// 		var dict = new Dictionary<string, PpField>();
+	//
+	// 		for (var i = 0; i < reader.FieldCount; i++)
+	// 		{
+	// 			var name = reader.GetName(i);
+	// 			var type = reader.GetFieldType(i);
+	// 			// var val2 = reader.GetValue(i);
+	// 			var val2 = reader.GetString(i);
+	//
+	// 			// dict[name] = new(ToPpDataType(type), val2);
+	// 			var table = new PpTable(val2);
+	// 			res.Add(table);
+	//
+	// 			await table.InitAsync();
+	// 		}
+	// 	}
+	//
+	// 	Tables = res;
+	//
+	// 	return res;
+	// }
+	public async Task ExecuteNonQueryAsync(string sql)
+	{
+		await using var db = await CreateConnectionAsync();
+		await using var cmd = db.CreateCommand();
+
+		cmd.CommandText = sql;
+
+		await cmd.ExecuteNonQueryAsync();
 	}
 }

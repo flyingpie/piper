@@ -3,6 +3,8 @@ using Blazor.Diagrams;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Piper.Core;
+using Piper.Core.Data;
+using Piper.Core.Db;
 using Piper.Core.Nodes;
 using Piper.Core.Nodes.Unix;
 using Piper.Core.Serialization;
@@ -20,6 +22,8 @@ public partial class PpDiagram : ComponentBase
 	private BlazorDiagram? Diagram { get; set; }
 
 	public List<PpGraphFile> Graphs { get; set; } = [];
+
+	// public IReadOnlyCollection<PpTable> Tables => PpDb.Instance.Tables;
 
 	// [
 	// 	new() { Name = "My graph 1" },

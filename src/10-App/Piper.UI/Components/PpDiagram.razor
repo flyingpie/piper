@@ -1,6 +1,7 @@
 @using Blazor.Diagrams.Components
 @using Blazor.Diagrams.Components.Widgets
 @using Piper.Core
+@using Piper.Core.Data
 @using Piper.UI.Components.CodeEditor
 @using Piper.UI.Components.Logs
 @using Piper.UI.Components.Nodes
@@ -21,6 +22,9 @@
 				<RadzenMenuItem Text="Read XSLX"		Value="@("PP_NODE_READ_XSLX")"></RadzenMenuItem>
 
 				<RadzenMenuItem Text="SMap"				Value="@("PP_NODE_SMAP")"></RadzenMenuItem>
+
+				<RadzenMenuItem Text="Fit"				Click="() => Diagram.ZoomToFit()"></RadzenMenuItem>
+
 				@* <RadzenMenuItem Text="Item2" Value="2"></RadzenMenuItem> *@
 				@* <RadzenMenuItem Text="More items" Value="3"> *@
 					@* <RadzenMenuItem Text="More sub items" Value="4"> *@
@@ -41,22 +45,30 @@
 		<RadzenSplitter Orientation="Orientation.Horizontal">
 			<RadzenSplitterPane Size="80%">
 
-				<div
-					class="diagram-container"
-					@oncontextmenu=@(args => ShowContextMenuWithContent(args))
-					@oncontextmenu:preventDefault="true"
-				>
-					<CascadingValue Value="Diagram" IsFixed="true">
-						<DiagramCanvas>
-							<Widgets>
-								<GridWidget
-									Mode="GridMode.Point"
-									BackgroundColor="var(--rz-base-900)"
-								/>
-							</Widgets>
-						</DiagramCanvas>
-					</CascadingValue>
-				</div>
+				@* <RadzenStack Style="height: 100%;"> *@
+
+					@* <RadzenPanelMenu> *@
+					@* 	<RadzenPanelMenuItem Text="Bleh" /> *@
+					@* </RadzenPanelMenu> *@
+
+					<div
+						class="diagram-container"
+						@oncontextmenu=@(args => ShowContextMenuWithContent(args))
+						@oncontextmenu:preventDefault="true"
+					>
+						<CascadingValue Value="Diagram" IsFixed="true">
+							<DiagramCanvas>
+								<Widgets>
+									<GridWidget
+										Mode="GridMode.Point"
+										BackgroundColor="var(--rz-base-900)"
+									/>
+								</Widgets>
+							</DiagramCanvas>
+						</CascadingValue>
+					</div>
+
+				@* </RadzenStack> *@
 
 			</RadzenSplitterPane>
 			<RadzenSplitterPane>
@@ -138,6 +150,33 @@
 							}
 
 						</RadzenTabsItem>
+
+						@* <!-- Tables --> *@
+						@* <RadzenTabsItem Text="Tables" Icon="table_view"> *@
+						@* *@
+						@* 		<RadzenDataGrid *@
+						@* 			Data="@Tables" *@
+						@* 		> *@
+						@* 			<Columns> *@
+						@* 				<RadzenDataGridColumn *@
+						@* 					Title="Name" *@
+						@* 					Property="@nameof(PpTable.TableName)" *@
+						@* 				/> *@
+						@* *@
+						@* 				<RadzenDataGridColumn Width="180px"> *@
+						@* 					<Template Context="graphFile"> *@
+						@* *@
+						@* 						<RadzenStack Orientation="Orientation.Horizontal"> *@
+						@* 							$1$ <RadzenButton Icon="folder_open" Text="Load" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graphFile)" /> #1# *@
+						@* 							$1$ <RadzenButton Icon="save" Text="Save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="() => SaveGraphFile(graphFile)" /> #1# *@
+						@* 						</RadzenStack> *@
+						@* *@
+						@* 					</Template> *@
+						@* 				</RadzenDataGridColumn> *@
+						@* 			</Columns> *@
+						@* 		</RadzenDataGrid> *@
+						@* *@
+						@* </RadzenTabsItem> *@
 					</Tabs>
 				</RadzenTabs>
 
