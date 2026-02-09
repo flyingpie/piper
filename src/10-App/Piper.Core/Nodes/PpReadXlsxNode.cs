@@ -1,18 +1,14 @@
 using Piper.Core.Attributes;
 using Piper.Core.Data;
-using Piper.Core.Db;
 using static Piper.Core.Data.PpPortDirection;
 
 namespace Piper.Core.Nodes;
 
 public class PpReadXlsxNode : PpNode
 {
-	private readonly PpTable _outLines;
-
 	public PpReadXlsxNode()
 	{
-		_outLines = new(PpTable.GetTableName(this, nameof(OutRows)));
-		OutRows = new(this, nameof(OutRows)) { Table = () => _outLines };
+		OutRows = new(this, nameof(OutRows), new(PpTable.GetTableName(this, nameof(OutRows))));
 	}
 
 	public override string Color => "#8a2828";

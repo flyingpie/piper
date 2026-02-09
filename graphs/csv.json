@@ -74,8 +74,7 @@
 		"id": "Gx8RfeKpP5:PpReadCsvNode:Read CSV 01",
 		"pos": "0,457",
 		"params": {
-			"InAttr": "file__path",
-			"MaxFileSize": "25000"
+			"InAttr": "file__path"
 		},
 		"ports": {
 			"InFiles": "47jjna6Vp:OutFiles"
@@ -83,10 +82,7 @@
 	},
 	{
 		"id": "u10olT0fx:PpReadCsvNode:Read CSV 01",
-		"pos": "-268,1538",
-		"params": {
-			"MaxFileSize": "2000000"
-		}
+		"pos": "-268,1538"
 	},
 	{
 		"id": "47jjna6Vp:PpListFilesNode:List Files 02",
@@ -99,10 +95,10 @@
 	},
 	{
 		"id": "Xd5h4gav2D9W:PpListFilesNode:List Files 03",
-		"pos": "-218,1204",
+		"pos": "540,301",
 		"params": {
 			"InPath": "/home/marco/Downloads",
-			"InPattern": "procinst*.csv",
+			"InPattern": "*.csv",
 			"MaxFiles": "10000"
 		}
 	},
@@ -112,6 +108,16 @@
 		"params": {
 			"Path": "/home/marco/Downloads/reptile_checklist_2025_05.xlsx",
 			"Sheet": ""
+		}
+	},
+	{
+		"id": "IRsYetEP:PpReadCsvNode:Read CSV 01",
+		"pos": "900,340",
+		"params": {
+			"InAttr": "file__path"
+		},
+		"ports": {
+			"InFiles": "Xd5h4gav2D9W:OutFiles"
 		}
 	}
 ]

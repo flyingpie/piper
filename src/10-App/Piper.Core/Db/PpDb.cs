@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading;
+using Dapper;
 using DuckDB.NET.Data;
 using DuckDB.NET.Native;
 using Microsoft.Extensions.Logging;
@@ -32,6 +34,8 @@ public interface IPpDb
 
 	// Task<ICollection<PpTable>> ListTablesAsync(CancellationToken ct = default);
 	Task ExecuteNonQueryAsync(string sql);
+
+	Task InitTableAsync(PpTable table);
 }
 
 public class PpDb : IPpDb
@@ -373,5 +377,45 @@ public class PpDb : IPpDb
 		cmd.CommandText = sql;
 
 		await cmd.ExecuteNonQueryAsync();
+	}
+
+	public async Task InitTableAsync(PpTable table)
+	{
+		await using var db = await CreateConnectionAsync();
+
+		IEnumerable<DuckDbTableDescription> res = null!;
+
+		try
+		{
+			res = await db.QueryAsync<DuckDbTableDescription>($"describe {table.TableName}");
+		}
+		catch (DuckDBException ex) when (ex.Message?.Contains("does not exist", StringComparison.OrdinalIgnoreCase) ?? false)
+		{
+			// return null;
+		}
+
+		// // var res = await db.GetSchemaAsync(name);
+		// var cmd = db.CreateCommand();
+		// cmd.CommandText = $"DESCRIBE {name}";
+		// var reader = await cmd.ExecuteReaderAsync();
+
+		// var table = new PpTable(name);
+
+		foreach (var col in res)
+		{
+			table.Columns.Add(new(col.column_name, ToPpDataType(col.column_type)));
+		}
+
+		var dbg = 2;
+
+		// return table;
+	}
+
+	public class DuckDbTableDescription
+	{
+		// [Column("column_name")]
+		public string column_name { get; set; }
+
+		public DuckDBType column_type { get; set; }
 	}
 }

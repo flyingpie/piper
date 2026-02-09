@@ -1,5 +1,4 @@
 using Blazor.Diagrams.Core.Models;
-using Microsoft.Extensions.FileSystemGlobbing;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
 using Piper.Core.Db;
@@ -10,14 +9,10 @@ namespace Piper.Core.Nodes;
 
 public class PpReadCsvNode : PpNode
 {
-	private readonly PpTable _outTables;
-
 	public PpReadCsvNode()
 	{
-		_outTables = new(PpTable.GetTableName(this, nameof(OutTables)));
-
 		InFiles = new(this, nameof(InFiles));
-		OutTables = new(this, nameof(OutTables)) { Table = () => _outTables };
+		OutTables = new(this, nameof(OutTables), new(PpTable.GetTableName(this, nameof(OutTables))));
 	}
 
 	public override string Color => "#8a2828";
@@ -28,8 +23,6 @@ public class PpReadCsvNode : PpNode
 
 	public override bool SupportsProgress => true;
 
-	// [PpParam("Path")]
-	// public string Path { get; set; } = "";
 	[PpPort(In, "File Paths")]
 	public PpNodeInput InFiles { get; }
 
@@ -47,18 +40,6 @@ public class PpReadCsvNode : PpNode
 
 	protected override async Task OnExecuteAsync()
 	{
-		// if (string.IsNullOrWhiteSpace(Path))
-		// {
-		// 	Logs.Warning($"Param '{nameof(Path)}' not set");
-		// 	return;
-		// }
-		//
-		// if (!File.Exists(Path))
-		// {
-		// 	Logs.Warning($"Param '{nameof(Path)}' points to file '{Path}', which does not exist");
-		// 	return;
-		// }
-
 		if (!InFiles.IsConnected)
 		{
 			Logs.Warning($"Port '{InFiles}' not connected");
@@ -72,24 +53,20 @@ public class PpReadCsvNode : PpNode
 		}
 
 		// Read in
-		var inTable = InFiles.Output.Table();
+		var inTable = InFiles.Output.Table;
 
 		// Prep out
 		var cols = inTable.Columns.ToList();
-		cols.AddRange([
-			//
-			new("is_successful", PpBool),
-			new("table_name", PpString),
-			new("row_count", PpInt64),
-			new("error", PpString),
-		]);
-		_outTables.Columns = cols;
-		await _outTables.ClearAsync();
+		cols.AddRange([new("is_successful", PpBool), new("table_name", PpString), new("row_count", PpInt64), new("error", PpString)]);
+		OutTables.Table.Columns = cols;
+		await OutTables.Table.ClearAsync();
+
+		_dynNodeProps.Clear();
 
 		var i = 0;
 
 		{
-			await using var appender = await _outTables.CreateAppenderAsync();
+			await using var appender = await OutTables.Table.CreateAppenderAsync();
 
 			await foreach (var file in inTable.QueryAllAsync())
 			{
@@ -100,8 +77,8 @@ public class PpReadCsvNode : PpNode
 
 				if (string.IsNullOrWhiteSpace(field.Value?.ValueAsString))
 				{
-					Logs.Warning($"Record does not have an attribute with name '{InAttr}'");
 					// TODO: Send to "skipped" output
+					Logs.Warning($"Record does not have an attribute with name '{InAttr}'");
 					continue;
 				}
 
@@ -109,13 +86,13 @@ public class PpReadCsvNode : PpNode
 				var path = field.Value.ValueAsString;
 				if (!File.Exists(path))
 				{
-					Logs.Warning($"File at path '{path}' does not exist");
 					// TODO: Send to "skipped" output
+					Logs.Warning($"File at path '{path}' does not exist");
 					continue;
 				}
 
 				// Read CSV
-				var table = new PpTable($"{_outTables.TableName}_{i++}");
+				var table = new PpTable($"{OutTables.Table.TableName}_{i++}");
 
 				try
 				{
@@ -127,37 +104,27 @@ public class PpReadCsvNode : PpNode
 					);
 
 					await table.InitAsync();
-					// await _outTables.InitAsync();
 
-					// appender.Add(CreateRecord(file, isSuccessful: true, table.TableName, table.Count));
-					//
-					// var nodeOut = new PpNodeOutput(this, table.TableName) { Table = () => table };
-					// _dynNodeProps.Add(
-					// 	new PpNodePort(this, PortAlignment.Right)
-					// 	{
-					// 		//
-					// 		Name = table.TableName,
-					// 		GetNodeOutput = () => nodeOut,
-					// 	}
-					// );
+					appender.Add(CreateRecord(file, isSuccessful: true, table.TableName, table.Count));
+
+					var nodeOut = new PpNodeOutput(this, table.TableName, table);
+					_dynNodeProps.Add(new PpNodePort(table.TableName, this, PortAlignment.Right) { GetNodeOutput = () => nodeOut });
 				}
 				catch (Exception ex)
 				{
-					//
 					appender.Add(CreateRecord(file, isSuccessful: false, table.TableName, table.Count, error: ex.Message));
 				}
 			}
 		}
 
-		await _outTables.DoneAsync();
+		await OutTables.Table.DoneAsync();
 	}
 
-	public PpRecord CreateRecord(PpRecord file, bool isSuccessful, string tableName, long count, string? error = null) =>
+	private static PpRecord CreateRecord(PpRecord file, bool isSuccessful, string tableName, long count, string? error = null) =>
 		new()
 		{
 			Fields = new Dictionary<string, PpField>(file.Fields, StringComparer.OrdinalIgnoreCase)
 			{
-				//
 				{ "is_successful", isSuccessful },
 				{ "table_name", tableName },
 				{ "row_count", count },

@@ -8,13 +8,9 @@ namespace Piper.Core.Nodes;
 
 public class PpListFilesNode : PpNode
 {
-	private readonly PpTable _files;
-
 	public PpListFilesNode()
 	{
-		_files = new(PpTable.GetTableName(this, nameof(OutFiles)));
-
-		OutFiles = new(this, nameof(OutFiles)) { Table = () => _files };
+		OutFiles = new(this, nameof(OutFiles), new(PpTable.GetTableName(this, nameof(OutFiles))));
 	}
 
 	public override string Color => "#8a2828";
@@ -51,7 +47,7 @@ public class PpListFilesNode : PpNode
 			return;
 		}
 
-		_files.Columns =
+		OutFiles.Table.Columns =
 		[
 			new("rec__uuid", PpGuid),
 			new("file__createdutc", PpDateTime),
@@ -63,22 +59,16 @@ public class PpListFilesNode : PpNode
 			new("file__size", PpInt32),
 		];
 
-		await _files.ClearAsync();
+		await OutFiles.Table.ClearAsync();
 
 		var matcher = new Matcher();
 		matcher.AddIncludePatterns([InPattern]);
 		var it = matcher.GetResultsInFullPath(InPath);
 
-		// var it = Directory.EnumerateFiles(
-		// 	path: InPath,
-		// 	searchPattern: InPattern,
-		// 	enumerationOptions: new EnumerationOptions() { RecurseSubdirectories = true }
-		// );
-
 		var i = 0;
 
 		{
-			await using var appender = await _files.CreateAppenderAsync();
+			await using var appender = await OutFiles.Table.CreateAppenderAsync();
 
 			foreach (var path in it)
 			{
@@ -109,6 +99,6 @@ public class PpListFilesNode : PpNode
 			}
 		}
 
-		await _files.DoneAsync();
+		await OutFiles.Table.DoneAsync();
 	}
 }

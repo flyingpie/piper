@@ -196,7 +196,7 @@ public class ScriptingTest
 
 		await node.ExecuteAsync();
 
-		var outFilesTable = await node.OutFiles.Table().QueryAllAsync().ToListAsync();
+		var outFilesTable = await node.OutFiles.Table.QueryAllAsync().ToListAsync();
 
 		var dbg = 2;
 	}

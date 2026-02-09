@@ -10,16 +10,12 @@ namespace Piper.Core;
 
 public static class Extensions
 {
-	// extension (PpNodePort port)
-	// {
-	// 	public long? InCount => port.GetNodeInput?.Invoke()?.Output?.Table?.Invoke()?.Count;
-	//
-	// 	public long? OutCount => port.GetNodeOutput?.Invoke()?.Table?.Invoke()?.Count;
-	// }
+	extension(PpNodePort port)
+	{
+		public long InCount => port.GetNodeInput?.Invoke()?.Output?.Table?.Count ?? 0;
 
-	public static long? GetInCount(this PpNodePort port) => port.GetNodeInput?.Invoke()?.Output?.Table?.Invoke()?.Count;
-
-	public static long? GetOutCount(this PpNodePort port) => port.GetNodeOutput?.Invoke()?.Table?.Invoke()?.Count;
+		public long OutCount => port.GetNodeOutput?.Invoke()?.Table?.Count ?? 0;
+	}
 
 	public static PpGraph GetGraph(this BlazorDiagram diagram)
 	{
@@ -99,19 +95,21 @@ public static class Extensions
 			{
 				if (prop.PropertyType == typeof(PpNodeInput))
 				{
-					var pp = new PpNodePort(node, PortAlignment.Left);
-					// pp.PortAttribute = inAttr;
-					pp.Name = inAttr.Name;
-					pp.GetNodeInput = () => (PpNodeInput)prop.GetValue(node)!;
+					var pp = new PpNodePort(inAttr.Name, node, PortAlignment.Left)
+					{
+						//
+						GetNodeInput = () => (PpNodeInput)prop.GetValue(node)!,
+					};
 					node.AddPort(pp);
 					yield return pp;
 				}
 				else if (prop.PropertyType == typeof(PpNodeOutput))
 				{
-					var pp = new PpNodePort(node, PortAlignment.Right);
-					// pp.PortAttribute = inAttr;
-					pp.Name = inAttr.Name;
-					pp.GetNodeOutput = () => (PpNodeOutput)prop.GetValue(node)!;
+					var pp = new PpNodePort(inAttr.Name, node, PortAlignment.Right)
+					{
+						//
+						GetNodeOutput = () => (PpNodeOutput)prop.GetValue(node)!,
+					};
 					node.AddPort(pp);
 					yield return pp;
 				}
@@ -119,14 +117,6 @@ public static class Extensions
 				{
 					Console.WriteLine($"No node port type found port '{node.Name}.{prop.Name}'");
 				}
-
-				// if (prop.GetValue(node) is PpNodeInput nodeInput)
-				// {
-				// }
-				//
-				// if (prop.GetValue(node) is PpNodeOutput nodeOutput)
-				// {
-				// }
 			}
 		}
 	}

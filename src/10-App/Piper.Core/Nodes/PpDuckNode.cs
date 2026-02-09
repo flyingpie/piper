@@ -13,7 +13,7 @@ public class PpDuckNode : PpNode
 		_outLines = new(PpTable.GetTableName(this, nameof(OutRecords)));
 
 		InRecords = new(this, nameof(InRecords));
-		OutRecords = new(this, nameof(OutRecords)) { Table = () => _outLines };
+		OutRecords = new(this, nameof(OutRecords), new(PpTable.GetTableName(this, nameof(OutRecords))));
 	}
 
 	public override string NodeType => "SQL Query";
@@ -41,12 +41,9 @@ public class PpDuckNode : PpNode
 			return;
 		}
 
-		var inTable = InRecords.Output.Table();
-
-		// await _outLines.ClearAsync();
+		var inTable = InRecords.Output.Table;
 
 		PpDbAppender? appender = null;
-		// var appender = await _outLines.CreateAppenderAsync();
 
 		try
 		{
@@ -60,7 +57,6 @@ public class PpDuckNode : PpNode
 				}
 
 				appender.Add(rec);
-				// appender.Add(rec.Data);
 			}
 		}
 		finally

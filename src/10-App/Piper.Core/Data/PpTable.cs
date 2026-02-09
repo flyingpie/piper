@@ -43,7 +43,7 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 
 	public async Task InitAsync()
 	{
-		// await PpDb.Instance.InitTableAsync(this);
+		await PpDb.Instance.InitTableAsync(this);
 
 		await DoneAsync();
 	}

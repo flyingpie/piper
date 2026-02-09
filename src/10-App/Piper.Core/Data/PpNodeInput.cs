@@ -1,15 +1,18 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace Piper.Core.Data;
 
-public class PpNodeInput(PpNode node, string name)
+/// <summary>
+/// A "node input" is a port of a node, that accepts data from another node.
+/// </summary>
+public class PpNodeInput(PpNode node, string name) : PpNodePort(node, name)
 {
-	public PpNode Node { get; } = Guard.Against.Null(node);
-
-	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
-
+	/// <summary>
+	/// Convenience property to figure out whether an output is connected to this input.
+	/// </summary>
 	[MemberNotNullWhen(true, nameof(Output))]
 	public bool IsConnected => Output != null;
 
+	/// <summary>
+	/// The output that this input is connected to (null if not connected).
+	/// </summary>
 	public PpNodeOutput? Output { get; set; }
 }

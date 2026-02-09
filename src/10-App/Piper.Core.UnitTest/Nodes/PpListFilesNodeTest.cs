@@ -19,7 +19,7 @@ public class PpListFilesNodeTest
 
 		await node.ExecuteAsync();
 
-		var res = node.OutFiles.Table();
+		var res = node.OutFiles.Table;
 		var x = await res.QueryAllAsync().Take(200).ToListAsync();
 
 		var dbg = 2;

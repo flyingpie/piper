@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Components;
-using Piper.Core;
 using Piper.Core.Data;
 using Piper.Core.Db;
 using Piper.UI.Services;
@@ -81,8 +80,8 @@ public partial class DataViewer : ComponentBase
 	{
 		Console.WriteLine("LoadDataAsync");
 
-		// var table = SelectedThingyService.Instance.SelectedPort?.Table?.Invoke();
-		var table = SelectedThingyService.Instance.SelectedPort?.GetNodeOutput?.Invoke()?.Table?.Invoke();
+		// var table = SelectedThingyService.Instance.SelectedPort?.GetNodeOutput?.Invoke()?.Table;
+		var table = SelectedThingyService.Instance.SelectedPort?.Table;
 		if (table == null)
 		{
 			return;

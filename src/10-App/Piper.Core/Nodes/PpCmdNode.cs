@@ -1,21 +1,15 @@
 using Piper.Core.Attributes;
 using Piper.Core.Data;
-using static Piper.Core.Data.PpDataType;
 using static Piper.Core.Data.PpPortDirection;
 
 namespace Piper.Core.Nodes;
 
 public class PpCmdNode : PpNode
 {
-	private readonly PpTable _results;
-
 	public PpCmdNode()
 	{
-		_results = new("results");
-
 		InInputs = new(this, nameof(InInputs));
-
-		OutResults = new(this, nameof(OutResults)) { Table = () => _results };
+		OutResults = new(this, nameof(OutResults), new("results"));
 	}
 
 	public override bool SupportsProgress => true;
@@ -43,7 +37,7 @@ public class PpCmdNode : PpNode
 		// 	return;
 		// }
 
-		var inputs = InInputs.Output.Table();
+		var inputs = InInputs.Output.Table;
 
 		await foreach (var inp in inputs.QueryAllAsync())
 		{

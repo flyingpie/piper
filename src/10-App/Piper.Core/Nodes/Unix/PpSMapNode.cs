@@ -6,12 +6,9 @@ namespace Piper.Core.Nodes.Unix;
 
 public class PpSMapNode : PpNode
 {
-	private readonly PpTable _outProcesses;
-
 	public PpSMapNode()
 	{
-		_outProcesses = new(PpTable.GetTableName(this, nameof(OutProcesses)));
-		OutProcesses = new(this, nameof(OutProcesses)) { Table = () => _outProcesses };
+		OutProcesses = new(this, nameof(OutProcesses), new(PpTable.GetTableName(this, nameof(OutProcesses))));
 	}
 
 	[PpParam("Process Name")]
@@ -46,9 +43,9 @@ public class PpSMapNode : PpNode
 
 					if (!isInit)
 					{
-						_outProcesses.Columns = recs.First().Fields.Select(f => new PpColumn(f.Key, PpDataType.PpString)).ToList();
-						await _outProcesses.ClearAsync();
-						appender = await _outProcesses.CreateAppenderAsync();
+						OutProcesses.Table.Columns = recs.First().Fields.Select(f => new PpColumn(f.Key, PpDataType.PpString)).ToList();
+						await OutProcesses.Table.ClearAsync();
+						appender = await OutProcesses.Table.CreateAppenderAsync();
 						isInit = true;
 					}
 
@@ -62,7 +59,7 @@ public class PpSMapNode : PpNode
 			}
 		}
 
-		await _outProcesses.DoneAsync();
+		await OutProcesses.Table.DoneAsync();
 	}
 
 	private static async Task<List<PpRecord>> GetSMapAsync(int pid)

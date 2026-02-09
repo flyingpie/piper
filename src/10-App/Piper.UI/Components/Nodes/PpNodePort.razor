@@ -22,9 +22,17 @@
 				Variant="Variant.Outlined"
 			/>
 
+			<RadzenButton
+				Click="() => NodePort.DisconnectAll()"
+				Disabled="!NodePort.IsConnected"
+				Icon="close"
+				Size="ButtonSize.ExtraSmall"
+				Variant="Variant.Outlined"
+			/>
+
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
 				<RadzenIcon Icon="numbers" />
-				<RadzenLabel Text="@(NodePort.GetInCount()?.ToString("N0"))" />
+				<RadzenLabel Text="@(NodePort.InCount.ToString("N0"))" />
 				<RadzenLabel Text="@NodePort.Name" />
 			</RadzenStack>
 		</RadzenStack>
@@ -40,9 +48,17 @@
 		>
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
 				<RadzenIcon Icon="numbers" />
-				<RadzenLabel Text="@(NodePort.GetOutCount()?.ToString("N0"))" />
+				<RadzenLabel Text="@(NodePort.OutCount.ToString("N0"))" />
 				<RadzenLabel Text="@NodePort.Name" />
 			</RadzenStack>
+
+			<RadzenButton
+				Click="() => NodePort.DisconnectAll()"
+				Disabled="!NodePort.IsConnected"
+				Icon="close"
+				Size="ButtonSize.ExtraSmall"
+				Variant="Variant.Outlined"
+			/>
 
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
