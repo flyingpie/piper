@@ -16,6 +16,11 @@ public partial class PpNodePort : ComponentBase
 		NodePort.OnChange(_ => InvokeAsync(StateHasChanged));
 	}
 
+	public void OnClickModifiers()
+	{
+		//
+	}
+
 	public void OnClickShowData()
 	{
 		SelectedThingyService.Instance.SelectPort(NodePort);

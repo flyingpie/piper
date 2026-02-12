@@ -28,37 +28,90 @@ public interface IPpDb
 	/// </summary>
 	IAsyncEnumerable<PpRecord> QueryAsync(PpTable table, string query);
 
+	IAsyncEnumerable<PpRecord> QueryAsync(IList<PpTable> tables, string query);
+
 	Task<PpDbAppender> CreateAppenderAsync(PpTable table);
 
-	Task InsertDataAsync(PpTable table, IEnumerable<PpRecord> records);
+	// Task InsertDataAsync(PpTable table, IEnumerable<PpRecord> records);
 
 	// Task<ICollection<PpTable>> ListTablesAsync(CancellationToken ct = default);
 	Task ExecuteNonQueryAsync(string sql);
 
 	Task InitTableAsync(PpTable table);
+
+	IAsyncEnumerable<PpRecord> RawQueryAsync(string query);
 }
 
 public class PpDb : IPpDb
 {
 	private readonly ILogger _log = Log.For<PpDb>();
+	private readonly string _path;
+
+	private readonly DuckDBConnection _conn;
+	private bool _isOpen;
+	private readonly SemaphoreSlim _lock = new(1);
+
+	public PpDb(string path = "/home/marco/Downloads/piper.db")
+	{
+		_path = Guard.Against.NullOrWhiteSpace(path);
+		// _conn = new DuckDBConnection($"DataSource=:memory:?cache=shared");
+		_conn = new DuckDBConnection($"DataSource={path}");
+	}
 
 	public static PpDb Instance { get; } = new();
 
 	// public IReadOnlyCollection<PpTable> Tables { get; private set; }
 
-	private static async Task<DuckDBConnection> CreateConnectionAsync()
+	private async Task<DuckDBConnection> CreateConnectionAsync2()
 	{
-		var db = new DuckDBConnection("data source=/home/marco/Downloads/piper.db");
-		await db.OpenAsync();
+		// var db = new DuckDBConnection($"data source={_path}");
+		// var db = new DuckDBConnection($"DataSource=:memory:?cache=shared");
+		if (!_isOpen)
+		{
+			await _conn.OpenAsync();
+			_isOpen = true;
+		}
 
-		return db;
+		return _conn;
+	}
+
+	public async Task OpenAsync()
+	{
+		if (_isOpen)
+		{
+			return;
+		}
+
+		await _lock.WaitAsync();
+
+		try
+		{
+			if (_isOpen)
+			{
+				return;
+			}
+
+			await _conn.OpenAsync();
+			_isOpen = true;
+		}
+		finally
+		{
+			_lock.Release();
+		}
+	}
+
+	public async Task<DuckDBCommand> CreateCommandAsync()
+	{
+		await OpenAsync();
+
+		return _conn.CreateCommand();
 	}
 
 	/// <inheritdoc/>
 	public async Task<long> CountAsync(string query)
 	{
-		await using var db = await CreateConnectionAsync();
-		await using var cmd = db.CreateCommand();
+		// var db = await CreateConnectionAsync();
+		await using var cmd = await CreateCommandAsync();
 
 		cmd.CommandText = query;
 
@@ -84,7 +137,7 @@ public class PpDb : IPpDb
 
 	public async Task CreateTableAsync(PpTable table)
 	{
-		await using var db = await CreateConnectionAsync();
+		// var db = await CreateConnectionAsync();
 
 		var sb1 = new StringBuilder();
 		sb1.Append(
@@ -111,13 +164,12 @@ public class PpDb : IPpDb
 			"""
 		);
 
-		await using var cmd = db.CreateCommand();
+		// await using var cmd = db.CreateCommand();
+		await using var cmd = await CreateCommandAsync();
 
 		cmd.CommandText = sb1.ToString();
 
 		await cmd.ExecuteNonQueryAsync();
-
-		// await ListTablesAsync();
 	}
 
 	private static string GetColThing(PpColumn column)
@@ -147,6 +199,9 @@ public class PpDb : IPpDb
 			case PpDataType.PpInt64:
 				return $"{name} BIGINT NULL";
 
+			// case PpDataType.PpJson:
+			// 	return $"{name} JSON NULL";
+
 			case PpDataType.PpString:
 				return $"{name} TEXT NULL";
 
@@ -160,25 +215,25 @@ public class PpDb : IPpDb
 
 	public async Task<PpDbAppender> CreateAppenderAsync(PpTable table)
 	{
-		var db = await CreateConnectionAsync();
-		var appender = db.CreateAppender(table.TableName);
+		await using var cmd = await CreateCommandAsync();
+		var appender = _conn.CreateAppender(table.TableName);
 
-		return new PpDbAppender(db, appender, table);
+		return new PpDbAppender(appender, table);
 	}
 
-	public async Task InsertDataAsync(PpTable table, IEnumerable<PpRecord> records)
-	{
-		await using var db = await CreateConnectionAsync();
-
-		using var appender = db.CreateAppender(table.TableName);
-
-		foreach (var rec in records)
-		{
-			var row = appender.CreateRow();
-			row.AppendValue(rec.AsJson());
-			row.EndRow();
-		}
-	}
+	// public async Task InsertDataAsync(PpTable table, IEnumerable<PpRecord> records)
+	// {
+	// 	var db = await CreateConnectionAsync();
+	//
+	// 	using var appender = db.CreateAppender(table.TableName);
+	//
+	// 	foreach (var rec in records)
+	// 	{
+	// 		var row = appender.CreateRow();
+	// 		row.AppendValue(rec.AsJson());
+	// 		row.EndRow();
+	// 	}
+	// }
 
 	// public async IAsyncEnumerable<PpRecord> QueryAsync(PpTable table, string query)
 	// {
@@ -255,14 +310,87 @@ public class PpDb : IPpDb
 	// 	}
 	// }
 
+	public async IAsyncEnumerable<PpRecord> RawQueryAsync(string query)
+	{
+		// _log.LogInformation("Executing query '{Query}' on table '{Table}'", query, table);
+
+		// var db = await CreateConnectionAsync();
+		// await using var cmd = db.CreateCommand();
+		await using var cmd = await CreateCommandAsync();
+
+		// cmd.CommandText = query.Replace("$table", $"\"{table.TableName}\"");
+		cmd.CommandText = query;
+
+		var reader = await cmd.ExecuteReaderAsync();
+		while (await reader.ReadAsync())
+		{
+			var dict = new Dictionary<string, PpField>();
+
+			for (var i = 0; i < reader.FieldCount; i++)
+			{
+				var name = reader.GetName(i);
+				var type = reader.GetFieldType(i);
+				// var isNull = reader.IsDBNull(i);
+				var val2 = reader.GetValue(i);
+				// var val = isNull ? null : reader.GetString(i);
+
+				dict[name] = new(ToPpDataType(type), val2);
+			}
+
+			yield return new PpRecord() { Fields = dict };
+		}
+	}
+
 	public async IAsyncEnumerable<PpRecord> QueryAsync(PpTable table, string query)
 	{
 		_log.LogInformation("Executing query '{Query}' on table '{Table}'", query, table);
 
-		await using var db = await CreateConnectionAsync();
-		await using var cmd = db.CreateCommand();
+		// var db = await CreateConnectionAsync();
+		// await using var cmd = db.CreateCommand();
+		await using var cmd = await CreateCommandAsync();
 
 		cmd.CommandText = query.Replace("$table", $"\"{table.TableName}\"");
+
+		var reader = await cmd.ExecuteReaderAsync();
+		while (await reader.ReadAsync())
+		{
+			var dict = new Dictionary<string, PpField>();
+
+			for (var i = 0; i < reader.FieldCount; i++)
+			{
+				var name = reader.GetName(i);
+				var type = reader.GetFieldType(i);
+				// var isNull = reader.IsDBNull(i);
+				var val2 = reader.GetValue(i);
+				// var val = isNull ? null : reader.GetString(i);
+
+				dict[name] = new(ToPpDataType(type), val2);
+			}
+
+			yield return new PpRecord() { Fields = dict };
+		}
+	}
+
+	public async IAsyncEnumerable<PpRecord> QueryAsync(IList<PpTable> tables, string query)
+	{
+		// _log.LogInformation("Executing query '{Query}' on table '{Table}'", query, tables);
+
+		// var db = await CreateConnectionAsync();
+		// await using var cmd = db.CreateCommand();
+		await using var cmd = await CreateCommandAsync();
+
+		cmd.CommandText = query;
+
+		for (var i = 0; i < tables.Count; i++)
+		{
+			var table = tables[i];
+			cmd.CommandText = cmd.CommandText.Replace($"$table{i}", $"\"{table.TableName}\"");
+		}
+
+		if (tables.Count > 0)
+		{
+			cmd.CommandText = cmd.CommandText.Replace("$table", $"\"{tables[0].TableName}\"");
+		}
 
 		var reader = await cmd.ExecuteReaderAsync();
 		while (await reader.ReadAsync())
@@ -294,6 +422,7 @@ public class PpDb : IPpDb
 		{ typeof(Guid),				PpDataType.PpGuid },
 		{ typeof(int),				PpDataType.PpInt32 },
 		{ typeof(long),				PpDataType.PpInt64 },
+		// { typeof(object),			PpDataType.PpJson },
 		{ typeof(string),			PpDataType.PpString },
 		{ typeof(string[]),			PpDataType.PpStringArray },
 	};
@@ -307,6 +436,7 @@ public class PpDb : IPpDb
 		{ DuckDBType.Float, PpDataType.PpFloat },
 		{ DuckDBType.Uuid, PpDataType.PpGuid },
 		{ DuckDBType.Integer, PpDataType.PpInt32 },
+		// { DuckDBType.Json, PpDataType.PpInt32 },
 		{ DuckDBType.BigInt, PpDataType.PpInt64 },
 		{ DuckDBType.Varchar, PpDataType.PpString },
 		{ DuckDBType.Array, PpDataType.PpStringArray },
@@ -371,8 +501,9 @@ public class PpDb : IPpDb
 	// }
 	public async Task ExecuteNonQueryAsync(string sql)
 	{
-		await using var db = await CreateConnectionAsync();
-		await using var cmd = db.CreateCommand();
+		// var db = await CreateConnectionAsync();
+		// await using var cmd = db.CreateCommand();
+		await using var cmd = await CreateCommandAsync();
 
 		cmd.CommandText = sql;
 
@@ -381,13 +512,13 @@ public class PpDb : IPpDb
 
 	public async Task InitTableAsync(PpTable table)
 	{
-		await using var db = await CreateConnectionAsync();
+		await OpenAsync();
 
 		IEnumerable<DuckDbTableDescription> res = null!;
 
 		try
 		{
-			res = await db.QueryAsync<DuckDbTableDescription>($"describe {table.TableName}");
+			res = await _conn.QueryAsync<DuckDbTableDescription>($"describe {table.TableName}");
 		}
 		catch (DuckDBException ex) when (ex.Message?.Contains("does not exist", StringComparison.OrdinalIgnoreCase) ?? false)
 		{

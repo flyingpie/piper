@@ -50,13 +50,15 @@ public class PpListFilesNode : PpNode
 		OutFiles.Table.Columns =
 		[
 			new("rec__uuid", PpGuid),
-			new("file__createdutc", PpDateTime),
-			new("file__dir", PpString),
-			new("file__ext", PpString),
-			new("file__name", PpString),
-			new("file__name_without_ext", PpString),
-			new("file__path", PpString),
-			new("file__size", PpInt32),
+			// new("file", PpDataType.PpJson),
+			new("file", PpDataType.PpString),
+			// new("file__createdutc", PpDateTime),
+			// new("file__dir", PpString),
+			// new("file__ext", PpString),
+			// new("file__name", PpString),
+			// new("file__name_without_ext", PpString),
+			// new("file__path", PpString),
+			// new("file__size", PpInt32),
 		];
 
 		await OutFiles.Table.ClearAsync();
@@ -86,13 +88,32 @@ public class PpListFilesNode : PpNode
 						Fields =
 						{
 							{ "rec__uuid", new(PpGuid, Guid.CreateVersion7()) },
-							{ "file__createdutc", new(PpDateTime, fi.CreationTimeUtc) },
-							{ "file__dir", new(PpString, Path.GetDirectoryName(path)) },
-							{ "file__ext", new(PpString, Path.GetExtension(path)) },
-							{ "file__name", new(PpString, Path.GetFileName(path)) },
-							{ "file__name_without_ext", new(PpString, Path.GetFileNameWithoutExtension(path)) },
-							{ "file__path", new(PpString, Path.GetFullPath(path)) },
-							{ "file__size", new(PpInt32, (int)fi.Length) },
+							{
+								"file",
+								new(
+									PpString,
+									// PpDataType.PpJson,
+									Piper.Core.Utils.PpJson.SerializeToString(
+										new
+										{
+											createdutc = fi.CreationTimeUtc,
+											dir = Path.GetDirectoryName(path),
+											ext = Path.GetExtension(path),
+											name = Path.GetFileName(path),
+											name_without_ext = Path.GetFileNameWithoutExtension(path),
+											path = Path.GetFullPath(path),
+											size = (int)fi.Length,
+										}
+									)
+								)
+							},
+							// { "file__createdutc", new(PpDateTime, fi.CreationTimeUtc) },
+							// { "file__dir", new(PpString, Path.GetDirectoryName(path)) },
+							// { "file__ext", new(PpString, Path.GetExtension(path)) },
+							// { "file__name", new(PpString, Path.GetFileName(path)) },
+							// { "file__name_without_ext", new(PpString, Path.GetFileNameWithoutExtension(path)) },
+							// { "file__path", new(PpString, Path.GetFullPath(path)) },
+							// { "file__size", new(PpInt32, (int)fi.Length) },
 						},
 					}
 				);

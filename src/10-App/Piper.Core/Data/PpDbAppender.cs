@@ -2,9 +2,9 @@ using DuckDB.NET.Data;
 
 namespace Piper.Core.Data;
 
-public sealed class PpDbAppender(DuckDBConnection conn, DuckDBAppender appender, PpTable table) : IAsyncDisposable
+public sealed class PpDbAppender(DuckDBAppender appender, PpTable table) : IAsyncDisposable
 {
-	private readonly DuckDBConnection _conn = Guard.Against.Null(conn);
+	// private readonly DuckDBConnection _conn = Guard.Against.Null(conn);
 	private readonly DuckDBAppender _appender = Guard.Against.Null(appender);
 	private readonly PpTable _table = Guard.Against.Null(table);
 
@@ -83,6 +83,7 @@ public sealed class PpDbAppender(DuckDBConnection conn, DuckDBAppender appender,
 					row.AppendValue(asStringArray);
 					break;
 
+				case DBNull:
 				case null:
 					row.AppendNullValue();
 					break;
@@ -98,6 +99,6 @@ public sealed class PpDbAppender(DuckDBConnection conn, DuckDBAppender appender,
 	public async ValueTask DisposeAsync()
 	{
 		_appender.Dispose();
-		await _conn.DisposeAsync();
+		// await _conn.DisposeAsync();
 	}
 }

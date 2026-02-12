@@ -4,7 +4,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Include debug symbols in the assemblies themselves, makes debugging so much easier -->
-		<DebugType>embedded</DebugType>
+		<DebugType>full</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 
 		<!-- Some features we use require a documentation file, like analyzers, and the docs manifest generation -->

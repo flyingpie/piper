@@ -60,6 +60,9 @@ public partial class DataViewer : ComponentBase
 	{
 		switch (col.PpDataType)
 		{
+			case PpDataType.PpBool:
+				return "8em";
+
 			case PpDataType.PpDateTime:
 				return "12em";
 

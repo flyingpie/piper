@@ -5,14 +5,27 @@
 <div class="pp-field">
 	<PortRenderer @key="NodePort" Port="NodePort"/>
 
+	<!-- Input -->
 	@if (NodePort.Alignment == PortAlignment.Left)
 	{
 		<RadzenStack
 			Orientation="Orientation.Horizontal"
 			JustifyContent="JustifyContent.Left"
 			AlignItems="AlignItems.Center"
-			Gap="1em"
+			Gap=".5em"
 		>
+
+			<!-- Modifiers -->
+			<RadzenButton
+				ButtonStyle="ButtonStyle.Light"
+				Click="() => OnClickModifiers()"
+				Icon="build"
+				Shade="Shade.Darker"
+				Size="ButtonSize.ExtraSmall"
+				Variant="Variant.Outlined"
+			/>
+
+			<!-- Show Data -->
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
 				Click="() => OnClickShowData()"
@@ -22,44 +35,45 @@
 				Variant="Variant.Outlined"
 			/>
 
+			<!-- Disconnect -->
 			<RadzenButton
+				ButtonStyle="ButtonStyle.Light"
 				Click="() => NodePort.DisconnectAll()"
 				Disabled="!NodePort.IsConnected"
 				Icon="close"
+				Shade="Shade.Darker"
 				Size="ButtonSize.ExtraSmall"
 				Variant="Variant.Outlined"
 			/>
 
+			<!-- Summary -->
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
-				<RadzenIcon Icon="numbers" />
-				<RadzenLabel Text="@(NodePort.InCount.ToString("N0"))" />
-				<RadzenLabel Text="@NodePort.Name" />
+				<RadzenIcon Icon="numbers"/>
+				<RadzenLabel Text="@(NodePort.InCount.ToString("N0"))"/>
+				<RadzenLabel Text="@NodePort.Name"/>
 			</RadzenStack>
+
 		</RadzenStack>
 	}
 
+	<!-- Output -->
 	@if (NodePort.Alignment == PortAlignment.Right)
 	{
 		<RadzenStack
 			Orientation="Orientation.Horizontal"
 			JustifyContent="JustifyContent.Right"
 			AlignItems="AlignItems.Center"
-			Gap="1em"
+			Gap=".5em"
 		>
+
+			<!-- Summary -->
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em">
 				<RadzenIcon Icon="numbers" />
 				<RadzenLabel Text="@(NodePort.OutCount.ToString("N0"))" />
 				<RadzenLabel Text="@NodePort.Name" />
 			</RadzenStack>
 
-			<RadzenButton
-				Click="() => NodePort.DisconnectAll()"
-				Disabled="!NodePort.IsConnected"
-				Icon="close"
-				Size="ButtonSize.ExtraSmall"
-				Variant="Variant.Outlined"
-			/>
-
+			<!-- Show Data -->
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
 				Click="() => OnClickShowData()"
@@ -68,6 +82,28 @@
 				Size="ButtonSize.ExtraSmall"
 				Variant="Variant.Outlined"
 			/>
+
+			<!-- Modifiers -->
+			<RadzenButton
+				ButtonStyle="ButtonStyle.Light"
+				Click="() => OnClickModifiers()"
+				Icon="build"
+				Shade="Shade.Darker"
+				Size="ButtonSize.ExtraSmall"
+				Variant="Variant.Outlined"
+			/>
+
+			<!-- Disconnect -->
+			<RadzenButton
+				ButtonStyle="ButtonStyle.Light"
+				Click="() => NodePort.DisconnectAll()"
+				Disabled="!NodePort.IsConnected"
+				Icon="close"
+				Shade="Shade.Darker"
+				Size="ButtonSize.ExtraSmall"
+				Variant="Variant.Outlined"
+			/>
+
 		</RadzenStack>
 	}
 </div>

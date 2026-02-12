@@ -1,7 +1,7 @@
 [
 	{
 		"id": "GgRKvMPM:PpListFilesNode:List Files 01",
-		"pos": "217,1198",
+		"pos": "103,1603",
 		"params": {
 			"InPath": "/home/marco/Downloads",
 			"InPattern": "*.csv",
@@ -10,27 +10,21 @@
 	},
 	{
 		"id": "9yqDeyuw5akb:PpDuckNode:List Files 02",
-		"pos": "843,1012",
+		"pos": "1791,1424",
 		"params": {
 			"Query": "select file__ext, count(1) cnt from $table group by file__ext order by count(1) desc"
-		},
-		"ports": {
-			"InRecords": "GgRKvMPM:OutFiles"
 		}
 	},
 	{
 		"id": "Jbo7bGym3D:PpDuckNode:List Files 01",
-		"pos": "740,1340",
+		"pos": "990,1783",
 		"params": {
 			"Query": "select\t\trow_to_json(t)\n,\t\t\t*\nfrom\t\t$table as t"
-		},
-		"ports": {
-			"InRecords": "GgRKvMPM:OutFiles"
 		}
 	},
 	{
 		"id": "WG64J9FTdvE:PpReadFilesNode:Read Files 02",
-		"pos": "833,1716",
+		"pos": "446,1606",
 		"params": {
 			"InAttr": "file__path",
 			"MaxFileSize": "20000"
@@ -41,17 +35,14 @@
 	},
 	{
 		"id": "yNahTQCovG:PpDuckNode:List Files 01",
-		"pos": "1152,1740",
+		"pos": "2077,1432",
 		"params": {
 			"Query": "select\t\t*\nfrom\t\t$table\nwhere\t\tfile__size \u003E 1500\norder by\tfile__createdutc desc\n,\t\t\tidx desc\n"
-		},
-		"ports": {
-			"InRecords": "WG64J9FTdvE:OutLines"
 		}
 	},
 	{
 		"id": "aHjs3wGLLxLe:PpReadFilesNode:Read Files 01",
-		"pos": "1166,1365",
+		"pos": "1316,1836",
 		"params": {
 			"InAttr": "file__path",
 			"MaxFileSize": "2000000"
@@ -62,17 +53,14 @@
 	},
 	{
 		"id": "cqwbjJga8ubF:PpDuckNode:List Files 02",
-		"pos": "1516,1345",
+		"pos": "2353,1433",
 		"params": {
 			"Query": ""
-		},
-		"ports": {
-			"InRecords": "aHjs3wGLLxLe:OutLines"
 		}
 	},
 	{
 		"id": "Gx8RfeKpP5:PpReadCsvNode:Read CSV 01",
-		"pos": "0,457",
+		"pos": "-363,302",
 		"params": {
 			"InAttr": "file__path"
 		},
@@ -81,12 +69,8 @@
 		}
 	},
 	{
-		"id": "u10olT0fx:PpReadCsvNode:Read CSV 01",
-		"pos": "-268,1538"
-	},
-	{
 		"id": "47jjna6Vp:PpListFilesNode:List Files 02",
-		"pos": "-349,474",
+		"pos": "-697,289",
 		"params": {
 			"InPath": "/home/marco/Downloads",
 			"InPattern": "**/*.csv",
@@ -95,7 +79,7 @@
 	},
 	{
 		"id": "Xd5h4gav2D9W:PpListFilesNode:List Files 03",
-		"pos": "540,301",
+		"pos": "499,154",
 		"params": {
 			"InPath": "/home/marco/Downloads",
 			"InPattern": "*.csv",
@@ -104,7 +88,7 @@
 	},
 	{
 		"id": "b2QoCqA4:PpReadXlsxNode:Read XSLX 01",
-		"pos": "217,797",
+		"pos": "-116,1077",
 		"params": {
 			"Path": "/home/marco/Downloads/reptile_checklist_2025_05.xlsx",
 			"Sheet": ""
@@ -112,12 +96,73 @@
 	},
 	{
 		"id": "IRsYetEP:PpReadCsvNode:Read CSV 01",
-		"pos": "900,340",
+		"pos": "1158,158",
 		"params": {
-			"InAttr": "file__path"
+			"InAttr": "path"
 		},
 		"ports": {
-			"InFiles": "Xd5h4gav2D9W:OutFiles"
+			"InFiles": "RqeKfQHJpN:OutRecords"
+		}
+	},
+	{
+		"id": "RqeKfQHJpN:PpDuckNode:List Files 01",
+		"pos": "827,159",
+		"params": {
+			"Query": "select\t\t*\n,\t\t\tfile-\u003E\u003E\u0027path\u0027 as path\nfrom\t\t$table\n"
+		},
+		"ports": {
+			"InRecords1": "Xd5h4gav2D9W:OutFiles"
+		}
+	},
+	{
+		"id": "JpY9YNRaV:PpDuckNode:List Files 01",
+		"pos": "1509,160",
+		"params": {
+			"Query": "select\t\t*\n,\t\t\tcoalesce(csv_row-\u003E\u003E\u0027name\u0027, csv_row-\u003E\u003E\u0027Species\u0027) as name\nfrom\t\t$table\n"
+		},
+		"ports": {
+			"InRecords1": "IRsYetEP:OutRecords"
+		}
+	},
+	{
+		"id": "EpbD7dHIsly1:PpDuckNode:List Files 02",
+		"pos": "1218,723",
+		"params": {
+			"Query": "select\t\t*\nfrom\t\t$table\nwhere\t\tpath ilike \u0027%steam%\u0027"
+		},
+		"ports": {
+			"InRecords1": "RqeKfQHJpN:OutRecords"
+		}
+	},
+	{
+		"id": "Ju124zEug9eby:PpReadCsvNode:Read CSV 03",
+		"pos": "1616,748",
+		"params": {
+			"InAttr": "path"
+		},
+		"ports": {
+			"InFiles": "EpbD7dHIsly1:OutRecords"
+		}
+	},
+	{
+		"id": "uI6NskUa:PpDuckNode:List Files 01",
+		"pos": "1953,743",
+		"params": {
+			"Query": "select\t\t*\n,\t\t\tcsv_row-\u003E\u003E\u0027name\u0027 as name\nfrom\t\t$table\n"
+		},
+		"ports": {
+			"InRecords1": "Ju124zEug9eby:OutRecords"
+		}
+	},
+	{
+		"id": "ym0jeXUB4ek03:PpDuckNode:List Files 01",
+		"pos": "2367,403",
+		"params": {
+			"Query": "select\t\tspecies as name\nfrom\t\t$table0\n\nunion all\n\nselect\t\tname\nfrom\t\t$table1"
+		},
+		"ports": {
+			"InRecords1": "JpY9YNRaV:OutRecords",
+			"InRecords2": "uI6NskUa:OutRecords"
 		}
 	}
 ]

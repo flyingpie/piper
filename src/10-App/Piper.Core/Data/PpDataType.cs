@@ -25,6 +25,9 @@ public enum PpDataType
 	[JsonStringEnumMemberName("i64")]
 	PpInt64,
 
+	// [JsonStringEnumMemberName("json")]
+	// PpJson,
+
 	[JsonStringEnumMemberName("string")]
 	PpString,
 

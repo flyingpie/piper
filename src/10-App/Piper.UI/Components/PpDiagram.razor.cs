@@ -46,6 +46,11 @@ public partial class PpDiagram : ComponentBase
 
 	private void OnMenuItemClick(MouseEventArgs a1, MenuItemEventArgs args)
 	{
+		if (args.Value?.ToString()?.Equals("child", StringComparison.OrdinalIgnoreCase) ?? false)
+		{
+			return;
+		}
+
 		Console.WriteLine($"VALUE:{args.Value}");
 
 		switch (args.Value ?? string.Empty)
@@ -114,6 +119,39 @@ public partial class PpDiagram : ComponentBase
 					{
 						Name = $"SMAP {++_idx:00}",
 						// PathPattern = "/home/marco/Downloads/**/*.csv",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					}
+				);
+				break;
+
+			case "PP_NODE_RDBMS":
+				Diagram.Nodes.Add(
+					new PpRdbmsNode()
+					{
+						//
+						Name = $"RDBMS {++_idx:00}",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					}
+				);
+				break;
+
+			case "PP_NODE_SCRIPT":
+				Diagram.Nodes.Add(
+					new PpCSharpNode()
+					{
+						//
+						Name = $"Script {++_idx:00}",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					}
+				);
+				break;
+
+			case "PP_NODE_FUNCTION":
+				Diagram.Nodes.Add(
+					new PpFunctionNode()
+					{
+						//
+						Name = $"Function {++_idx:00}",
 						Position = new BD.Point(a1.ClientX, a1.ClientY),
 					}
 				);

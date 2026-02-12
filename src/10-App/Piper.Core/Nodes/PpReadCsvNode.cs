@@ -1,4 +1,3 @@
-using Blazor.Diagrams.Core.Models;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
 using Piper.Core.Db;
@@ -12,7 +11,9 @@ public class PpReadCsvNode : PpNode
 	public PpReadCsvNode()
 	{
 		InFiles = new(this, nameof(InFiles));
-		OutTables = new(this, nameof(OutTables), new(PpTable.GetTableName(this, nameof(OutTables))));
+
+		OutRecords = new(this, nameof(OutRecords), new(PpTable.GetTableName(this, nameof(OutRecords))));
+		OutFailures = new(this, nameof(OutFailures), new(PpTable.GetTableName(this, nameof(OutFailures))));
 	}
 
 	public override string Color => "#8a2828";
@@ -35,8 +36,11 @@ public class PpReadCsvNode : PpNode
 	// [PpParam("Max File Size")]
 	// public int MaxFileSize { get; set; } = 2_000_000; // 2MB
 
-	[PpPort(Out, "Tables")]
-	public PpNodeOutput OutTables { get; }
+	[PpPort(Out, "Records")]
+	public PpNodeOutput OutRecords { get; }
+
+	[PpPort(Out, "Failures")]
+	public PpNodeOutput OutFailures { get; }
 
 	protected override async Task OnExecuteAsync()
 	{
@@ -56,17 +60,21 @@ public class PpReadCsvNode : PpNode
 		var inTable = InFiles.Output.Table;
 
 		// Prep out
-		var cols = inTable.Columns.ToList();
-		cols.AddRange([new("is_successful", PpBool), new("table_name", PpString), new("row_count", PpInt64), new("error", PpString)]);
-		OutTables.Table.Columns = cols;
-		await OutTables.Table.ClearAsync();
+		var cols1 = inTable.Columns.ToList();
+		cols1.AddRange([new("csv_row", PpString)]);
+		OutRecords.Table.Columns = cols1;
+		await OutRecords.Table.ClearAsync();
 
-		_dynNodeProps.Clear();
+		var cols2 = inTable.Columns.ToList();
+		cols2.AddRange([new("error", PpString)]);
+		OutFailures.Table.Columns = cols2;
+		await OutFailures.Table.ClearAsync();
 
 		var i = 0;
 
 		{
-			await using var appender = await OutTables.Table.CreateAppenderAsync();
+			await using var appender = await OutRecords.Table.CreateAppenderAsync();
+			await using var appender2 = await OutFailures.Table.CreateAppenderAsync();
 
 			await foreach (var file in inTable.QueryAllAsync())
 			{
@@ -92,43 +100,93 @@ public class PpReadCsvNode : PpNode
 				}
 
 				// Read CSV
-				var table = new PpTable($"{OutTables.Table.TableName}_{i++}");
-
 				try
 				{
-					await PpDb.Instance.ExecuteNonQueryAsync(
-						$"""
-						create or replace table "{table.TableName}"
-							as select * from read_csv('{path}', union_by_name = true)
-						"""
-					);
-
-					await table.InitAsync();
-
-					appender.Add(CreateRecord(file, isSuccessful: true, table.TableName, table.Count));
-
-					var nodeOut = new PpNodeOutput(this, table.TableName, table);
-					_dynNodeProps.Add(new PpNodePort(table.TableName, this, PortAlignment.Right) { GetNodeOutput = () => nodeOut });
+					await foreach (
+						var row in PpDb.Instance.RawQueryAsync(
+							$"""
+								select row_to_json(csv) as csv_row from read_csv('{path}', union_by_name = true) as csv
+							"""
+						)
+					)
+					{
+						appender.Add(CreateRecord(file, row.Fields.First().Value.ValueAsString));
+					}
 				}
 				catch (Exception ex)
 				{
-					appender.Add(CreateRecord(file, isSuccessful: false, table.TableName, table.Count, error: ex.Message));
+					// appender.Add(CreateRecord(file, isSuccessful: false, null, error: ex.Message));
+
+					appender2.Add(
+						new PpRecord()
+						{
+							Fields = new Dictionary<string, PpField>(file.Fields, StringComparer.OrdinalIgnoreCase)
+							{
+								{ "error", new(PpString, ex.Message) },
+							},
+						}
+					);
 				}
+
+				// 	var csvConf = new CsvConfiguration(CultureInfo.InvariantCulture)
+				// 	{
+				// 		//
+				// 		HasHeaderRecord = true,
+				// 		DetectDelimiter = true,
+				// 	};
+				// 	using var fileStr = File.OpenRead(path);
+				// 	using var strReader = new StreamReader(fileStr);
+				// 	using var csvReader = new CsvHelper.CsvReader(strReader, csvConf);
+				//
+				// 	if (!await csvReader.ReadAsync())
+				// 	{
+				// 		//
+				// 	}
+				//
+				// 	csvReader.ReadHeader();
+				//
+				// 	while (await csvReader.ReadAsync())
+				// 	{
+				// 		// var dict = new Dictionary<string, PpField>();
+				// 		var dict = new Dictionary<string, string?>();
+				//
+				// 		foreach (var h in csvReader.HeaderRecord ?? [])
+				// 		{
+				// 			if (csvReader.TryGetField(typeof(string), h, out var val))
+				// 			{
+				// 				// dict[h] = new PpField(PpString, val);
+				// 				dict[h] = val?.ToString();
+				//
+				// 				var xy = 2;
+				// 			}
+				// 			else
+				// 			{
+				// 				dict[h] = null;
+				//
+				// 				var xy = 2;
+				// 			}
+				// 		}
+				// 		//
+				//
+				// 		// var x = csvReader.GetRecord<Dictionary<string, object>>();
+				//
+				// 		appender.Add(CreateRecord(file, isSuccessful: true, Utils.PpJson.SerializeToString(dict), error: null));
+				//
+				// 		var xx = 2;
+				// 	}
 			}
 		}
 
-		await OutTables.Table.DoneAsync();
+		await OutRecords.Table.DoneAsync();
+		await OutFailures.Table.DoneAsync();
 	}
 
-	private static PpRecord CreateRecord(PpRecord file, bool isSuccessful, string tableName, long count, string? error = null) =>
+	private static PpRecord CreateRecord(PpRecord file, string? csvRow) =>
 		new()
 		{
 			Fields = new Dictionary<string, PpField>(file.Fields, StringComparer.OrdinalIgnoreCase)
 			{
-				{ "is_successful", isSuccessful },
-				{ "table_name", tableName },
-				{ "row_count", count },
-				{ "error", error },
+				{ "csv_row", new(PpString, csvRow) },
 			},
 		};
 }
