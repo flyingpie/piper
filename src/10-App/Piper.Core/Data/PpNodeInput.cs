@@ -15,4 +15,6 @@ public class PpNodeInput(PpNode node, string name) : PpNodePort(node, name)
 	/// The output that this input is connected to (null if not connected).
 	/// </summary>
 	public PpNodeOutput? Output { get; set; }
+
+	public PpTable? Table { get; set; }
 }

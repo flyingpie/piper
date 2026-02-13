@@ -7,8 +7,6 @@ namespace Piper.Core.Nodes;
 
 public class PpReadFilesNode : PpNode
 {
-	private readonly PpTable _outLines;
-
 	public PpReadFilesNode()
 	{
 		InFiles = new(this, nameof(InFiles));
@@ -56,11 +54,11 @@ public class PpReadFilesNode : PpNode
 
 		var cols = inTable.Columns.ToList();
 		cols.AddRange([new("idx", PpString), new("line", PpString)]);
-		_outLines.Columns = cols;
-		await _outLines.ClearAsync();
+		OutLines.Table.Columns = cols;
+		await OutLines.Table.ClearAsync();
 
 		{
-			await using var appender = await _outLines.CreateAppenderAsync();
+			await using var appender = await OutLines.Table.CreateAppenderAsync();
 
 			var i = 0;
 			await foreach (var file in inTable.QueryAllAsync())
@@ -118,7 +116,7 @@ public class PpReadFilesNode : PpNode
 			}
 		}
 
-		await _outLines.DoneAsync();
+		await OutLines.Table.DoneAsync();
 	}
 
 	public PpRecord CreateRecord(PpRecord file, int idx, string line) =>

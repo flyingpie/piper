@@ -69,6 +69,7 @@ public static class BlazorDiagramConfiguration
 				SnappingRadius = 15,
 				// Factory =
 			},
+			GridSnapToCenter = true,
 			Zoom = { Enabled = true, Inverse = true },
 		};
 

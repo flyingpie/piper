@@ -14,4 +14,6 @@ public abstract class PpNodePort(PpNode node, string name)
 	/// The node owning this port.
 	/// </summary>
 	public PpNode Node { get; } = Guard.Against.Null(node);
+
+	public List<PpModifier> Modifiers { get; set; } = [];
 }

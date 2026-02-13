@@ -25,5 +25,9 @@
 		<PackageReference Include="Z.Blazor.Diagrams" />
 		<PackageReference Include="Z.Blazor.Diagrams.Algorithms" />
 		<PackageReference Include="Z.Blazor.Diagrams.Core" />
+		<PackageReference Update="CSharpier.MSBuild">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 </Project>

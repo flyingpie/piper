@@ -2,6 +2,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Piper.Core.Serialization;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace Piper.Core.Utils;
 
@@ -34,4 +36,13 @@ public static class PpJson
 		Deserialize<T>(json) ?? throw new InvalidOperationException($"Json '{json}' deserialized to null.");
 
 	public static string SerializeToString(object? obj) => JsonSerializer.Serialize(obj, JsonOpts);
+}
+
+public static class PpYaml
+{
+	private static readonly ISerializer _serializer = new SerializerBuilder()
+		.WithNamingConvention(new UnderscoredNamingConvention())
+		.Build();
+
+	public static string SerializeToString(object? obj) => _serializer.Serialize(obj);
 }

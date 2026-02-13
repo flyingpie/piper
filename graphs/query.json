@@ -1,73 +1,48 @@
 [
 	{
-		"id": "GgRKvMPM:PpListFilesNode:List Files 01",
-		"pos": "500,356",
+		"id": "QKmbqodHlpN:PpListFilesNode:List Files 01",
+		"pos": "471,467",
 		"params": {
 			"InPath": "/home/marco/Downloads",
-			"InPattern": "*",
+			"InPattern": "*.csv",
 			"MaxFiles": "10000"
 		}
 	},
 	{
-		"id": "9yqDeyuw5akb:PpDuckNode:List Files 02",
-		"pos": "953,111",
+		"id": "Tlp2JaSVkCXWP:PpReadFilesNode:Read Files 02",
+		"pos": "1208,340",
 		"params": {
-			"Query": "select file__ext, count(1) cnt from $table group by file__ext order by count(1) desc"
-		},
-		"ports": {
-			"InRecords": "GgRKvMPM:OutFiles"
-		}
-	},
-	{
-		"id": "Jbo7bGym3D:PpDuckNode:List Files 01",
-		"pos": "950,442",
-		"params": {
-			"Query": "select * from $table where file__path ilike \u0027%wtq%\u0027"
-		},
-		"ports": {
-			"InRecords": "GgRKvMPM:OutFiles"
-		}
-	},
-	{
-		"id": "WG64J9FTdvE:PpReadFilesNode:Read Files 02",
-		"pos": "951,768",
-		"params": {
-			"InAttr": "file__path",
-			"MaxFileSize": "20000"
-		},
-		"ports": {
-			"InFiles": "GgRKvMPM:OutFiles"
-		}
-	},
-	{
-		"id": "yNahTQCovG:PpDuckNode:List Files 01",
-		"pos": "1356,780",
-		"params": {
-			"Query": "select      *\nfrom        $table\nwhere       file__size \u003E 1500\norder by    file__createdutc desc, idx desc\n"
-		},
-		"ports": {
-			"InRecords": "WG64J9FTdvE:OutLines"
-		}
-	},
-	{
-		"id": "aHjs3wGLLxLe:PpReadFilesNode:Read Files 01",
-		"pos": "1347,448",
-		"params": {
-			"InAttr": "file__path",
+			"InAttr": "path",
 			"MaxFileSize": "2000000"
 		},
 		"ports": {
-			"InFiles": "Jbo7bGym3D:OutRecords"
+			"InFiles": {
+				"link": "W4GroIITN:OutRecords",
+				"mods": []
+			}
 		}
 	},
 	{
-		"id": "cqwbjJga8ubF:PpDuckNode:List Files 02",
-		"pos": "1720,448",
+		"id": "W4GroIITN:PpDuckNode:List Files 03",
+		"pos": "848,438",
 		"params": {
-			"Query": ""
+			"Query": "select\t\t*\n,\t\t\tfile-\u003E\u003E\u0027path\u0027 as path\nfrom\t\t$table\n"
 		},
 		"ports": {
-			"InRecords": "aHjs3wGLLxLe:OutLines"
+			"InRecords1": {
+				"link": "QKmbqodHlpN:OutFiles",
+				"mods": []
+			}
+		}
+	},
+	{
+		"id": "djEuzlEetk:PpReadCsvNode:Read CSV 01",
+		"pos": "1215,671",
+		"ports": {
+			"InFiles": {
+				"link": "W4GroIITN:OutRecords",
+				"mods": []
+			}
 		}
 	}
 ]

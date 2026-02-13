@@ -1,0 +1,48 @@
+- id:
+    id: 7vW0gnkn3
+    type: PpListFilesNode
+    name: List Files 01
+  pos:
+    x: 471
+    y: 306
+  params:
+    InPath: /home/marco/Downloads
+    InPattern: '*.txt'
+    MaxFiles: 10000
+  ports: 
+- id:
+    id: PgppWeGwkuJhY
+    type: PpReadFilesNode
+    name: Read Files 02
+  pos:
+    x: 1148
+    y: 319
+  params:
+    InAttr: path
+    MaxFileSize: 2000000
+  ports:
+    InFiles:
+      link:
+        node: ckav2wDPRfvB
+        port: OutRecords
+      mods: []
+- id:
+    id: ckav2wDPRfvB
+    type: PpDuckNode
+    name: List Files 03
+  pos:
+    x: 824
+    y: 275
+  params:
+    Query: >-
+      select		*
+
+      ,			file->>'path' as path
+
+      from		$table
+  ports:
+    InRecords1:
+      link:
+        node: 7vW0gnkn3
+        port: OutFiles
+      mods: []
