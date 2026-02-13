@@ -3,19 +3,19 @@ using System.Text.Json.Serialization;
 
 namespace Piper.Core.Serialization;
 
-public class PpJsonPortJsonConverter : JsonConverter<PpJsonPort>
+public class PpJsonPortLinkJsonConverter : JsonConverter<PpJsonPortLink>
 {
-	public override PpJsonPort? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	public override PpJsonPortLink? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var str = reader.GetString();
 		var spl = str.Split(':');
 		var nodeId = spl[0];
 		var portName = spl[1];
 
-		return new PpJsonPort(nodeId, portName);
+		return new PpJsonPortLink(nodeId, portName);
 	}
 
-	public override void Write(Utf8JsonWriter writer, PpJsonPort value, JsonSerializerOptions options)
+	public override void Write(Utf8JsonWriter writer, PpJsonPortLink value, JsonSerializerOptions options)
 	{
 		writer.WriteStringValue($"{value.Node}:{value.Port}");
 	}

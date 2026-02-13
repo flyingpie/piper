@@ -15,7 +15,7 @@ public partial class DataViewer : ComponentBase
 
 	public List<PpColumn> Columns = [];
 
-	public IEnumerable<PpRecord> Records { get; set; } = [];
+	public IReadOnlyCollection<PpRecord> Records { get; set; } = [];
 
 	public int RecordCount { get; set; }
 
@@ -111,7 +111,14 @@ public partial class DataViewer : ComponentBase
 
 		RecordCount = (int)await PpDb.Instance.CountAsync(sqlCount);
 		// Records = await PpDb.Instance.QueryAsync(sql).ToListAsync();
-		Records = await PpDb.Instance.QueryAsync(table, sql).ToListAsync();
+		// Records = await PpDb.Instance.QueryAsync(table, sql).ToListAsync();
+		Records = await table.QueryAsync(sql).ToListAsync();
+
+		if (Records.Count > 0)
+		{
+			var rec = Records.First();
+			Columns = rec.Fields.Select(f => new PpColumn(f.Key, f.Value.DataType)).ToList();
+		}
 
 		Console.WriteLine($"Data reload took {sw.Elapsed}");
 	}

@@ -1,21 +1,25 @@
 [
 	{
-		"id": "x6mRWgU4J:PpListFilesNode:Node 2",
-		"pos": "50,200",
+		"id": "ukw4hf8xtDAft:PpListFilesNode:List Files 01",
+		"pos": "322,202",
 		"params": {
 			"InPath": "/home/marco/Downloads",
-			"InPattern": "*.txt"
+			"InPattern": "*.txt",
+			"MaxFiles": "10000"
 		}
 	},
 	{
-		"id": "PchUJ05HWE02:PpReadFilesNode:Node 3",
-		"pos": "400,200",
+		"id": "D6FeWok50Jh:PpReadFilesNode:Read Files 02",
+		"pos": "698,213",
 		"params": {
 			"InAttr": "path",
-			"MaxFileSize": "12345"
+			"MaxFileSize": "2000000"
 		},
 		"ports": {
-			"InFiles": "x6mRWgU4J:OutFiles"
+			"InFiles": {
+				"link": "ukw4hf8xtDAft:OutFiles",
+				"mods": []
+			}
 		}
 	}
 ]

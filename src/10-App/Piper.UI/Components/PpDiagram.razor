@@ -4,6 +4,7 @@
 @using Piper.UI.Components.CodeEditor
 @using Piper.UI.Components.Logs
 @using Piper.UI.Components.Nodes
+@using Piper.UI.Services
 
 @inject ContextMenuService ContextMenuService
 
@@ -146,12 +147,14 @@
 												</Columns>
 											</RadzenDataGrid>
 
-											<RadzenSplitterPane>
-												SUP
-											</RadzenSplitterPane>
 										</RadzenStack>
 
 									</RadzenSplitterPane>
+
+									<RadzenSplitterPane>
+										SUP
+									</RadzenSplitterPane>
+
 								</RadzenSplitter>
 
 
@@ -206,6 +209,44 @@
 						@* 		</RadzenDataGrid> *@
 						@* *@
 						@* </RadzenTabsItem> *@
+
+
+						<!-- Modifiers -->
+						<RadzenTabsItem Text="Modifiers" Icon="polyline">
+
+							<RadzenStack>
+
+								<RadzenMenu Click="a => AddModifier(a.Value?.ToString())">
+									<RadzenMenuItem Text="Add">
+										<RadzenMenuItem Text="Casing" Value="@("PP_MOD_CASING")" />
+										<RadzenMenuItem Text="Reverse" Value="@("PP_MOD_REVERSE")" />
+									</RadzenMenuItem>
+								</RadzenMenu>
+
+								<RadzenTable>
+									<RadzenTableBody>
+
+										@foreach (var mod in SelectedThingyService.Instance?.SelectedTable?.Modifiers ?? [])
+										{
+											<RadzenTableRow>
+												<RadzenTableCell>@mod.Name</RadzenTableCell>
+												<RadzenTableCell Style="width: 7em;">
+													<RadzenButton
+														Icon="keyboard_arrow_up" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+													<RadzenButton
+														Icon="keyboard_arrow_down" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+													<RadzenButton
+														Click="() => RemoveModifier(mod)"
+														Text="X" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+												</RadzenTableCell>
+											</RadzenTableRow>
+										}
+									</RadzenTableBody>
+								</RadzenTable>
+
+							</RadzenStack>
+
+						</RadzenTabsItem>
 					</Tabs>
 				</RadzenTabs>
 

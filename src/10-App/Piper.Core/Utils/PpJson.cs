@@ -14,7 +14,7 @@ public static class PpJson
 			new JsonStringEnumConverter(),
 			new PpJsonNodeIdJsonConverter(),
 			new PpJsonNodeParamJsonConverter(),
-			new PpJsonPortJsonConverter(),
+			new PpJsonPortLinkJsonConverter(),
 			new Vector2JsonConverter(),
 		},
 		IncludeFields = true,

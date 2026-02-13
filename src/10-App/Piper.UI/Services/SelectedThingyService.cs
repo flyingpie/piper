@@ -1,4 +1,6 @@
 using Piper.Core;
+using Piper.Core.Data;
+using PpNodePort = Piper.Core.PpNodePort;
 
 namespace Piper.UI.Services;
 
@@ -31,6 +33,8 @@ public class SelectedThingyService
 		}
 	}
 
+	public PpTable? SelectedTable => SelectedPort?.Table;
+
 	public bool IsNodeSelected(PpNode? node) => _selectedNode != null && _selectedNode == node;
 
 	public bool IsNodePortSelected(PpNodePort port) => _selectedPort != null && _selectedPort == port;
@@ -52,7 +56,7 @@ public class SelectedThingyService
 		_onChanged.Add(onChanged);
 	}
 
-	private void Changed()
+	public void Changed()
 	{
 		Console.WriteLine($"Changed ({_onChanged.Count})");
 

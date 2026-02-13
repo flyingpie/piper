@@ -56,7 +56,12 @@ public static class PpNodeSerializer
 						if (prop.GetValue(n) is PpNodeInput { Output.Node: not null } inPort)
 						{
 							jsonNode.Ports ??= new();
-							jsonNode.Ports[prop.Name] = new(inPort.Output.Node.NodeId, inPort.Output.Name);
+							jsonNode.Ports[prop.Name] = new()
+							{
+								//
+								Link = new(inPort.Output.Node.NodeId, inPort.Output.Name),
+								Mods = [],
+							};
 						}
 					}
 				}
@@ -149,13 +154,13 @@ public static class PpNodeSerializer
 					continue;
 				}
 
-				var outNode = graph.Nodes.FirstOrDefault(nx => nx.NodeId == port.Value.Node);
+				var outNode = graph.Nodes.FirstOrDefault(nx => nx.NodeId == port.Value.Link.Node);
 				if (outNode == null)
 				{
 					continue;
 				}
 
-				var outPort = outNode.GetType().GetProperty(port.Value.Port);
+				var outPort = outNode.GetType().GetProperty(port.Value.Link.Port);
 				if (outPort == null)
 				{
 					continue;

@@ -1,3 +1,8 @@
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using System.Runtime.Loader;
+using System.Runtime.Serialization;
 using System.Threading;
 using Piper.Core.Db;
 
@@ -15,6 +20,8 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 	public string TableName { get; } = Guard.Against.NullOrWhiteSpace(tableName);
 
 	public List<PpColumn> Columns { get; set; } = Guard.Against.Null(columns).ToList();
+
+	public List<PpModifier> Modifiers { get; set; } = [];
 
 	public static string GetTableName(PpNode node, string propName)
 	{
@@ -85,12 +92,112 @@ public class PpTable(string tableName, ICollection<PpColumn> columns)
 	public IAsyncEnumerable<PpRecord> QueryAllAsync()
 	{
 		// return PpDb.Instance.QueryAsync($"select * from {TableName}");
-		return PpDb.Instance.QueryAsync(this, "select * from $table");
+
+		return QueryAsync($"select * from {TableName}");
+
+		// await foreach (var rec in PpDb.Instance.QueryAsync(this, "select * from $table"))
+		// {
+		// 	var x = rec;
+		//
+		// 	foreach (var mod in Modifiers)
+		// 	{
+		// 		x = await mod.ExecuteAsync(x);
+		// 	}
+		//
+		// 	yield return x;
+		// }
 	}
 
-	public IAsyncEnumerable<PpRecord> QueryAsync(string sql)
+	public async IAsyncEnumerable<PpRecord> QueryAsync(string sql)
 	{
-		// return PpDb.Instance.QueryAsync(sql);
-		return PpDb.Instance.QueryAsync(this, sql);
+		// await foreach (var rec in PpDb.Instance.QueryAsync(this, "select * from $table"))
+		await foreach (var rec in PpDb.Instance.QueryAsync(this, sql))
+		{
+			var x = rec;
+
+			foreach (var mod in Modifiers)
+			{
+				x = await mod.ExecuteAsync(x);
+			}
+
+			yield return x;
+		}
+	}
+}
+
+public abstract class PpModifier
+{
+	public abstract string Name { get; set; }
+
+	public abstract Task<PpRecord> ExecuteAsync(PpRecord record);
+}
+
+public class PpCasingModifier : PpModifier
+{
+	public override string Name { get; set; } = "Casing";
+
+	public string FieldName { get; set; } = "rec__uuid";
+
+	public override Task<PpRecord> ExecuteAsync(PpRecord record)
+	{
+		if (FieldName == null)
+		{
+			return Task.FromResult(record);
+		}
+
+		if (record.Fields.TryGetValue(FieldName, out var field))
+		{
+			field.Value = field.Value?.ToString()?.ToUpperInvariant();
+		}
+
+		// record.Fields["new_field"] = "A string";
+
+		return Task.FromResult(record);
+	}
+}
+
+[DataContract(Name = "Reverse", Namespace = "PpModifier")]
+public class PpReverseModifier : PpModifier
+{
+	public override string Name { get; set; } = "Reverse";
+
+	public string FieldName { get; set; } = "rec__uuid";
+
+	public override Task<PpRecord> ExecuteAsync(PpRecord record)
+	{
+		// record.Fields["new_field"] = "A string";
+
+		if (FieldName == null)
+		{
+			return Task.FromResult(record);
+		}
+
+		record.Fields["new_field"] = string.Empty;
+		if (record.Fields.TryGetValue(FieldName, out var field))
+		{
+			record.Fields["new_field"] = new string(field.Value?.ToString()?.Reverse()?.ToArray() ?? []);
+		}
+
+		return Task.FromResult(record);
+	}
+}
+
+public class PluginLoadContext : AssemblyLoadContext
+{
+	// public readonly AssemblyDependencyResolver _resolver;
+
+	public PluginLoadContext()
+	{
+		// _resolver = new();
+	}
+
+	protected override Assembly? Load(AssemblyName assemblyName)
+	{
+		return base.Load(assemblyName);
+	}
+
+	protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
+	{
+		return base.LoadUnmanagedDll(unmanagedDllName);
 	}
 }
