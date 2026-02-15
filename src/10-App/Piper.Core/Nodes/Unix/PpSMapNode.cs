@@ -8,7 +8,7 @@ public class PpSMapNode : PpNode
 {
 	public PpSMapNode()
 	{
-		OutProcesses = new(this, nameof(OutProcesses), new(PpTable.GetTableName(this, nameof(OutProcesses))));
+		OutProcesses = new(this, nameof(OutProcesses), new PpTable());
 	}
 
 	[PpParam("Process Name")]
@@ -43,9 +43,9 @@ public class PpSMapNode : PpNode
 
 					if (!isInit)
 					{
-						OutProcesses.Table.Columns = recs.First().Fields.Select(f => new PpColumn(f.Key, PpDataType.PpString)).ToList();
-						await OutProcesses.Table.ClearAsync();
-						appender = await OutProcesses.Table.CreateAppenderAsync();
+						OutProcesses.BaseTable.Columns = recs.First().Fields.Select(f => new PpColumn(f.Key, PpDataType.PpString)).ToList();
+						await OutProcesses.BaseTable.ClearAsync();
+						appender = await OutProcesses.BaseTable.CreateAppenderAsync();
 						isInit = true;
 					}
 
@@ -59,7 +59,7 @@ public class PpSMapNode : PpNode
 			}
 		}
 
-		await OutProcesses.Table.DoneAsync();
+		await OutProcesses.BaseTable.DoneAsync();
 	}
 
 	private static async Task<List<PpRecord>> GetSMapAsync(int pid)

@@ -9,7 +9,7 @@ public class PpCmdNode : PpNode
 	public PpCmdNode()
 	{
 		InInputs = new(this, nameof(InInputs));
-		OutResults = new(this, nameof(OutResults), new("results"));
+		OutResults = new(this, nameof(OutResults), new PpTable());
 	}
 
 	public override bool SupportsProgress => true;
@@ -37,7 +37,7 @@ public class PpCmdNode : PpNode
 		// 	return;
 		// }
 
-		var inputs = InInputs.Output.Table;
+		var inputs = InInputs.Output.BaseTable;
 
 		await foreach (var inp in inputs.QueryAllAsync())
 		{

@@ -15,7 +15,7 @@ public class PpDuckNode : PpNode
 		InRecords4 = new(this, nameof(InRecords4));
 		InRecords5 = new(this, nameof(InRecords5));
 
-		OutRecords = new(this, nameof(OutRecords), new(PpTable.GetTableName(this, nameof(OutRecords))));
+		OutRecords = new(this, nameof(OutRecords), new PpTable());
 	}
 
 	public override string NodeType => "SQL Query";
@@ -56,26 +56,26 @@ public class PpDuckNode : PpNode
 		}
 
 		// var inTable = InRecords1.Output.Table;
-		var inTables = new List<PpTable>();
+		var inTables = new List<IPpTable>();
 		if (InRecords1.IsConnected)
 		{
-			inTables.Add(InRecords1.Output.Table);
+			inTables.Add(InRecords1.Output.BaseTable);
 		}
 		if (InRecords2.IsConnected)
 		{
-			inTables.Add(InRecords2.Output.Table);
+			inTables.Add(InRecords2.Output.BaseTable);
 		}
 		if (InRecords3.IsConnected)
 		{
-			inTables.Add(InRecords3.Output.Table);
+			inTables.Add(InRecords3.Output.BaseTable);
 		}
 		if (InRecords4.IsConnected)
 		{
-			inTables.Add(InRecords4.Output.Table);
+			inTables.Add(InRecords4.Output.BaseTable);
 		}
 		if (InRecords5.IsConnected)
 		{
-			inTables.Add(InRecords5.Output.Table);
+			inTables.Add(InRecords5.Output.BaseTable);
 		}
 
 		PpDbAppender? appender = null;
@@ -87,9 +87,9 @@ public class PpDuckNode : PpNode
 			{
 				if (appender == null)
 				{
-					OutRecords.Table.Columns = rec.Fields.Select(kv => new PpColumn(kv.Key, kv.Value.DataType)).ToList();
-					await OutRecords.Table.ClearAsync();
-					appender = await OutRecords.Table.CreateAppenderAsync();
+					OutRecords.BaseTable.Columns = rec.Fields.Select(kv => new PpColumn(kv.Key, kv.Value.DataType)).ToList();
+					await OutRecords.BaseTable.ClearAsync();
+					appender = await OutRecords.BaseTable.CreateAppenderAsync();
 				}
 
 				appender.Add(rec);
@@ -100,6 +100,6 @@ public class PpDuckNode : PpNode
 			await (appender?.DisposeAsync() ?? ValueTask.CompletedTask);
 		}
 
-		await OutRecords.Table.DoneAsync();
+		await OutRecords.BaseTable.DoneAsync();
 	}
 }

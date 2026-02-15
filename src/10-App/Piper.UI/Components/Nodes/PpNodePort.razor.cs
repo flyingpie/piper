@@ -23,6 +23,18 @@ public partial class PpNodePort : ComponentBase
 
 	public void OnClickShowData()
 	{
-		SelectedThingyService.Instance.SelectPort(NodePort);
+		// SelectedThingyService.Instance.SelectPort(NodePort);
+
+		var inp = NodePort?.GetNodeInput?.Invoke();
+		if (inp != null)
+		{
+			SelectedThingyService.Instance.SelectPort2(inp);
+		}
+
+		var outp = NodePort?.GetNodeOutput?.Invoke();
+		if (outp != null)
+		{
+			SelectedThingyService.Instance.SelectPort2(outp);
+		}
 	}
 }

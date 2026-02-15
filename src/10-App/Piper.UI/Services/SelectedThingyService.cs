@@ -12,6 +12,7 @@ public class SelectedThingyService
 
 	private PpNode? _selectedNode;
 	private PpNodePort? _selectedPort;
+	private Piper.Core.Data.PpNodePort? _selectedPort2;
 
 	public PpNode? SelectedNode
 	{
@@ -23,17 +24,27 @@ public class SelectedThingyService
 		}
 	}
 
-	public PpNodePort? SelectedPort
+	// public PpNodePort? SelectedPort
+	// {
+	// 	get => _selectedPort;
+	// 	set
+	// 	{
+	// 		_selectedPort = value;
+	// 		Changed();
+	// 	}
+	// }
+
+	public Piper.Core.Data.PpNodePort? SelectedPort2
 	{
-		get => _selectedPort;
+		get => _selectedPort2;
 		set
 		{
-			_selectedPort = value;
+			_selectedPort2 = value;
 			Changed();
 		}
 	}
 
-	public PpTable? SelectedTable => SelectedPort?.Table;
+	// public IPpTable? SelectedTable => SelectedPort2?.Table;
 
 	public bool IsNodeSelected(PpNode? node) => _selectedNode != null && _selectedNode == node;
 
@@ -46,9 +57,18 @@ public class SelectedThingyService
 		Changed();
 	}
 
-	public void SelectPort(PpNodePort port)
+	// public void SelectPort(PpNodePort port)
+	// {
+	// 	SelectedPort = port;
+	//
+	// 	Changed();
+	// }
+
+	public void SelectPort2(Piper.Core.Data.PpNodePort port)
 	{
-		SelectedPort = port;
+		_selectedPort2 = port;
+
+		Changed();
 	}
 
 	public void OnChanged(Action onChanged)

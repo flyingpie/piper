@@ -1,5 +1,4 @@
 using System.IO.Compression;
-using System.Threading;
 using Piper.Core.Data;
 
 namespace Piper.Core.Functions;

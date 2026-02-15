@@ -10,7 +10,7 @@ public class PpListFilesNode : PpNode
 {
 	public PpListFilesNode()
 	{
-		OutFiles = new(this, nameof(OutFiles), new(PpTable.GetTableName(this, nameof(OutFiles))));
+		OutFiles = new(this, nameof(OutFiles), new PpTable());
 	}
 
 	public override string Color => "#8a2828";
@@ -47,7 +47,7 @@ public class PpListFilesNode : PpNode
 			return;
 		}
 
-		OutFiles.Table.Columns =
+		OutFiles.BaseTable.Columns =
 		[
 			new("rec__uuid", PpGuid),
 			// new("file", PpDataType.PpJson),
@@ -61,7 +61,7 @@ public class PpListFilesNode : PpNode
 			// new("file__size", PpInt32),
 		];
 
-		await OutFiles.Table.ClearAsync();
+		await OutFiles.BaseTable.ClearAsync();
 
 		var matcher = new Matcher();
 		matcher.AddIncludePatterns([InPattern]);
@@ -70,7 +70,7 @@ public class PpListFilesNode : PpNode
 		var i = 0;
 
 		{
-			await using var appender = await OutFiles.Table.CreateAppenderAsync();
+			await using var appender = await OutFiles.BaseTable.CreateAppenderAsync();
 
 			foreach (var path in it)
 			{
@@ -120,6 +120,6 @@ public class PpListFilesNode : PpNode
 			}
 		}
 
-		await OutFiles.Table.DoneAsync();
+		await OutFiles.BaseTable.DoneAsync();
 	}
 }

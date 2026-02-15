@@ -17,7 +17,7 @@ public class PpCSharpNode : PpNode
 	public PpCSharpNode()
 	{
 		InRecords = new(this, nameof(InRecords));
-		OutRecords = new(this, nameof(OutRecords), new(PpTable.GetTableName(this, nameof(OutRecords))));
+		OutRecords = new(this, nameof(OutRecords), new PpTable());
 	}
 
 	public override string Color => "#8a2828";
@@ -39,11 +39,11 @@ public class PpCSharpNode : PpNode
 
 	protected override async Task OnExecuteAsync()
 	{
-		var cols = InRecords.Output.Table.Columns.ToList();
+		var cols = InRecords.Output.BaseTable.Columns.ToList();
 		cols.Add(new("out1", PpDataType.PpString));
-		OutRecords.Table.Columns.Clear();
-		OutRecords.Table.Columns.AddRange(cols);
-		await OutRecords.Table.ClearAsync();
+		OutRecords.BaseTable.Columns.Clear();
+		OutRecords.BaseTable.Columns.AddRange(cols);
+		await OutRecords.BaseTable.ClearAsync();
 
 		var options = ScriptOptions.Default;
 		options = options.WithImports(
@@ -60,9 +60,9 @@ public class PpCSharpNode : PpNode
 		var diags = scr.Compile();
 
 		{
-			var appender = await OutRecords.Table.CreateAppenderAsync();
+			var appender = await OutRecords.BaseTable.CreateAppenderAsync();
 
-			await foreach (var rec in InRecords.Output.Table.QueryAllAsync())
+			await foreach (var rec in InRecords.Output.BaseTable.QueryAllAsync())
 			{
 				var ff = new Dictionary<string, PpField>(rec.Fields, StringComparer.OrdinalIgnoreCase);
 
@@ -82,6 +82,6 @@ public class PpCSharpNode : PpNode
 			}
 		}
 
-		await OutRecords.Table.DoneAsync();
+		await OutRecords.BaseTable.DoneAsync();
 	}
 }

@@ -84,7 +84,7 @@ public partial class DataViewer : ComponentBase
 		Console.WriteLine("LoadDataAsync");
 
 		// var table = SelectedThingyService.Instance.SelectedPort?.GetNodeOutput?.Invoke()?.Table;
-		var table = SelectedThingyService.Instance.SelectedPort?.Table;
+		var table = SelectedThingyService.Instance.SelectedPort2?.Table;
 		if (table == null)
 		{
 			return;
@@ -92,24 +92,24 @@ public partial class DataViewer : ComponentBase
 
 		var sw = Stopwatch.StartNew();
 
-		table.OnChange(_ => InvokeAsync(() => _grid.Reload()));
+		// table.OnChange(_ => InvokeAsync(() => _grid.Reload()));
 
 		Columns = table.Columns;
 
 		// Select
 		var sql = $"""
 			select		*
-			from		{table.TableName}
+			from		{table.Name}
 			offset		{args.Skip}
 			limit		{args.Top}
 			""";
 
 		var sqlCount = $"""
 			select		count(1)
-			from		{table.TableName}
+			from		{table.Name}
 			""";
 
-		RecordCount = (int)await PpDb.Instance.CountAsync(sqlCount);
+		RecordCount = (int)await PpDb.Instance.LowLevel.ExecuteScalarAsync(sqlCount);
 		// Records = await PpDb.Instance.QueryAsync(sql).ToListAsync();
 		// Records = await PpDb.Instance.QueryAsync(table, sql).ToListAsync();
 		Records = await table.QueryAsync(sql).ToListAsync();

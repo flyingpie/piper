@@ -226,7 +226,7 @@
 								<RadzenTable>
 									<RadzenTableBody>
 
-										@foreach (var mod in SelectedThingyService.Instance?.SelectedTable?.Modifiers ?? [])
+										@foreach (var mod in SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.Modifiers ?? [])
 										{
 											<RadzenTableRow>
 												<RadzenTableCell>@mod.Name</RadzenTableCell>
@@ -235,6 +235,9 @@
 														Icon="keyboard_arrow_up" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
 													<RadzenButton
 														Icon="keyboard_arrow_down" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+													<RadzenButton
+														Click="async () => await (SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.ExecuteAsync() ?? Task.CompletedTask)"
+														Text="Exec" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
 													<RadzenButton
 														Click="() => RemoveModifier(mod)"
 														Text="X" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />

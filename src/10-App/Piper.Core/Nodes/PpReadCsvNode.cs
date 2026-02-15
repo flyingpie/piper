@@ -12,8 +12,8 @@ public class PpReadCsvNode : PpNode
 	{
 		InFiles = new(this, nameof(InFiles));
 
-		OutRecords = new(this, nameof(OutRecords), new(PpTable.GetTableName(this, nameof(OutRecords))));
-		OutFailures = new(this, nameof(OutFailures), new(PpTable.GetTableName(this, nameof(OutFailures))));
+		OutRecords = new(this, nameof(OutRecords), new PpTable());
+		OutFailures = new(this, nameof(OutFailures), new PpTable());
 	}
 
 	public override string Color => "#8a2828";
@@ -57,24 +57,24 @@ public class PpReadCsvNode : PpNode
 		}
 
 		// Read in
-		var inTable = InFiles.Output.Table;
+		var inTable = InFiles.Output.BaseTable;
 
 		// Prep out
 		var cols1 = inTable.Columns.ToList();
 		cols1.AddRange([new("csv_row", PpString)]);
-		OutRecords.Table.Columns = cols1;
-		await OutRecords.Table.ClearAsync();
+		OutRecords.BaseTable.Columns = cols1;
+		await OutRecords.BaseTable.ClearAsync();
 
 		var cols2 = inTable.Columns.ToList();
 		cols2.AddRange([new("error", PpString)]);
-		OutFailures.Table.Columns = cols2;
-		await OutFailures.Table.ClearAsync();
+		OutFailures.BaseTable.Columns = cols2;
+		await OutFailures.BaseTable.ClearAsync();
 
 		var i = 0;
 
 		{
-			await using var appender = await OutRecords.Table.CreateAppenderAsync();
-			await using var appender2 = await OutFailures.Table.CreateAppenderAsync();
+			await using var appender = await OutRecords.BaseTable.CreateAppenderAsync();
+			await using var appender2 = await OutFailures.BaseTable.CreateAppenderAsync();
 
 			await foreach (var file in inTable.QueryAllAsync())
 			{
@@ -103,7 +103,7 @@ public class PpReadCsvNode : PpNode
 				try
 				{
 					await foreach (
-						var row in PpDb.Instance.RawQueryAsync(
+						var row in PpDb.Instance.LowLevel.ExecuteQueryAsync(
 							$"""
 								select row_to_json(csv) as csv_row from read_csv('{path}', union_by_name = true) as csv
 							"""
@@ -177,8 +177,8 @@ public class PpReadCsvNode : PpNode
 			}
 		}
 
-		await OutRecords.Table.DoneAsync();
-		await OutFailures.Table.DoneAsync();
+		await OutRecords.BaseTable.DoneAsync();
+		await OutFailures.BaseTable.DoneAsync();
 	}
 
 	private static PpRecord CreateRecord(PpRecord file, string? csvRow) =>

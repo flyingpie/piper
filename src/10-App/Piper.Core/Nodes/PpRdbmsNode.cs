@@ -9,7 +9,7 @@ public class PpRdbmsNode : PpNode
 {
 	public PpRdbmsNode()
 	{
-		OutRecords = new(this, nameof(OutRecords), new(PpTable.GetTableName(this, nameof(OutRecords))));
+		OutRecords = new(this, nameof(OutRecords), new PpTable());
 	}
 
 	public override string Color => "#8a2828";
@@ -80,11 +80,11 @@ public class PpRdbmsNode : PpNode
 				if (appender == null)
 				{
 					var cols = await ReadColumnsAsync(reader);
-					OutRecords.Table.Columns.Clear();
-					OutRecords.Table.Columns.AddRange(cols);
-					await OutRecords.Table.ClearAsync();
+					OutRecords.BaseTable.Columns.Clear();
+					OutRecords.BaseTable.Columns.AddRange(cols);
+					await OutRecords.BaseTable.ClearAsync();
 
-					appender = await OutRecords.Table.CreateAppenderAsync();
+					appender = await OutRecords.BaseTable.CreateAppenderAsync();
 				}
 
 				// Logs.Info();
@@ -109,7 +109,7 @@ public class PpRdbmsNode : PpNode
 			await (appender?.DisposeAsync() ?? ValueTask.CompletedTask);
 		}
 
-		await OutRecords.Table.DoneAsync();
+		await OutRecords.BaseTable.DoneAsync();
 	}
 
 	// csharpier-ignore-start

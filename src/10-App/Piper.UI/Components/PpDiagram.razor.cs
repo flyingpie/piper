@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Piper.Core;
 using Piper.Core.Data;
+using Piper.Core.Data.Modifiers;
 using Piper.Core.Db;
 using Piper.Core.Nodes;
 using Piper.Core.Nodes.Unix;
@@ -182,7 +183,7 @@ public partial class PpDiagram : ComponentBase
 	private void AddModifier(string type)
 	{
 		Console.WriteLine($"MOD:{type}");
-		var mods = SelectedThingyService.Instance?.SelectedTable?.Modifiers;
+		var mods = SelectedThingyService.Instance?.SelectedPort2?.Modifiers;
 		if (mods == null)
 		{
 			return;
@@ -194,9 +195,9 @@ public partial class PpDiagram : ComponentBase
 				mods.Add(new PpCasingModifier());
 				break;
 
-			case "PP_MOD_REVERSE":
-				mods.Add(new PpReverseModifier());
-				break;
+			// case "PP_MOD_REVERSE":
+			// 	mods.Add(new PpReverseModifier());
+			// 	break;
 
 			default:
 				break;
@@ -207,7 +208,7 @@ public partial class PpDiagram : ComponentBase
 
 	private void RemoveModifier(PpModifier modifier)
 	{
-		var mods = SelectedThingyService.Instance?.SelectedTable?.Modifiers;
+		var mods = SelectedThingyService.Instance.SelectedPort2?.Modifiers;
 		if (mods == null)
 		{
 			return;

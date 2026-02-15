@@ -10,7 +10,7 @@ public class PpReadFilesNode : PpNode
 	public PpReadFilesNode()
 	{
 		InFiles = new(this, nameof(InFiles));
-		OutLines = new(this, nameof(OutLines), new(PpTable.GetTableName(this, nameof(OutLines))));
+		OutLines = new(this, nameof(OutLines), new PpTable());
 	}
 
 	public override string Color => "#8a2828";
@@ -50,15 +50,15 @@ public class PpReadFilesNode : PpNode
 			return;
 		}
 
-		var inTable = InFiles.Output.Table;
+		var inTable = InFiles.Output.BaseTable;
 
 		var cols = inTable.Columns.ToList();
 		cols.AddRange([new("idx", PpString), new("line", PpString)]);
-		OutLines.Table.Columns = cols;
-		await OutLines.Table.ClearAsync();
+		OutLines.BaseTable.Columns = cols;
+		await OutLines.BaseTable.ClearAsync();
 
 		{
-			await using var appender = await OutLines.Table.CreateAppenderAsync();
+			await using var appender = await OutLines.BaseTable.CreateAppenderAsync();
 
 			var i = 0;
 			await foreach (var file in inTable.QueryAllAsync())
@@ -116,7 +116,7 @@ public class PpReadFilesNode : PpNode
 			}
 		}
 
-		await OutLines.Table.DoneAsync();
+		await OutLines.BaseTable.DoneAsync();
 	}
 
 	public PpRecord CreateRecord(PpRecord file, int idx, string line) =>

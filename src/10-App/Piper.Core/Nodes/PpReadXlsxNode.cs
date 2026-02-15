@@ -8,7 +8,7 @@ public class PpReadXlsxNode : PpNode
 {
 	public PpReadXlsxNode()
 	{
-		OutRows = new(this, nameof(OutRows), new(PpTable.GetTableName(this, nameof(OutRows))));
+		OutRows = new(this, nameof(OutRows), new PpTable());
 	}
 
 	public override string Color => "#8a2828";

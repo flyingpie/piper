@@ -12,9 +12,9 @@ public static class Extensions
 {
 	extension(PpNodePort port)
 	{
-		public long InCount => port.GetNodeInput?.Invoke()?.Output?.Table?.Count ?? 0;
+		public long InCount => port.GetNodeInput?.Invoke()?.Output?.BaseTable?.Count ?? 0;
 
-		public long OutCount => port.GetNodeOutput?.Invoke()?.Table?.Count ?? 0;
+		public long OutCount => port.GetNodeOutput?.Invoke()?.BaseTable?.Count ?? 0;
 	}
 
 	public static PpGraph GetGraph(this BlazorDiagram diagram)
