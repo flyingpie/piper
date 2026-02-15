@@ -1,5 +1,9 @@
 namespace Piper.Core.Data;
 
+/// <summary>
+/// A table forms the basic data container that operators like nodes work on.<br/>
+/// It's technically just a pointer to a table in DuckDB.
+/// </summary>
 public interface IPpTable
 {
 	List<PpColumn> Columns { get; set; }

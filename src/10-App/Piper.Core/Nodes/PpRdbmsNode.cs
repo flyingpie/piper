@@ -139,7 +139,7 @@ public class PpRdbmsNode : PpNode
 			var name = reader.GetName(i);
 			var type = reader.GetFieldType(i);
 
-			cols.Add(new(name, ToPpDataType(type)));
+			cols.Add(new(ToPpDataType(type), name));
 		}
 
 		return cols;

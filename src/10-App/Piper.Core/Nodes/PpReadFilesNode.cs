@@ -53,7 +53,7 @@ public class PpReadFilesNode : PpNode
 		var inTable = InFiles.Output.BaseTable;
 
 		var cols = inTable.Columns.ToList();
-		cols.AddRange([new("idx", PpString), new("line", PpString)]);
+		cols.AddRange([new(PpString, "idx"), new(PpString, "line")]);
 		OutLines.BaseTable.Columns = cols;
 		await OutLines.BaseTable.ClearAsync();
 

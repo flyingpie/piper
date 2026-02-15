@@ -44,7 +44,7 @@ public partial class DataViewer : ComponentBase
 
 	private TextAlign GetAlign(PpColumn col)
 	{
-		switch (col.PpDataType)
+		switch (col.DataType)
 		{
 			case PpDataType.PpFloat:
 			case PpDataType.PpInt32:
@@ -58,7 +58,7 @@ public partial class DataViewer : ComponentBase
 
 	private string GetWidth(PpColumn col)
 	{
-		switch (col.PpDataType)
+		switch (col.DataType)
 		{
 			case PpDataType.PpBool:
 				return "8em";
@@ -117,7 +117,7 @@ public partial class DataViewer : ComponentBase
 		if (Records.Count > 0)
 		{
 			var rec = Records.First();
-			Columns = rec.Fields.Select(f => new PpColumn(f.Key, f.Value.DataType)).ToList();
+			Columns = rec.Fields.Select(f => new PpColumn(f.Value.DataType, f.Key)).ToList();
 		}
 
 		Console.WriteLine($"Data reload took {sw.Elapsed}");

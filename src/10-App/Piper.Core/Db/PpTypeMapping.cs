@@ -39,7 +39,7 @@ public static class PpTypeMapping
 	{
 		var name = $"\"{column.Name.Replace(" ", "_")}\"";
 
-		switch (column.PpDataType)
+		switch (column.DataType)
 		{
 			case PpDataType.PpBool:
 				return $"{name} BOOLEAN NULL";
@@ -72,7 +72,7 @@ public static class PpTypeMapping
 				return $"{name} TEXT[] NULL";
 
 			default:
-				throw new InvalidOperationException($"Unsupported column '{column.PpDataType}'");
+				throw new InvalidOperationException($"Unsupported column '{column.DataType}'");
 		}
 	}
 

@@ -1,8 +1,8 @@
 namespace Piper.Core.Data;
 
-public class PpColumn(string name, PpDataType ppDataType)
+public class PpColumn(PpDataType dataType, string name)
 {
-	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
+	public PpDataType DataType { get; } = dataType;
 
-	public PpDataType PpDataType { get; } = ppDataType;
+	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
 }

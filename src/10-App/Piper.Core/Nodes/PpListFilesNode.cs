@@ -49,9 +49,9 @@ public class PpListFilesNode : PpNode
 
 		OutFiles.BaseTable.Columns =
 		[
-			new("rec__uuid", PpGuid),
+			new(PpGuid, "rec__uuid"),
 			// new("file", PpDataType.PpJson),
-			new("file", PpDataType.PpString),
+			new(PpDataType.PpString, "file"),
 			// new("file__createdutc", PpDateTime),
 			// new("file__dir", PpString),
 			// new("file__ext", PpString),

@@ -1,23 +1,8 @@
 using Piper.Core.Db;
-using shortid;
 
 namespace Piper.Core.Data;
 
-public class PpId
-{
-	private int _i;
-	private int _j;
-
-	public static PpId Instance { get; } = new();
-
-	// public string Next() => $"{(char)_i++}{_j++}";
-	public string Next() => $"t{Guid.CreateVersion7().ToString().ToLowerInvariant().Replace("-", "")}";
-}
-
-/// <summary>
-/// A table forms the basic data container that operators like nodes work on.<br/>
-/// It's technically just a pointer to a table in DuckDB.
-/// </summary>
+/// <inheritdoc cref="IPpTable"/>
 public class PpTable(string? name = null, ICollection<PpColumn>? columns = null) : IPpTable
 {
 	/// <inheritdoc/>
@@ -28,11 +13,6 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 
 	/// <inheritdoc/>
 	public List<PpColumn> Columns { get; set; } = (columns ?? []).ToList();
-
-	// public static string GetTableName(PpNode node, string propName)
-	// {
-	// 	return $"{node.GetType().Name}_{node.NodeId}_{propName}";
-	// }
 
 	/// <inheritdoc/>
 	public async Task ClearAsync(CancellationToken ct = default)

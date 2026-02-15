@@ -30,7 +30,7 @@ public abstract class PpNodePort
 
 	public IPpTable BaseTable
 	{
-		get => field;
+		get;
 		set
 		{
 			field = value;

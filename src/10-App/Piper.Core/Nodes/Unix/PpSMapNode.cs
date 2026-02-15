@@ -43,7 +43,7 @@ public class PpSMapNode : PpNode
 
 					if (!isInit)
 					{
-						OutProcesses.BaseTable.Columns = recs.First().Fields.Select(f => new PpColumn(f.Key, PpDataType.PpString)).ToList();
+						OutProcesses.BaseTable.Columns = recs.First().Fields.Select(f => new PpColumn(PpDataType.PpString, f.Key)).ToList();
 						await OutProcesses.BaseTable.ClearAsync();
 						appender = await OutProcesses.BaseTable.CreateAppenderAsync();
 						isInit = true;

@@ -40,7 +40,7 @@ public class PpCSharpNode : PpNode
 	protected override async Task OnExecuteAsync()
 	{
 		var cols = InRecords.Output.BaseTable.Columns.ToList();
-		cols.Add(new("out1", PpDataType.PpString));
+		cols.Add(new(PpDataType.PpString, "out1"));
 		OutRecords.BaseTable.Columns.Clear();
 		OutRecords.BaseTable.Columns.AddRange(cols);
 		await OutRecords.BaseTable.ClearAsync();

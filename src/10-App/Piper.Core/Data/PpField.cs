@@ -1,30 +1,12 @@
 namespace Piper.Core.Data;
 
-public class PpField
+public class PpField(PpDataType type, object? value)
 {
-	public PpField() { }
+	public PpDataType DataType { get; } = Guard.Against.Null(type);
 
-	public PpField(PpDataType type, object? value)
-	{
-		DataType = Guard.Against.Null(type);
-		Value = value;
-	}
-
-	public PpDataType DataType { get; set; }
-
-	public object? Value { get; set; }
-
-	// public bool? ValueAsBool { get; set; }
-
-	// public DateTime? ValueAsDateTime => Value as DateTime?;
-
-	// public Guid? ValueAsGuid { get; set; }
-
-	// public long? ValueAsLong { get; set; }
+	public object? Value { get; } = value;
 
 	public string? ValueAsString => Value as string;
-
-	// public object? Value2 => ValueAsLong?.ToString() ?? ValueAsString;
 
 	public static implicit operator PpField(bool? valueAsBool) => new(PpDataType.PpBool, valueAsBool);
 

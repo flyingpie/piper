@@ -39,7 +39,7 @@
 					Property="@field.Name"
 				>
 					<Template Context="item">
-						@switch (field.PpDataType)
+						@switch (field.DataType)
 						{
 							case PpDataType.PpDateTime:
 								@item.GetValue(field.Name)

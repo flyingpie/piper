@@ -61,12 +61,12 @@ public class PpReadCsvNode : PpNode
 
 		// Prep out
 		var cols1 = inTable.Columns.ToList();
-		cols1.AddRange([new("csv_row", PpString)]);
+		cols1.AddRange([new(PpString, "csv_row")]);
 		OutRecords.BaseTable.Columns = cols1;
 		await OutRecords.BaseTable.ClearAsync();
 
 		var cols2 = inTable.Columns.ToList();
-		cols2.AddRange([new("error", PpString)]);
+		cols2.AddRange([new(PpString, "error")]);
 		OutFailures.BaseTable.Columns = cols2;
 		await OutFailures.BaseTable.ClearAsync();
 
