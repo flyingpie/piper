@@ -1,21 +1,25 @@
+using Piper.Core.Attributes;
 using Piper.Core.Db;
 
 namespace Piper.Core.Data.Modifiers;
 
-public class PpReverseModifier : PpModifier
+public class PpReplaceModifier : PpModifier
 {
-	public override string Name { get; set; } = "Reverse";
+	public override string Name { get; set; } = "Replace";
 
-	public string SrcFieldName { get; set; } = "path";
+	[PpParam("Source Field")]
+	public string SrcFieldName { get; set; }
 
-	public string DstFieldName { get; set; } = "path_upper";
+	[PpParam("Destination Field")]
+	public string DstFieldName { get; set; }
 
 	public override async Task ExecuteAsync(IPpTable source, CancellationToken ct = default)
 	{
+		Guard.Against.Null(source);
+
 		var sql = $"""
 			create or replace view {Table.Name} as
-				select		*
-				,			reverse({SrcFieldName}) as {DstFieldName}
+				select		* replace({DstFieldName} as {SrcFieldName})
 				from		{source.Name}
 			""";
 

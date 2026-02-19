@@ -1,0 +1,13 @@
+@using Piper.UI.Components.Nodes
+
+<RadzenStack>
+
+	@foreach (var prop in Modifier.Props)
+	{
+		if (prop is Core.PpNodeParam param)
+		{
+			<PpNodeParam Param="param" IsInNode="true" />
+		}
+	}
+
+</RadzenStack>

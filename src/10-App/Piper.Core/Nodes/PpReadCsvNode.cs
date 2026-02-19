@@ -57,7 +57,7 @@ public class PpReadCsvNode : PpNode
 		}
 
 		// Read in
-		var inTable = InFiles.Output.BaseTable;
+		var inTable = InFiles.Output.Table;
 
 		// Prep out
 		var cols1 = inTable.Columns.ToList();

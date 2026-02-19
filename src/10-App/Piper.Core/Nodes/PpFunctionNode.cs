@@ -37,7 +37,7 @@ public class PpFunctionNode : PpNode
 
 	protected override async Task OnExecuteAsync()
 	{
-		var cols = InRecords.Output.BaseTable.Columns.ToList();
+		var cols = InRecords.Output.Table.Columns.ToList();
 		cols.Add(new(PpDataType.PpString, "out1"));
 		OutRecords.BaseTable.Columns.Clear();
 		OutRecords.BaseTable.Columns.AddRange(cols);
@@ -48,7 +48,7 @@ public class PpFunctionNode : PpNode
 		{
 			await using var appender = await OutRecords.BaseTable.CreateAppenderAsync();
 
-			await foreach (var rec in InRecords.Output.BaseTable.QueryAllAsync())
+			await foreach (var rec in InRecords.Output.Table.QueryAllAsync())
 			{
 				var val = rec.Fields[InAttr].ValueAsString;
 				var res = await func.ExecuteAsync(val);

@@ -22,4 +22,7 @@
 		<Project Path="20-Host/Piper.Host.BlazorServer/Piper.Host.BlazorServer.csproj" />
 		<Project Path="20-Host/Piper.Host.Photino/Piper.Host.Photino.csproj" />
 	</Folder>
+	<Folder Name="/P30-Test/">
+		<Project Path="30-Test/Piper.Test/Piper.Test.csproj" />
+	</Folder>
 </Solution>

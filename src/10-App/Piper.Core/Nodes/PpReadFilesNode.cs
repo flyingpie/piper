@@ -50,7 +50,7 @@ public class PpReadFilesNode : PpNode
 			return;
 		}
 
-		var inTable = InFiles.Output.BaseTable;
+		var inTable = InFiles.Output.Table;
 
 		var cols = inTable.Columns.ToList();
 		cols.AddRange([new(PpString, "idx"), new(PpString, "line")]);

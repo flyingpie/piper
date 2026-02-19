@@ -4,6 +4,7 @@ using Blazor.Diagrams.Core.Models;
 using Microsoft.Extensions.Logging;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
+using Piper.Core.Data.Modifiers;
 using Piper.Core.Utils;
 
 namespace Piper.Core;
@@ -12,9 +13,9 @@ public static class Extensions
 {
 	extension(PpNodePort port)
 	{
-		public long InCount => port.GetNodeInput?.Invoke()?.Output?.BaseTable?.Count ?? 0;
+		public long InCount => port.GetNodeInput?.Invoke()?.Output?.Table?.Count ?? 0;
 
-		public long OutCount => port.GetNodeOutput?.Invoke()?.BaseTable?.Count ?? 0;
+		public long OutCount => port.GetNodeOutput?.Invoke()?.Table?.Count ?? 0;
 	}
 
 	public static PpGraph GetGraph(this BlazorDiagram diagram)
@@ -64,6 +65,32 @@ public static class Extensions
 		}
 	}
 
+	public static IReadOnlyCollection<IPpNodeProperty> GetModifierProps(this PpModifier mod) => mod.GetModifierPropsInternal().ToList();
+
+	private static IEnumerable<IPpNodeProperty> GetModifierPropsInternal(this PpModifier mod)
+	{
+		var props = mod.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+
+		foreach (var prop in props)
+		{
+			// Param
+			var paramAttr = prop.GetCustomAttribute<PpParamAttribute>();
+			if (paramAttr != null)
+			{
+				yield return new PpNodeParam()
+				{
+					Name = prop.Name,
+					// Name = paramAttr.Name,
+					Hint = paramAttr.Hint,
+					// Value = prop.GetValue(node),
+					Type = prop.PropertyType,
+					Getter = () => prop.GetValue(mod),
+					Setter = v => prop.SetValue(mod, v),
+				};
+			}
+		}
+	}
+
 	public static IReadOnlyCollection<IPpNodeProperty> GetNodeProps(this PpNode node) => node.GetNodePropsInternal().ToList();
 
 	private static IEnumerable<IPpNodeProperty> GetNodePropsInternal(this PpNode node)
@@ -95,7 +122,7 @@ public static class Extensions
 			{
 				if (prop.PropertyType == typeof(PpNodeInput))
 				{
-					var pp = new PpNodePort(inAttr.Name, node, PortAlignment.Left)
+					var pp = new PpNodePort(prop.Name, node, PortAlignment.Left)
 					{
 						//
 						GetNodeInput = () => (PpNodeInput)prop.GetValue(node)!,
@@ -105,7 +132,7 @@ public static class Extensions
 				}
 				else if (prop.PropertyType == typeof(PpNodeOutput))
 				{
-					var pp = new PpNodePort(inAttr.Name, node, PortAlignment.Right)
+					var pp = new PpNodePort(prop.Name, node, PortAlignment.Right)
 					{
 						//
 						GetNodeOutput = () => (PpNodeOutput)prop.GetValue(node)!,

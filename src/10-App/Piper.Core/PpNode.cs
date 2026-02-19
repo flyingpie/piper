@@ -68,6 +68,12 @@ public abstract class PpNode : NodeModel
 			// await OnExecuteAsync();
 
 			await Task.Run(OnExecuteAsync);
+
+			foreach (var port in NodePorts)
+			{
+				var ppPort = (Piper.Core.Data.PpNodePort)port.GetNodeInput?.Invoke() ?? port.GetNodeOutput?.Invoke();
+				await ppPort.Modifiers.ExecuteAsync(CancellationToken.None);
+			}
 		}
 		catch (Exception ex)
 		{

@@ -16,5 +16,7 @@ public class PpJsonPortLink(string node, string port)
 
 public class PpJsonModifier
 {
-	public string Type { get; set; }
+	public PpJsonNodeId Id { get; set; }
+
+	public Dictionary<string, string> Params { get; set; } = [];
 }

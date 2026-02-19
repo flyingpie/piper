@@ -4,7 +4,6 @@
 @using Piper.UI.Components.CodeEditor
 @using Piper.UI.Components.Logs
 @using Piper.UI.Components.Nodes
-@using Piper.UI.Services
 
 @inject ContextMenuService ContextMenuService
 
@@ -113,7 +112,7 @@
 														<RadzenTableRow>
 															<RadzenTableCell Style="width: 80px;">
 																<RadzenStack Orientation="Orientation.Horizontal" Gap="1em">
-																	<RadzenButton Icon="file_open" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.ExtraSmall" Click="() => LoadGraphFile(graphFile)" />
+																	<RadzenButton Class="pp-btn-load" Icon="file_open" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.ExtraSmall" Click="() => LoadGraphFile(graphFile)" />
 																	<RadzenButton Icon="save" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" Click="() => SaveGraphFile(graphFile)" />
 																</RadzenStack>
 															</RadzenTableCell>
@@ -138,7 +137,7 @@
 														<Template Context="graphFile">
 
 															<RadzenStack Orientation="Orientation.Horizontal">
-																<RadzenButton Icon="folder_open" Text="Load" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graphFile)" />
+																<RadzenButton class="pp-btn-load" Icon="folder_open" Text="Load" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graphFile)" />
 																<RadzenButton Icon="save" Text="Save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="() => SaveGraphFile(graphFile)" />
 															</RadzenStack>
 
@@ -212,42 +211,9 @@
 
 
 						<!-- Modifiers -->
-						<RadzenTabsItem Text="Modifiers" Icon="polyline">
+						<RadzenTabsItem Text="Modifiers" Icon="build">
 
-							<RadzenStack>
-
-								<RadzenMenu Click="a => AddModifier(a.Value?.ToString())">
-									<RadzenMenuItem Text="Add">
-										<RadzenMenuItem Text="Casing" Value="@("PP_MOD_CASING")" />
-										<RadzenMenuItem Text="Reverse" Value="@("PP_MOD_REVERSE")" />
-									</RadzenMenuItem>
-								</RadzenMenu>
-
-								<RadzenTable>
-									<RadzenTableBody>
-
-										@foreach (var mod in SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.Modifiers ?? [])
-										{
-											<RadzenTableRow>
-												<RadzenTableCell>@mod.Name</RadzenTableCell>
-												<RadzenTableCell Style="width: 7em;">
-													<RadzenButton
-														Icon="keyboard_arrow_up" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
-													<RadzenButton
-														Icon="keyboard_arrow_down" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
-													<RadzenButton
-														Click="async () => await (SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.ExecuteAsync() ?? Task.CompletedTask)"
-														Text="Exec" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
-													<RadzenButton
-														Click="() => RemoveModifier(mod)"
-														Text="X" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
-												</RadzenTableCell>
-											</RadzenTableRow>
-										}
-									</RadzenTableBody>
-								</RadzenTable>
-
-							</RadzenStack>
+							<PpModifiersPanel />
 
 						</RadzenTabsItem>
 					</Tabs>
@@ -257,6 +223,8 @@
 		</RadzenSplitter>
 
 	</RadzenSplitterPane>
+
+	<!-- Bottom split -->
 	<RadzenSplitterPane>
 
 		<RadzenTabs TabPosition="TabPosition.Top" Style="height: 100%;">

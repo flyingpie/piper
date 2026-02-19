@@ -179,45 +179,6 @@ public partial class PpDiagram : ComponentBase
 
 		File.WriteAllText(file.Path, graph);
 	}
-
-	private void AddModifier(string type)
-	{
-		Console.WriteLine($"MOD:{type}");
-		var mods = SelectedThingyService.Instance?.SelectedPort2?.Modifiers;
-		if (mods == null)
-		{
-			return;
-		}
-
-		switch (type ?? string.Empty)
-		{
-			case "PP_MOD_CASING":
-				mods.Add(new PpCasingModifier());
-				break;
-
-			// case "PP_MOD_REVERSE":
-			// 	mods.Add(new PpReverseModifier());
-			// 	break;
-
-			default:
-				break;
-		}
-
-		SelectedThingyService.Instance.Changed();
-	}
-
-	private void RemoveModifier(PpModifier modifier)
-	{
-		var mods = SelectedThingyService.Instance.SelectedPort2?.Modifiers;
-		if (mods == null)
-		{
-			return;
-		}
-
-		mods.Remove(modifier);
-
-		SelectedThingyService.Instance.Changed();
-	}
 }
 
 public class PpGraphFile

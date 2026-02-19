@@ -1,3 +1,4 @@
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
@@ -19,14 +20,14 @@ public static class PpJson
 			new PpJsonPortLinkJsonConverter(),
 			new Vector2JsonConverter(),
 		},
+		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, // Causes UTF8 characters to be serialized as-is, instead of (less readable) escape codes.
 		IncludeFields = true,
+		IndentCharacter = '\t',
+		IndentSize = 1,
 		PropertyNamingPolicy = JsonNamingPolicy.KebabCaseLower,
 		ReferenceHandler = ReferenceHandler.IgnoreCycles,
 		TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
-		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-
-		IndentCharacter = '\t',
-		IndentSize = 1,
 		WriteIndented = true,
 	};
 

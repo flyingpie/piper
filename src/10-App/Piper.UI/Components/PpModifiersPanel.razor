@@ -1,0 +1,45 @@
+@using Piper.UI.Components.Modifiers
+@using Piper.UI.Services
+
+<RadzenStack>
+
+	<RadzenMenu Click="a => AddModifier(a.Value?.ToString())">
+		<RadzenMenuItem Text="Add">
+			<RadzenMenuItem Text="Casing" Value="@("PP_MOD_CASING")" />
+			<RadzenMenuItem Text="Remove" Value="@("PP_MOD_REMOVE")" />
+			<RadzenMenuItem Text="Replace" Value="@("PP_MOD_REPLACE")" />
+			<RadzenMenuItem Text="Reverse" Value="@("PP_MOD_REVERSE")" />
+			<RadzenMenuItem Text="Select" Value="@("PP_MOD_SELECT")" />
+		</RadzenMenuItem>
+	</RadzenMenu>
+
+	<RadzenTable>
+		<RadzenTableBody>
+
+			@foreach (var mod in SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.Modifiers ?? [])
+			{
+				<RadzenTableRow>
+					<RadzenTableCell>@mod.Name</RadzenTableCell>
+					<RadzenTableCell Style="width: 7em;">
+						<RadzenButton
+							Icon="keyboard_arrow_up" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+						<RadzenButton
+							Icon="keyboard_arrow_down" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+						<RadzenButton
+							Click="async () => await (SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.ExecuteAsync() ?? Task.CompletedTask)"
+							Text="Exec" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+						<RadzenButton
+							Click="() => RemoveModifier(mod)"
+							Text="X" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+					</RadzenTableCell>
+				</RadzenTableRow>
+				<RadzenTableRow>
+					<RadzenTableCell colspan="2">
+						<GenericModifierView Modifier="mod" />
+					</RadzenTableCell>
+				</RadzenTableRow>
+			}
+		</RadzenTableBody>
+	</RadzenTable>
+
+</RadzenStack>

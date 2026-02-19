@@ -28,7 +28,7 @@ public class PpNodePort(
 
 	// public PpNodeOutput? NodeOutput { get; init; }
 
-	public IPpTable? Table => GetNodeInput?.Invoke()?.BaseTable ?? GetNodeOutput?.Invoke()?.BaseTable;
+	public IPpTable? Table => GetNodeInput?.Invoke()?.Table ?? GetNodeOutput?.Invoke()?.Table;
 
 	public bool IsConnected => Links.Count > 0;
 

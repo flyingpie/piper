@@ -59,23 +59,23 @@ public class PpDuckNode : PpNode
 		var inTables = new List<IPpTable>();
 		if (InRecords1.IsConnected)
 		{
-			inTables.Add(InRecords1.Output.BaseTable);
+			inTables.Add(InRecords1.Output.Table);
 		}
 		if (InRecords2.IsConnected)
 		{
-			inTables.Add(InRecords2.Output.BaseTable);
+			inTables.Add(InRecords2.Output.Table);
 		}
 		if (InRecords3.IsConnected)
 		{
-			inTables.Add(InRecords3.Output.BaseTable);
+			inTables.Add(InRecords3.Output.Table);
 		}
 		if (InRecords4.IsConnected)
 		{
-			inTables.Add(InRecords4.Output.BaseTable);
+			inTables.Add(InRecords4.Output.Table);
 		}
 		if (InRecords5.IsConnected)
 		{
-			inTables.Add(InRecords5.Output.BaseTable);
+			inTables.Add(InRecords5.Output.Table);
 		}
 
 		PpDbAppender? appender = null;

@@ -1,3 +1,4 @@
+using Piper.Core.Attributes;
 using Piper.Core.Db;
 
 namespace Piper.Core.Data.Modifiers;
@@ -6,8 +7,10 @@ public class PpCasingModifier : PpModifier
 {
 	public override string Name { get; set; } = "Casing";
 
+	[PpParam("Source Field")]
 	public string SrcFieldName { get; set; } = "path";
 
+	[PpParam("Destination Field")]
 	public string DstFieldName { get; set; } = "path_upper";
 
 	public override async Task ExecuteAsync(IPpTable source, CancellationToken ct = default)
