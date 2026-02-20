@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="ElectronNET.Core" />
+		<PackageReference Include="ElectronNET.Core.AspNet" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\10-App\Piper.UI\Piper.UI.csproj" />
+	</ItemGroup>
+</Project>

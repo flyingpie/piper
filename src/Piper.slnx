@@ -20,6 +20,7 @@
 	</Folder>
 	<Folder Name="/P20-Host/">
 		<Project Path="20-Host/Piper.Host.BlazorServer/Piper.Host.BlazorServer.csproj" />
+		<Project Path="20-Host/Piper.Host.Electron/Piper.Host.Electron.csproj" />
 		<Project Path="20-Host/Piper.Host.Photino/Piper.Host.Photino.csproj" />
 	</Folder>
 	<Folder Name="/P30-Test/">
