@@ -57,6 +57,10 @@
 		<RadzenSplitter Orientation="Orientation.Horizontal">
 			<RadzenSplitterPane Size="80%">
 
+				<RadzenMenu>
+					<RadzenMenuItem Text="File" />
+				</RadzenMenu>
+
 				@* <RadzenStack Style="height: 100%;"> *@
 
 					@* <RadzenPanelMenu> *@
@@ -85,83 +89,70 @@
 			</RadzenSplitterPane>
 			<RadzenSplitterPane>
 
-				<RadzenTabs Style="height: 100%;">
+				<RadzenTabs Style="height: 100%;" TabPosition="TabPosition.Right">
 					<Tabs>
 
 						<!-- Graphs -->
-						<RadzenTabsItem Text="Graphs" Icon="polyline">
-
+						<RadzenTabsItem Icon="polyline">
 							<RadzenStack Style="height: 100%;">
 
-								<RadzenSplitter Orientation="Orientation.Vertical">
-									<RadzenSplitterPane>
+								<RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Stretch">
 
-										<RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Stretch">
+									<RadzenStack Orientation="Orientation.Horizontal">
+										<RadzenTextBox Style="flex: 1;" />
+										<RadzenButton Text="Save As" Size="ButtonSize.Small" />
+									</RadzenStack>
 
-											<RadzenStack Orientation="Orientation.Horizontal">
-												<RadzenTextBox Style="flex: 1;" />
-												<RadzenButton Text="Save As" Size="ButtonSize.Small" />
-											</RadzenStack>
+									@*
+									<RadzenTable>
+										<RadzenTableBody>
 
-											@*
-											<RadzenTable>
-												<RadzenTableBody>
+											@foreach (var graphFile in Graphs)
+											{
+												<RadzenTableRow>
+													<RadzenTableCell Style="width: 80px;">
+														<RadzenStack Orientation="Orientation.Horizontal" Gap="1em">
+															<RadzenButton Class="pp-btn-load" Icon="file_open" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.ExtraSmall" Click="() => LoadGraphFile(graphFile)" />
+															<RadzenButton Icon="save" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" Click="() => SaveGraphFile(graphFile)" />
+														</RadzenStack>
+													</RadzenTableCell>
+													<RadzenTableCell>@graphFile.Name</RadzenTableCell>
+												</RadzenTableRow>
+											}
 
-													@foreach (var graphFile in Graphs)
-													{
-														<RadzenTableRow>
-															<RadzenTableCell Style="width: 80px;">
-																<RadzenStack Orientation="Orientation.Horizontal" Gap="1em">
-																	<RadzenButton Class="pp-btn-load" Icon="file_open" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.ExtraSmall" Click="() => LoadGraphFile(graphFile)" />
-																	<RadzenButton Icon="save" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" Click="() => SaveGraphFile(graphFile)" />
-																</RadzenStack>
-															</RadzenTableCell>
-															<RadzenTableCell>@graphFile.Name</RadzenTableCell>
-														</RadzenTableRow>
-													}
+										</RadzenTableBody>
+									</RadzenTable>
+									*@
 
-												</RadzenTableBody>
-											</RadzenTable>
-											*@
+									<RadzenDataGrid
+										Data="@Graphs"
+									>
+										<Columns>
+											<RadzenDataGridColumn
+												Title="Name"
+												Property="@nameof(PpGraphFile.Name)"
+											/>
 
-											<RadzenDataGrid
-												Data="@Graphs"
-											>
-												<Columns>
-													<RadzenDataGridColumn
-														Title="Name"
-														Property="@nameof(PpGraphFile.Name)"
-													/>
+											<RadzenDataGridColumn Width="180px">
+												<Template Context="graphFile">
 
-													<RadzenDataGridColumn Width="180px">
-														<Template Context="graphFile">
+													<RadzenStack Orientation="Orientation.Horizontal">
+														<RadzenButton class="pp-btn-load" Icon="folder_open" Text="Load" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graphFile)" />
+														<RadzenButton Icon="save" Text="Save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="() => SaveGraphFile(graphFile)" />
+													</RadzenStack>
 
-															<RadzenStack Orientation="Orientation.Horizontal">
-																<RadzenButton class="pp-btn-load" Icon="folder_open" Text="Load" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graphFile)" />
-																<RadzenButton Icon="save" Text="Save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="() => SaveGraphFile(graphFile)" />
-															</RadzenStack>
+												</Template>
+											</RadzenDataGridColumn>
+										</Columns>
+									</RadzenDataGrid>
 
-														</Template>
-													</RadzenDataGridColumn>
-												</Columns>
-											</RadzenDataGrid>
-
-										</RadzenStack>
-
-									</RadzenSplitterPane>
-
-									<RadzenSplitterPane>
-										SUP
-									</RadzenSplitterPane>
-
-								</RadzenSplitter>
-
+								</RadzenStack>
 
 							</RadzenStack>
 
 
 						</RadzenTabsItem>
-						<RadzenTabsItem Text="Node" Icon="toolbar">
+						<RadzenTabsItem Icon="toolbar">
 							@if (SelectedNode != null)
 							{
 								@(SelectedNode?.NodeType)
@@ -211,7 +202,7 @@
 
 
 						<!-- Modifiers -->
-						<RadzenTabsItem Text="Modifiers" Icon="build">
+						<RadzenTabsItem Icon="build">
 
 							<PpModifiersPanel />
 
@@ -227,12 +218,14 @@
 	<!-- Bottom split -->
 	<RadzenSplitterPane>
 
-		<RadzenTabs TabPosition="TabPosition.Top" Style="height: 100%;">
+		<RadzenTabs TabPosition="TabPosition.Left" Style="height: 100%;">
 			<Tabs>
-				<RadzenTabsItem Text="Data" Icon="table">
+
+				<RadzenTabsItem Icon="table">
 					<DataViewer/>
 				</RadzenTabsItem>
-				<RadzenTabsItem Text="Code" Style="height: 100%;" Icon="code">
+
+				<RadzenTabsItem Icon="code">
 					<RadzenStack Orientation="Orientation.Vertical" Style="height: 100%;" Gap=".5em">
 						<RadzenMenu>
 							<RadzenMenuItem Text="File"/>
@@ -240,7 +233,8 @@
 						<PpCodeEditor/>
 					</RadzenStack>
 				</RadzenTabsItem>
-				<RadzenTabsItem Text="Logs" Icon="graph_2">
+
+				<RadzenTabsItem Icon="graph_2">
 					<LogsPanel />
 				</RadzenTabsItem>
 			</Tabs>
@@ -276,6 +270,6 @@
 
 	.rz-tabview-panel {
 		height: 100%;
-		padding: .5em;
+		padding: 0;
 	}
 </style>

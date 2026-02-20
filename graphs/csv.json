@@ -4,7 +4,7 @@
 		"pos": "220,160",
 		"params": {
 			"InPath": "/home/marco/Downloads",
-			"InPattern": "*.csv",
+			"InPattern": "*vragenlijst.xml",
 			"MaxFiles": "10000"
 		},
 		"ports": {
@@ -22,6 +22,19 @@
 						"params": {
 							"SrcFieldName": "path",
 							"DstFieldName": "path_upper"
+						}
+					},
+					{
+						"id": "t019c78349c8373679a5eb3a299e407fd:PpRemoveModifier:Remove",
+						"params": {
+							"SrcFieldName": "path_upper"
+						}
+					},
+					{
+						"id": "t019c7834de6c7df19253178f41c29096:PpSelectModifier:Select",
+						"params": {
+							"Expression": "file->>'createdutc'",
+							"DstFieldName": "createdutc"
 						}
 					}
 				]

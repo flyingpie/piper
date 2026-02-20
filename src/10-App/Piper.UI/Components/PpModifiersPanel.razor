@@ -3,6 +3,7 @@
 
 <RadzenStack>
 
+	<!-- Panel header -->
 	<RadzenMenu Click="a => AddModifier(a.Value?.ToString())">
 		<RadzenMenuItem Text="Add">
 			<RadzenMenuItem Text="Casing" Value="@("PP_MOD_CASING")" />
@@ -13,33 +14,44 @@
 		</RadzenMenuItem>
 	</RadzenMenu>
 
-	<RadzenTable>
-		<RadzenTableBody>
+	<RadzenStack Orientation="Orientation.Vertical">
 
-			@foreach (var mod in SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.Modifiers ?? [])
-			{
-				<RadzenTableRow>
-					<RadzenTableCell>@mod.Name</RadzenTableCell>
-					<RadzenTableCell Style="width: 7em;">
-						<RadzenButton
-							Icon="keyboard_arrow_up" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
-						<RadzenButton
-							Icon="keyboard_arrow_down" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
-						<RadzenButton
-							Click="async () => await (SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.ExecuteAsync() ?? Task.CompletedTask)"
-							Text="Exec" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
-						<RadzenButton
-							Click="() => RemoveModifier(mod)"
-							Text="X" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
-					</RadzenTableCell>
-				</RadzenTableRow>
-				<RadzenTableRow>
-					<RadzenTableCell colspan="2">
-						<GenericModifierView Modifier="mod" />
-					</RadzenTableCell>
-				</RadzenTableRow>
-			}
-		</RadzenTableBody>
-	</RadzenTable>
+		@foreach (var mod in SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.Modifiers ?? [])
+		{
+			<RadzenStack Orientation="Orientation.Vertical" Gap=".5em" class="rz-p-2">
+
+				<!-- Modifier header -->
+				<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5em" class="rz-background-color-base-900 rz-p-2">
+
+					<RadzenButton
+						Icon="keyboard_arrow_up" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+
+					<RadzenButton
+						Icon="keyboard_arrow_down" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+
+					<span style="flex: 1;">@mod.Name</span>
+
+					<RadzenButton
+						Icon="menu"
+						Size="ButtonSize.ExtraSmall"
+						Variant="Variant.Outlined"
+					/>
+
+					<RadzenButton
+						Click="async () => await (SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.ExecuteAsync() ?? Task.CompletedTask)"
+						Icon="play_arrow"
+						Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+
+					<RadzenButton
+						Click="() => RemoveModifier(mod)"
+						Text="X" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
+				</RadzenStack>
+
+				<!-- Modifier properties -->
+				<GenericModifierView Modifier="mod" />
+			</RadzenStack>
+		}
+
+	</RadzenStack>
 
 </RadzenStack>

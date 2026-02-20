@@ -83,43 +83,50 @@ public partial class DataViewer : ComponentBase
 	{
 		Console.WriteLine("LoadDataAsync");
 
-		// var table = SelectedThingyService.Instance.SelectedPort?.GetNodeOutput?.Invoke()?.Table;
-		var table = SelectedThingyService.Instance.SelectedPort2?.Table;
-		if (table == null)
+		try
 		{
-			return;
+			// var table = SelectedThingyService.Instance.SelectedPort?.GetNodeOutput?.Invoke()?.Table;
+			var table = SelectedThingyService.Instance.SelectedPort2?.Table;
+			if (table == null)
+			{
+				return;
+			}
+
+			var sw = Stopwatch.StartNew();
+
+			// table.OnChange(_ => InvokeAsync(() => _grid.Reload()));
+
+			Columns = table.Columns;
+
+			// Select
+			var sql = $"""
+				select		*
+				from		{table.Name}
+				offset		{args.Skip}
+				limit		{args.Top}
+				""";
+
+			var sqlCount = $"""
+				select		count(1)
+				from		{table.Name}
+				""";
+
+			RecordCount = (int)await PpDb.Instance.LowLevel.ExecuteScalarAsync(sqlCount);
+			// Records = await PpDb.Instance.QueryAsync(sql).ToListAsync();
+			// Records = await PpDb.Instance.QueryAsync(table, sql).ToListAsync();
+			Records = await table.QueryAsync(sql).ToListAsync();
+
+			if (Records.Count > 0)
+			{
+				var rec = Records.First();
+				Columns = rec.Fields.Select(f => new PpColumn(f.Value.DataType, f.Key)).ToList();
+			}
+
+			Console.WriteLine($"Data reload took {sw.Elapsed}");
 		}
-
-		var sw = Stopwatch.StartNew();
-
-		// table.OnChange(_ => InvokeAsync(() => _grid.Reload()));
-
-		Columns = table.Columns;
-
-		// Select
-		var sql = $"""
-			select		*
-			from		{table.Name}
-			offset		{args.Skip}
-			limit		{args.Top}
-			""";
-
-		var sqlCount = $"""
-			select		count(1)
-			from		{table.Name}
-			""";
-
-		RecordCount = (int)await PpDb.Instance.LowLevel.ExecuteScalarAsync(sqlCount);
-		// Records = await PpDb.Instance.QueryAsync(sql).ToListAsync();
-		// Records = await PpDb.Instance.QueryAsync(table, sql).ToListAsync();
-		Records = await table.QueryAsync(sql).ToListAsync();
-
-		if (Records.Count > 0)
+		catch (Exception ex)
 		{
-			var rec = Records.First();
-			Columns = rec.Fields.Select(f => new PpColumn(f.Value.DataType, f.Key)).ToList();
+			Console.WriteLine($"Breakage: {ex.Message}");
 		}
-
-		Console.WriteLine($"Data reload took {sw.Elapsed}");
 	}
 }
