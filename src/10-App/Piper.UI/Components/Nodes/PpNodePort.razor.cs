@@ -9,11 +9,16 @@ public partial class PpNodePort : ComponentBase
 	[Parameter]
 	public Core.PpNodePort NodePort { get; set; } = null!;
 
-	private bool IsPortSelected => SelectedThingyService.Instance.IsNodePortSelected(NodePort);
+	private bool IsPortSelected => SelectedThingyService.Instance.IsNodePortSelected(NodePort.Port);
 
 	protected override void OnParametersSet()
 	{
 		NodePort.OnChange(_ => InvokeAsync(StateHasChanged));
+	}
+
+	public void OnClickDisconnectAll()
+	{
+		NodePort.DisconnectAll();
 	}
 
 	public void OnClickModifiers()
@@ -23,18 +28,18 @@ public partial class PpNodePort : ComponentBase
 
 	public void OnClickShowData()
 	{
-		// SelectedThingyService.Instance.SelectPort(NodePort);
-
+		// Input
 		var inp = NodePort?.GetNodeInput?.Invoke();
 		if (inp != null)
 		{
-			SelectedThingyService.Instance.SelectPort2(inp);
+			SelectedThingyService.Instance.SelectPort(inp);
 		}
 
+		// Output
 		var outp = NodePort?.GetNodeOutput?.Invoke();
 		if (outp != null)
 		{
-			SelectedThingyService.Instance.SelectPort2(outp);
+			SelectedThingyService.Instance.SelectPort(outp);
 		}
 	}
 }

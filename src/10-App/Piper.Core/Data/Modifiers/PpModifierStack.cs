@@ -10,15 +10,15 @@ public class PpModifierStack
 	/// <summary>
 	/// The table on which the stack of modifiers starts executing.
 	/// </summary>
-	public IPpTable BaseTable
+	public Func<IPpTable> BaseTable
 	{
 		get;
-		set => field = value ?? PpNullTable.Instance;
-	} = PpNullTable.Instance;
+		set => field = value ?? (() => PpNullTable.Instance);
+	} = () => PpNullTable.Instance;
 
 	public List<PpModifier> Modifiers { get; } = [];
 
-	public IPpTable Table => Modifiers.LastOrDefault()?.Table ?? BaseTable;
+	public IPpTable Table => Modifiers.LastOrDefault()?.Table ?? BaseTable();
 
 	public void Add(PpModifier mod)
 	{
@@ -34,13 +34,14 @@ public class PpModifierStack
 	{
 		_log.LogInformation("Executing modifier stack");
 
-		var table = BaseTable;
+		var table = BaseTable();
 
 		foreach (var mod in Modifiers)
 		{
 			await mod.ExecuteAsync(table, ct);
 
 			table = mod.Table;
+			await table.DoneAsync(ct);
 		}
 	}
 }

@@ -9,7 +9,7 @@ public class PpFunctionNode : PpNode
 	public PpFunctionNode()
 	{
 		InRecords = new(this, nameof(InRecords));
-		OutRecords = new(this, nameof(OutRecords), new PpTable());
+		OutRecords = new(this, nameof(OutRecords));
 	}
 
 	public override string Color => "#8a2828";

@@ -15,7 +15,7 @@ public class PpDuckNode : PpNode
 		InRecords4 = new(this, nameof(InRecords4));
 		InRecords5 = new(this, nameof(InRecords5));
 
-		OutRecords = new(this, nameof(OutRecords), new PpTable());
+		OutRecords = new(this, nameof(OutRecords));
 	}
 
 	public override string NodeType => "SQL Query";

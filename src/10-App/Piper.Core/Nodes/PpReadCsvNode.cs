@@ -12,8 +12,8 @@ public class PpReadCsvNode : PpNode
 	{
 		InFiles = new(this, nameof(InFiles));
 
-		OutRecords = new(this, nameof(OutRecords), new PpTable());
-		OutFailures = new(this, nameof(OutFailures), new PpTable());
+		OutRecords = new(this, nameof(OutRecords));
+		OutFailures = new(this, nameof(OutFailures));
 	}
 
 	public override string Color => "#8a2828";
@@ -57,7 +57,7 @@ public class PpReadCsvNode : PpNode
 		}
 
 		// Read in
-		var inTable = InFiles.Output.Table;
+		var inTable = InFiles.Table;
 
 		// Prep out
 		var cols1 = inTable.Columns.ToList();
@@ -178,7 +178,10 @@ public class PpReadCsvNode : PpNode
 		}
 
 		await OutRecords.BaseTable.DoneAsync();
+		// await OutRecords.Table.DoneAsync();
+
 		await OutFailures.BaseTable.DoneAsync();
+		// await OutFailures.Table.DoneAsync();
 	}
 
 	private static PpRecord CreateRecord(PpRecord file, string? csvRow) =>

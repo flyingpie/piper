@@ -10,7 +10,7 @@ public class PpReadFilesNode : PpNode
 	public PpReadFilesNode()
 	{
 		InFiles = new(this, nameof(InFiles));
-		OutLines = new(this, nameof(OutLines), new PpTable());
+		OutLines = new(this, nameof(OutLines));
 	}
 
 	public override string Color => "#8a2828";

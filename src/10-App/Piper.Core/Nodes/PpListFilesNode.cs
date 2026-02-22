@@ -10,7 +10,7 @@ public class PpListFilesNode : PpNode
 {
 	public PpListFilesNode()
 	{
-		OutFiles = new(this, nameof(OutFiles), new PpTable());
+		OutFiles = new(this, nameof(OutFiles));
 	}
 
 	public override string Color => "#8a2828";
@@ -121,5 +121,6 @@ public class PpListFilesNode : PpNode
 		}
 
 		await OutFiles.BaseTable.DoneAsync();
+		// await OutFiles.Table.DoneAsync();
 	}
 }

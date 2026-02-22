@@ -1,0 +1,14 @@
+@using Piper.UI.Components.Nodes
+
+@if (SelectedNode != null)
+{
+	@(SelectedNode?.NodeType)
+
+	foreach (var prop in SelectedNode!.NodeProps)
+	{
+		if (prop is Core.PpNodeParam param)
+		{
+			<PpNodeParam Param="param" IsInNode="false" />
+		}
+	}
+}

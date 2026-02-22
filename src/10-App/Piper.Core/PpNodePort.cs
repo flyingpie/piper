@@ -28,7 +28,7 @@ public class PpNodePort(
 
 	// public PpNodeOutput? NodeOutput { get; init; }
 
-	public IPpTable? Table => GetNodeInput?.Invoke()?.Table ?? GetNodeOutput?.Invoke()?.Table;
+	public Piper.Core.Data.PpNodePort? Port => (Piper.Core.Data.PpNodePort?)GetNodeInput?.Invoke() ?? GetNodeOutput?.Invoke();
 
 	public bool IsConnected => Links.Count > 0;
 

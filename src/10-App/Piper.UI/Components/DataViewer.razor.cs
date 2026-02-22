@@ -31,7 +31,7 @@ public partial class DataViewer : ComponentBase
 
 	protected override async Task OnInitializedAsync()
 	{
-		SelectedThingyService.Instance.OnChanged(() => InvokeAsync(() => _grid.Reload()));
+		SelectedThingyService.Instance.OnSelectedPort(() => InvokeAsync(() => _grid.Reload()));
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -86,7 +86,7 @@ public partial class DataViewer : ComponentBase
 		try
 		{
 			// var table = SelectedThingyService.Instance.SelectedPort?.GetNodeOutput?.Invoke()?.Table;
-			var table = SelectedThingyService.Instance.SelectedPort2?.Table;
+			var table = SelectedThingyService.Instance.SelectedPort?.Table;
 			if (table == null)
 			{
 				return;

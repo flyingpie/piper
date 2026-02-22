@@ -9,7 +9,7 @@ public class PpCmdNode : PpNode
 	public PpCmdNode()
 	{
 		InInputs = new(this, nameof(InInputs));
-		OutResults = new(this, nameof(OutResults), new PpTable());
+		OutResults = new(this, nameof(OutResults));
 	}
 
 	public override bool SupportsProgress => true;

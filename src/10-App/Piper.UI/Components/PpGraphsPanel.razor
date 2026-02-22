@@ -1,0 +1,36 @@
+@using Piper.Core
+
+<RadzenStack Style="height: 100%;">
+
+	<RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Stretch">
+
+		<RadzenStack Orientation="Orientation.Horizontal">
+			<RadzenTextBox Style="flex: 1;" />
+			<RadzenButton Text="Save As" Size="ButtonSize.Small" />
+		</RadzenStack>
+
+		<RadzenDataGrid
+			Data="@Graphs"
+		>
+			<Columns>
+				<RadzenDataGridColumn
+					Title="Name"
+					Property="@nameof(PpGraphFile.Name)"
+				/>
+
+				<RadzenDataGridColumn Width="180px">
+					<Template Context="graphFile">
+
+						<RadzenStack Orientation="Orientation.Horizontal">
+							<RadzenButton class="pp-btn-load" Icon="folder_open" Text="Load" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graphFile)" />
+							<RadzenButton Icon="save" Text="Save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="() => SaveGraphFile(graphFile)" />
+						</RadzenStack>
+
+					</Template>
+				</RadzenDataGridColumn>
+			</Columns>
+		</RadzenDataGrid>
+
+	</RadzenStack>
+
+</RadzenStack>

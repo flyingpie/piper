@@ -18,7 +18,7 @@
 			<!-- Modifiers -->
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
-				Click="() => OnClickModifiers()"
+				Click="OnClickModifiers"
 				Icon="build"
 				Shade="Shade.Darker"
 				Size="ButtonSize.ExtraSmall"
@@ -28,7 +28,7 @@
 			<!-- Show Data -->
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
-				Click="() => OnClickShowData()"
+				Click="OnClickShowData"
 				Icon="list"
 				Shade="@(IsPortSelected ? Shade.Default : Shade.Darker)"
 				Size="ButtonSize.ExtraSmall"
@@ -38,7 +38,7 @@
 			<!-- Disconnect -->
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
-				Click="() => NodePort.DisconnectAll()"
+				Click="OnClickDisconnectAll"
 				Disabled="!NodePort.IsConnected"
 				Icon="close"
 				Shade="Shade.Darker"
@@ -76,7 +76,7 @@
 			<!-- Show Data -->
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
-				Click="() => OnClickShowData()"
+				Click="OnClickShowData"
 				Icon="list"
 				Shade="@(IsPortSelected ? Shade.Default : Shade.Darker)"
 				Size="ButtonSize.ExtraSmall"
@@ -86,7 +86,7 @@
 			<!-- Modifiers -->
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
-				Click="() => OnClickModifiers()"
+				Click="OnClickModifiers"
 				Icon="build"
 				Shade="Shade.Darker"
 				Size="ButtonSize.ExtraSmall"
@@ -96,7 +96,7 @@
 			<!-- Disconnect -->
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
-				Click="() => NodePort.DisconnectAll()"
+				Click="OnClickDisconnectAll"
 				Disabled="!NodePort.IsConnected"
 				Icon="close"
 				Shade="Shade.Darker"

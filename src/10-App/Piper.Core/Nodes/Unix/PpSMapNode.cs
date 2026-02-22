@@ -8,7 +8,7 @@ public class PpSMapNode : PpNode
 {
 	public PpSMapNode()
 	{
-		OutProcesses = new(this, nameof(OutProcesses), new PpTable());
+		OutProcesses = new(this, nameof(OutProcesses));
 	}
 
 	[PpParam("Process Name")]

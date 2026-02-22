@@ -4,7 +4,7 @@
 		"pos": "220,160",
 		"params": {
 			"InPath": "/home/marco/Downloads",
-			"InPattern": "*vragenlijst.xml",
+			"InPattern": "*.csv",
 			"MaxFiles": "10000"
 		},
 		"ports": {
@@ -43,14 +43,21 @@
 	},
 	{
 		"id": "MH3FW7AdF:PpReadCsvNode:Read CSV 02",
-		"pos": "552,168",
+		"pos": "542,156",
 		"params": {
 			"InAttr": "path"
 		},
 		"ports": {
 			"InFiles": {
 				"link": "l4HNYecsH:OutFiles",
-				"mods": []
+				"mods": [
+					{
+						"id": "t019c7d51d61375f7a47af74ab174f7de:PpRemoveModifier:Remove",
+						"params": {
+							"SrcFieldName": "rec__uuid"
+						}
+					}
+				]
 			},
 			"OutRecords": {
 				"mods": [
@@ -76,6 +83,33 @@
 				]
 			},
 			"OutFailures": {
+				"mods": []
+			}
+		}
+	},
+	{
+		"id": "o4UotLlNGhnM6:PpDuckNode:List Files 01",
+		"pos": "882,136",
+		"params": {
+			"Query": ""
+		},
+		"ports": {
+			"InRecords1": {
+				"mods": []
+			},
+			"InRecords2": {
+				"mods": []
+			},
+			"InRecords3": {
+				"mods": []
+			},
+			"InRecords4": {
+				"mods": []
+			},
+			"InRecords5": {
+				"mods": []
+			},
+			"OutRecords": {
 				"mods": []
 			}
 		}

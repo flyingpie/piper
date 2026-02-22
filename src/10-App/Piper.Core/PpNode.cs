@@ -1,4 +1,5 @@
 using Blazor.Diagrams.Core.Models;
+using Piper.Core.Data;
 using Piper.Core.Logging;
 using shortid;
 using shortid.Configuration;
@@ -67,12 +68,28 @@ public abstract class PpNode : NodeModel
 		{
 			// await OnExecuteAsync();
 
+			foreach (var port in NodePorts)
+			{
+				var nodeInput = port.GetNodeInput?.Invoke();
+				if (nodeInput == null)
+				{
+					continue;
+				}
+
+				await nodeInput.Modifiers.ExecuteAsync();
+			}
+
 			await Task.Run(OnExecuteAsync);
 
 			foreach (var port in NodePorts)
 			{
-				var ppPort = (Piper.Core.Data.PpNodePort)port.GetNodeInput?.Invoke() ?? port.GetNodeOutput?.Invoke();
-				await ppPort.Modifiers.ExecuteAsync(CancellationToken.None);
+				var nodeOutput = port.GetNodeOutput?.Invoke();
+				if (nodeOutput == null)
+				{
+					continue;
+				}
+
+				await nodeOutput.Modifiers.ExecuteAsync();
 			}
 		}
 		catch (Exception ex)

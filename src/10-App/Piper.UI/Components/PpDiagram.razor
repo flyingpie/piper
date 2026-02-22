@@ -1,11 +1,5 @@
 @using Blazor.Diagrams.Components
 @using Blazor.Diagrams.Components.Widgets
-@using Piper.Core
-@using Piper.UI.Components.CodeEditor
-@using Piper.UI.Components.Logs
-@using Piper.UI.Components.Nodes
-
-@inject ContextMenuService ContextMenuService
 
 @code {
 
@@ -48,201 +42,24 @@
 
 }
 
-<RadzenSplitter
-	Orientation="Orientation.Vertical"
-	style="border: 1px solid rgba(0,0,0,.08); position: absolute; top: 0; right: 0; bottom: 0; left: 0;"
+<div
+	class="diagram-container"
+	@oncontextmenu=@(args => ShowContextMenuWithContent(args))
+	@oncontextmenu:preventDefault="true"
 >
-	<RadzenSplitterPane Size="70%">
+	<CascadingValue Value="Diagram" IsFixed="true">
+		<DiagramCanvas>
 
-		<RadzenSplitter Orientation="Orientation.Horizontal">
-			<RadzenSplitterPane Size="80%">
+			<Widgets>
+				<GridWidget
+					Mode="GridMode.Point"
+					BackgroundColor="var(--rz-base-900)"
+				/>
+			</Widgets>
 
-				<RadzenMenu>
-					<RadzenMenuItem Text="File" />
-				</RadzenMenu>
-
-				@* <RadzenStack Style="height: 100%;"> *@
-
-					@* <RadzenPanelMenu> *@
-					@* 	<RadzenPanelMenuItem Text="Bleh" /> *@
-					@* </RadzenPanelMenu> *@
-
-					<div
-						class="diagram-container"
-						@oncontextmenu=@(args => ShowContextMenuWithContent(args))
-						@oncontextmenu:preventDefault="true"
-					>
-						<CascadingValue Value="Diagram" IsFixed="true">
-							<DiagramCanvas>
-								<Widgets>
-									<GridWidget
-										Mode="GridMode.Point"
-										BackgroundColor="var(--rz-base-900)"
-									/>
-								</Widgets>
-							</DiagramCanvas>
-						</CascadingValue>
-					</div>
-
-				@* </RadzenStack> *@
-
-			</RadzenSplitterPane>
-			<RadzenSplitterPane>
-
-				<RadzenTabs Style="height: 100%;" TabPosition="TabPosition.Right">
-					<Tabs>
-
-						<!-- Graphs -->
-						<RadzenTabsItem Icon="polyline">
-							<RadzenStack Style="height: 100%;">
-
-								<RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Stretch">
-
-									<RadzenStack Orientation="Orientation.Horizontal">
-										<RadzenTextBox Style="flex: 1;" />
-										<RadzenButton Text="Save As" Size="ButtonSize.Small" />
-									</RadzenStack>
-
-									@*
-									<RadzenTable>
-										<RadzenTableBody>
-
-											@foreach (var graphFile in Graphs)
-											{
-												<RadzenTableRow>
-													<RadzenTableCell Style="width: 80px;">
-														<RadzenStack Orientation="Orientation.Horizontal" Gap="1em">
-															<RadzenButton Class="pp-btn-load" Icon="file_open" ButtonStyle="ButtonStyle.Info" Size="ButtonSize.ExtraSmall" Click="() => LoadGraphFile(graphFile)" />
-															<RadzenButton Icon="save" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" Click="() => SaveGraphFile(graphFile)" />
-														</RadzenStack>
-													</RadzenTableCell>
-													<RadzenTableCell>@graphFile.Name</RadzenTableCell>
-												</RadzenTableRow>
-											}
-
-										</RadzenTableBody>
-									</RadzenTable>
-									*@
-
-									<RadzenDataGrid
-										Data="@Graphs"
-									>
-										<Columns>
-											<RadzenDataGridColumn
-												Title="Name"
-												Property="@nameof(PpGraphFile.Name)"
-											/>
-
-											<RadzenDataGridColumn Width="180px">
-												<Template Context="graphFile">
-
-													<RadzenStack Orientation="Orientation.Horizontal">
-														<RadzenButton class="pp-btn-load" Icon="folder_open" Text="Load" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graphFile)" />
-														<RadzenButton Icon="save" Text="Save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="() => SaveGraphFile(graphFile)" />
-													</RadzenStack>
-
-												</Template>
-											</RadzenDataGridColumn>
-										</Columns>
-									</RadzenDataGrid>
-
-								</RadzenStack>
-
-							</RadzenStack>
-
-
-						</RadzenTabsItem>
-						<RadzenTabsItem Icon="toolbar">
-							@if (SelectedNode != null)
-							{
-								@(SelectedNode?.NodeType)
-
-								foreach (var prop in SelectedNode!.NodeProps)
-								{
-									if (prop is Core.PpNodeParam param)
-									{
-										<PpNodeParam Param="param" IsInNode="false" />
-									}
-
-									@* else if (prop is Core.PpNodePort port) *@
-									@* { *@
-									@* 	<PpNodePort NodePort="port"/> *@
-									@* } *@
-								}
-							}
-
-						</RadzenTabsItem>
-
-						@* <!-- Tables --> *@
-						@* <RadzenTabsItem Text="Tables" Icon="table_view"> *@
-						@* *@
-						@* 		<RadzenDataGrid *@
-						@* 			Data="@Tables" *@
-						@* 		> *@
-						@* 			<Columns> *@
-						@* 				<RadzenDataGridColumn *@
-						@* 					Title="Name" *@
-						@* 					Property="@nameof(PpTable.TableName)" *@
-						@* 				/> *@
-						@* *@
-						@* 				<RadzenDataGridColumn Width="180px"> *@
-						@* 					<Template Context="graphFile"> *@
-						@* *@
-						@* 						<RadzenStack Orientation="Orientation.Horizontal"> *@
-						@* 							$1$ <RadzenButton Icon="folder_open" Text="Load" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graphFile)" /> #1# *@
-						@* 							$1$ <RadzenButton Icon="save" Text="Save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="() => SaveGraphFile(graphFile)" /> #1# *@
-						@* 						</RadzenStack> *@
-						@* *@
-						@* 					</Template> *@
-						@* 				</RadzenDataGridColumn> *@
-						@* 			</Columns> *@
-						@* 		</RadzenDataGrid> *@
-						@* *@
-						@* </RadzenTabsItem> *@
-
-
-						<!-- Modifiers -->
-						<RadzenTabsItem Icon="build">
-
-							<PpModifiersPanel />
-
-						</RadzenTabsItem>
-					</Tabs>
-				</RadzenTabs>
-
-			</RadzenSplitterPane>
-		</RadzenSplitter>
-
-	</RadzenSplitterPane>
-
-	<!-- Bottom split -->
-	<RadzenSplitterPane>
-
-		<RadzenTabs TabPosition="TabPosition.Left" Style="height: 100%;">
-			<Tabs>
-
-				<RadzenTabsItem Icon="table">
-					<DataViewer/>
-				</RadzenTabsItem>
-
-				<RadzenTabsItem Icon="code">
-					<RadzenStack Orientation="Orientation.Vertical" Style="height: 100%;" Gap=".5em">
-						<RadzenMenu>
-							<RadzenMenuItem Text="File"/>
-						</RadzenMenu>
-						<PpCodeEditor/>
-					</RadzenStack>
-				</RadzenTabsItem>
-
-				<RadzenTabsItem Icon="graph_2">
-					<LogsPanel />
-				</RadzenTabsItem>
-			</Tabs>
-		</RadzenTabs>
-
-	</RadzenSplitterPane>
-</RadzenSplitter>
-
+		</DiagramCanvas>
+	</CascadingValue>
+</div>
 
 <style>
 	.diagram-container {

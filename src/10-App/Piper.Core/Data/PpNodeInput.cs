@@ -3,8 +3,14 @@ namespace Piper.Core.Data;
 /// <summary>
 /// A "node input" is a port of a node, that accepts data from another node.
 /// </summary>
-public class PpNodeInput(PpNode node, string name) : PpNodePort(node, name, PpNullTable.Instance)
+public class PpNodeInput : PpNodePort
 {
+	public PpNodeInput(PpNode node, string name)
+		: base(node, name)
+	{
+		Modifiers.BaseTable = () => Output?.Table ?? PpNullTable.Instance;
+	}
+
 	/// <summary>
 	/// Convenience property to figure out whether an output is connected to this input.
 	/// </summary>
@@ -14,13 +20,5 @@ public class PpNodeInput(PpNode node, string name) : PpNodePort(node, name, PpNu
 	/// <summary>
 	/// The output that this input is connected to (null if not connected).
 	/// </summary>
-	public PpNodeOutput? Output
-	{
-		get;
-		set
-		{
-			BaseTable = value?.BaseTable ?? PpNullTable.Instance;
-			field = value;
-		}
-	}
+	public PpNodeOutput? Output { get; set; }
 }

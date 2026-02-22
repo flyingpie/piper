@@ -17,7 +17,7 @@ public class PpCSharpNode : PpNode
 	public PpCSharpNode()
 	{
 		InRecords = new(this, nameof(InRecords));
-		OutRecords = new(this, nameof(OutRecords), new PpTable());
+		OutRecords = new(this, nameof(OutRecords));
 	}
 
 	public override string Color => "#8a2828";

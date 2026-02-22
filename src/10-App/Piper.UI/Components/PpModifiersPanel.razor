@@ -16,7 +16,7 @@
 
 	<RadzenStack Orientation="Orientation.Vertical">
 
-		@foreach (var mod in SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.Modifiers ?? [])
+		@foreach (var mod in SelectedThingyService.Instance?.SelectedPort?.Modifiers?.Modifiers ?? [])
 		{
 			<RadzenStack Orientation="Orientation.Vertical" Gap=".5em" class="rz-p-2">
 
@@ -38,7 +38,7 @@
 					/>
 
 					<RadzenButton
-						Click="async () => await (SelectedThingyService.Instance?.SelectedPort2?.Modifiers?.ExecuteAsync() ?? Task.CompletedTask)"
+						Click="async () => await (SelectedThingyService.Instance?.SelectedPort?.Modifiers?.ExecuteAsync() ?? Task.CompletedTask)"
 						Icon="play_arrow"
 						Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" />
 

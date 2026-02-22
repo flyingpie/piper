@@ -1,15 +1,8 @@
-using System.IO;
 using Blazor.Diagrams;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Piper.Core;
-using Piper.Core.Data;
-using Piper.Core.Data.Modifiers;
-using Piper.Core.Db;
 using Piper.Core.Nodes;
 using Piper.Core.Nodes.Unix;
-using Piper.Core.Serialization;
-using Piper.UI.Services;
 using Radzen;
 using BD = Blazor.Diagrams.Core.Geometry;
 
@@ -20,30 +13,10 @@ public partial class PpDiagram : ComponentBase
 	private int _idx;
 
 	[Inject]
-	private BlazorDiagram? Diagram { get; set; }
+	private ContextMenuService ContextMenuService { get; set; } = null!;
 
-	public List<PpGraphFile> Graphs { get; set; } = [];
-
-	// public IReadOnlyCollection<PpTable> Tables => PpDb.Instance.Tables;
-
-	// [
-	// 	new() { Name = "My graph 1" },
-	// 	new() { Name = "Some other graph" },
-	// 	new() { Name = "Convert to csv" },
-	// 	new() { Name = "Format some stuff" },
-	// ];
-
-	private PpNode? SelectedNode => SelectedThingyService.Instance.SelectedNode;
-
-	protected override async Task OnInitializedAsync()
-	{
-		SelectedThingyService.Instance.OnChanged(() => InvokeAsync(StateHasChanged));
-
-		// var pp = Path.GetDirectoryName(new Uri(GetType().Assembly.Location).AbsolutePath);
-		var dir = "/home/marco/workspace/flyingpie/piper_1/graphs";
-
-		Graphs = Directory.GetFiles(dir, "*.json").Select(p => new PpGraphFile() { Path = p }).ToList();
-	}
+	[Inject]
+	private BlazorDiagram? Diagram { get; set; } = null!;
 
 	private void OnMenuItemClick(MouseEventArgs a1, MenuItemEventArgs args)
 	{
@@ -165,25 +138,4 @@ public partial class PpDiagram : ComponentBase
 
 		ContextMenuService.Close();
 	}
-
-	private void LoadGraphFile(PpGraphFile file)
-	{
-		var graph = PpNodeSerializer.DeserializeGraph(File.ReadAllText(file.Path));
-
-		Diagram.LoadGraph(graph);
-	}
-
-	private void SaveGraphFile(PpGraphFile file)
-	{
-		var graph = PpNodeSerializer.SerializeGraphJson(Diagram.GetGraph());
-
-		File.WriteAllText(file.Path, graph);
-	}
-}
-
-public class PpGraphFile
-{
-	public string Name => System.IO.Path.GetFileName(Path);
-
-	public string Path { get; set; }
 }

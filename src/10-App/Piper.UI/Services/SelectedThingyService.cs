@@ -1,6 +1,4 @@
 using Piper.Core;
-using Piper.Core.Data;
-using PpNodePort = Piper.Core.PpNodePort;
 
 namespace Piper.UI.Services;
 
@@ -8,79 +6,49 @@ public class SelectedThingyService
 {
 	public static SelectedThingyService Instance { get; } = new();
 
-	private readonly List<Action> _onChanged = [];
+	private readonly List<Action> _onSelectedNode = [];
+	private readonly List<Action> _onSelectedPort = [];
 
 	private PpNode? _selectedNode;
-	private PpNodePort? _selectedPort;
-	private Piper.Core.Data.PpNodePort? _selectedPort2;
+	private Piper.Core.Data.PpNodePort? _selectedPort;
 
-	public PpNode? SelectedNode
-	{
-		get => _selectedNode;
-		set
-		{
-			_selectedNode = value;
-			Changed();
-		}
-	}
+	public PpNode? SelectedNode => _selectedNode;
 
-	// public PpNodePort? SelectedPort
-	// {
-	// 	get => _selectedPort;
-	// 	set
-	// 	{
-	// 		_selectedPort = value;
-	// 		Changed();
-	// 	}
-	// }
+	public Piper.Core.Data.PpNodePort? SelectedPort => _selectedPort;
 
-	public Piper.Core.Data.PpNodePort? SelectedPort2
-	{
-		get => _selectedPort2;
-		set
-		{
-			_selectedPort2 = value;
-			Changed();
-		}
-	}
+	public void OnSelectedNode(Action action) => _onSelectedNode.Add(action);
 
-	// public IPpTable? SelectedTable => SelectedPort2?.Table;
+	public void OnSelectedPort(Action action) => _onSelectedPort.Add(action);
 
 	public bool IsNodeSelected(PpNode? node) => _selectedNode != null && _selectedNode == node;
 
-	public bool IsNodePortSelected(PpNodePort port) => _selectedPort != null && _selectedPort == port;
+	public bool IsNodePortSelected(Piper.Core.Data.PpNodePort port) => _selectedPort != null && _selectedPort == port;
 
 	public void SelectNode(PpNode? node)
 	{
-		SelectedNode = node;
+		_selectedNode = node;
 
-		Changed();
+		OnSelectedNode();
 	}
 
-	// public void SelectPort(PpNodePort port)
-	// {
-	// 	SelectedPort = port;
-	//
-	// 	Changed();
-	// }
-
-	public void SelectPort2(Piper.Core.Data.PpNodePort port)
+	public void SelectPort(Piper.Core.Data.PpNodePort? port)
 	{
-		_selectedPort2 = port;
+		_selectedPort = port;
 
-		Changed();
+		OnSelectedNode();
 	}
 
-	public void OnChanged(Action onChanged)
+	private void OnSelectedNode()
 	{
-		_onChanged.Add(onChanged);
+		foreach (var c in _onSelectedNode)
+		{
+			c.Invoke();
+		}
 	}
 
-	public void Changed()
+	private void OnSelectedPort()
 	{
-		Console.WriteLine($"Changed ({_onChanged.Count})");
-
-		foreach (var c in _onChanged)
+		foreach (var c in _onSelectedPort)
 		{
 			c.Invoke();
 		}
