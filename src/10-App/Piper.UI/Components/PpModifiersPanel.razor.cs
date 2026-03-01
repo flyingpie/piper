@@ -9,7 +9,7 @@ public partial class PpModifiersPanel : ComponentBase
 	private void AddModifier(string? type)
 	{
 		Console.WriteLine($"MOD:{type}");
-		var mods = SelectedThingyService.Instance.SelectedPort2?.Modifiers;
+		var mods = SelectedThingyService.Instance.SelectedPort?.Modifiers;
 		if (mods == null)
 		{
 			return;
@@ -38,12 +38,12 @@ public partial class PpModifiersPanel : ComponentBase
 				break;
 		}
 
-		SelectedThingyService.Instance.Changed();
+		// SelectedThingyService.Instance.Changed();
 	}
 
 	private void RemoveModifier(PpModifier modifier)
 	{
-		var mods = SelectedThingyService.Instance.SelectedPort2?.Modifiers;
+		var mods = SelectedThingyService.Instance.SelectedPort?.Modifiers;
 		if (mods == null)
 		{
 			return;
@@ -51,6 +51,6 @@ public partial class PpModifiersPanel : ComponentBase
 
 		mods.Remove(modifier);
 
-		SelectedThingyService.Instance.Changed();
+		// SelectedThingyService.Instance.Changed();
 	}
 }
