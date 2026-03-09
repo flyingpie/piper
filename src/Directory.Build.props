@@ -17,7 +17,11 @@
 		<Features>strict</Features>
 
 		<!-- Put any generated stuff (including "bin" and  "obj" folders, and NuGet packages) in an "artifacts" folder, instead of spread out across the source. -->
-		<ArtifactsPath>$(MSBuildThisFileDirectory)/../artifacts</ArtifactsPath>
+		<ArtifactsPath>$(MSBuildThisFileDirectory)/../art</ArtifactsPath>
+		<BasePath>$(MSBuildThisFileDirectory)/../out/$(MSBuildProjectName)</BasePath>
+		<BaseOutputPath>$(BasePath)/bin</BaseOutputPath>
+		<BaseIntermediateOutputPath>$(BasePath)/obj</BaseIntermediateOutputPath>
+		<OutputPath>$(BasePath)/bin</OutputPath>
 
 		<!--
 			Faster NuGet restores
