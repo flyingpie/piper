@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using Blazor.Diagrams.Core.Geometry;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
@@ -17,6 +18,14 @@ public static class PpNodeSerializer
 		return PpJson.SerializeToString(jsonGraph);
 		// return PpYaml.SerializeToString(jsonGraph);
 	}
+
+	// public static JsonNode SerializeGraphNode(PpGraph graph)
+	// {
+	// 	var jsonGraph = SerializeGraph(graph);
+	//
+	// 	return PpJson.SerializeToString(jsonGraph);
+	// 	// return PpYaml.SerializeToString(jsonGraph);
+	// }
 
 	public static List<PpJsonNode> SerializeGraph(PpGraph graph)
 	{
@@ -83,9 +92,11 @@ public static class PpNodeSerializer
 
 	private static void SerializeNodePort(Data.PpNodePort nodePort, PpJsonNode jsonNode, PropertyInfo prop, PpNode n)
 	{
-		var port = new PpJsonPort() { Mods = [] };
+		var port = new PpJsonPort();
 		foreach (var mod in nodePort.Modifiers.Modifiers)
 		{
+			port.Mods ??= [];
+
 			var jsonMod = SerializeModifier(mod);
 
 			port.Mods.Add(jsonMod);

@@ -1,5 +1,6 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Piper.Core.Serialization;
@@ -10,7 +11,7 @@ namespace Piper.Core.Utils;
 
 public static class PpJson
 {
-	private static JsonSerializerOptions JsonOpts = new()
+	private static readonly JsonSerializerOptions _jsonOpts = new()
 	{
 		Converters =
 		{
@@ -31,12 +32,18 @@ public static class PpJson
 		WriteIndented = true,
 	};
 
-	public static T? Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json, JsonOpts);
+	public static T? Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json, _jsonOpts);
 
 	public static T DeserializeRequired<T>(string json) =>
 		Deserialize<T>(json) ?? throw new InvalidOperationException($"Json '{json}' deserialized to null.");
 
-	public static string SerializeToString(object? obj) => JsonSerializer.Serialize(obj, JsonOpts);
+	public static string SerializeToString(object? obj) => JsonSerializer.Serialize(obj, _jsonOpts);
+
+	// public static JsonNode SerializeToElement(object value)
+	// {
+	// 	JsonNode.Parse();
+	// 	// return JsonSerializer.SerializeToElement(value, _jsonOpts);
+	// }
 }
 
 public static class PpYaml

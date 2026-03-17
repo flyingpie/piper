@@ -2,15 +2,15 @@ using Blazor.Diagrams.Core.Models;
 using Piper.Core.Data;
 using Piper.Core.Logging;
 using shortid;
-using shortid.Configuration;
 
 namespace Piper.Core;
 
 public abstract class PpNode : NodeModel
 {
+	private readonly List<IPpNodeProperty> _fixedNodeProps;
+
 	private Action<PpNode> _onChange = _ => { };
 
-	private readonly List<IPpNodeProperty> _fixedNodeProps;
 	protected readonly List<IPpNodeProperty> _dynNodeProps = [];
 
 	protected PpNode()
@@ -20,11 +20,11 @@ public abstract class PpNode : NodeModel
 		NodePorts = NodeProps.OfType<PpNodePort>().ToList();
 	}
 
-	public string NodeId { get; set; } = ShortId.Generate(new GenerationOptions(useNumbers: true, useSpecialCharacters: false));
+	public string NodeId { get; set; } = PpId.Instance.Next(); //ShortId.Generate(new ShortIdOptions(useNumbers: true, useSpecialCharacters: false));
 
 	public virtual string NodeType => GetType().Name;
 
-	public string Name { get; set; }
+	public string Name { get; set; } = "Node";
 
 	public virtual string Icon { get; } = "fa-solid fa-circle-nodes";
 
