@@ -9,7 +9,7 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 	public long Count { get; set; }
 
 	/// <inheritdoc/>
-	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name ?? PpId.Instance.Next());
+	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name ?? PpId.Instance.NextTable());
 
 	/// <inheritdoc/>
 	public List<PpColumn> Columns { get; set; } = (columns ?? []).ToList();

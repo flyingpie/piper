@@ -104,7 +104,6 @@ public static class PpNodeSerializer
 
 		// Port modifiers
 		// nodePort.Modifiers
-
 		jsonNode.Ports ??= new();
 		jsonNode.Ports[prop.Name] = port;
 
@@ -116,7 +115,7 @@ public static class PpNodeSerializer
 
 	private static PpJsonModifier SerializeModifier(PpModifier mod)
 	{
-		var jsonMod = new PpJsonModifier() { Id = new(id: mod.Id, type: mod.GetType().Name, name: mod.Name) };
+		var jsonMod = new PpJsonModifier() { Id = new(type: mod.GetType().Name, name: mod.Name) };
 
 		foreach (var modProp in mod.GetType().GetProperties())
 		{
@@ -283,7 +282,7 @@ public static class PpNodeSerializer
 						continue;
 					}
 
-					modInst.Id = jsonMod.Id.Id;
+					// modInst.Id = jsonMod.Id.Id;
 					modInst.Name = jsonMod.Id.Name;
 					// modInst.Position = new Point(n.Pos.X, n.Pos.Y);
 

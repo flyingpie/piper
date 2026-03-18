@@ -1,7 +1,10 @@
 ﻿[
   {
     id: node0001:PpTestNode:My Node 1,
-    pos: 123,321,
+    pos: 0,0,
+    params: {
+      Param1: Param1 Value
+    },
     ports: {}
   }
 ]

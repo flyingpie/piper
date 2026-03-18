@@ -36,6 +36,10 @@ public partial class PpModifiersPanel : ComponentBase
 			case "PP_MOD_SELECT":
 				mods.Add(new PpSelectModifier());
 				break;
+
+			case "PP_MOD_XPATH":
+				mods.Add(new PpXPathModifier());
+				break;
 		}
 
 		// SelectedThingyService.Instance.Changed();

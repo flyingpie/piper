@@ -3,11 +3,14 @@ namespace Piper.Core.Data;
 public class PpId
 {
 	private int _i;
-	private int _j;
 
 	public static PpId Instance { get; } = new();
 
-	// public string Next() => $"{(char)_i++}{_j++}";
-	// public string Next() => $"t{Guid.CreateVersion7().ToString().ToLowerInvariant().Replace("-", "")}";
-	public string Next() => $"t{_i++:0000}";
+	public string NextMod() => $"mod{++_i:0000}";
+
+	public string NextNode() => $"node{++_i:0000}";
+
+	public string NextTable() => $"tbl{++_i:0000}";
+
+	public void Reset() => _i = 0;
 }

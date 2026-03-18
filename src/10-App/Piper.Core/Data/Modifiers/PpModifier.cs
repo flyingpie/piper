@@ -9,7 +9,7 @@ public abstract class PpModifier
 		_fixedNodeProps = this.GetModifierProps().ToList();
 	}
 
-	public string Id { get; set; } = PpId.Instance.Next();
+	public string Id { get; set; } = PpId.Instance.NextMod();
 
 	public abstract string Name { get; set; }
 
@@ -17,7 +17,7 @@ public abstract class PpModifier
 
 	public IEnumerable<IPpNodeProperty> Props => _fixedNodeProps;
 
-	public IPpTable Table { get; } = new PpTable(PpId.Instance.Next());
+	public IPpTable Table { get; } = new PpTable(PpId.Instance.NextTable());
 
 	public abstract Task ExecuteAsync(IPpTable source, CancellationToken ct = default);
 }

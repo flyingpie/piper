@@ -1,116 +1,56 @@
 [
 	{
-		"id": "l4HNYecsH:PpListFilesNode:List Files 01",
-		"pos": "220,160",
+		"id": "node0008:PpListFilesNode:List Files 01",
+		"pos": "233,149",
 		"params": {
-			"InPath": "/home/marco/Downloads",
-			"InPattern": "*.csv",
+			"InPath": "/home/marco/workspace/flyingpie/",
+			"InPattern": "**/Directory.Packages.props",
 			"MaxFiles": "10000"
 		},
 		"ports": {
 			"OutFiles": {
 				"mods": [
 					{
-						"id": "t019c6def2ba7752fb0e920d86dd1f72b:PpSelectModifier:Select",
+						"id": "PpSelectModifier:Select",
 						"params": {
 							"Expression": "file->>'path'",
 							"DstFieldName": "path"
 						}
-					},
-					{
-						"id": "t019c6def809d7f568856a4c51801100e:PpCasingModifier:Casing",
-						"params": {
-							"SrcFieldName": "path",
-							"DstFieldName": "path_upper"
-						}
-					},
-					{
-						"id": "t019c78349c8373679a5eb3a299e407fd:PpRemoveModifier:Remove",
-						"params": {
-							"SrcFieldName": "path_upper"
-						}
-					},
-					{
-						"id": "t019c7834de6c7df19253178f41c29096:PpSelectModifier:Select",
-						"params": {
-							"Expression": "file->>'createdutc'",
-							"DstFieldName": "createdutc"
-						}
 					}
 				]
 			}
 		}
 	},
 	{
-		"id": "MH3FW7AdF:PpReadCsvNode:Read CSV 02",
-		"pos": "542,156",
+		"id": "node0010:PpReadFilesNode:Read Files 02",
+		"pos": "562,151",
 		"params": {
-			"InAttr": "path"
+			"InAttr": "path",
+			"MaxFileSize": "2000000"
 		},
 		"ports": {
 			"InFiles": {
-				"link": "l4HNYecsH:OutFiles",
-				"mods": [
-					{
-						"id": "t019c7d51d61375f7a47af74ab174f7de:PpRemoveModifier:Remove",
-						"params": {
-							"SrcFieldName": "rec__uuid"
-						}
-					}
-				]
+				"link": "node0008:OutFiles"
 			},
-			"OutRecords": {
+			"OutLines": {
 				"mods": [
 					{
-						"id": "t019c6e1e4c78780bad74a5857499008e:PpRemoveModifier:Remove",
+						"id": "PpXPathModifier:XPath",
 						"params": {
-							"SrcFieldName": "rec__uuid"
+							"SrcFieldName": "line",
+							"Query": "//@Include",
+							"DstFieldName": "xpath_1"
 						}
 					},
 					{
-						"id": "t019c6e1e8b4474c1826c6afccb38a3bb:PpRemoveModifier:Remove",
+						"id": "PpXPathModifier:XPath",
 						"params": {
-							"SrcFieldName": "file"
-						}
-					},
-					{
-						"id": "t019c6e1f69967c4fa07ce8255f9280af:PpSelectModifier:Select",
-						"params": {
-							"Expression": "csv_row->>'column1'",
-							"DstFieldName": "depl"
+							"SrcFieldName": "line",
+							"Query": "//@Version",
+							"DstFieldName": "xpath_2"
 						}
 					}
 				]
-			},
-			"OutFailures": {
-				"mods": []
-			}
-		}
-	},
-	{
-		"id": "o4UotLlNGhnM6:PpDuckNode:List Files 01",
-		"pos": "882,136",
-		"params": {
-			"Query": ""
-		},
-		"ports": {
-			"InRecords1": {
-				"mods": []
-			},
-			"InRecords2": {
-				"mods": []
-			},
-			"InRecords3": {
-				"mods": []
-			},
-			"InRecords4": {
-				"mods": []
-			},
-			"InRecords5": {
-				"mods": []
-			},
-			"OutRecords": {
-				"mods": []
 			}
 		}
 	}
