@@ -31,6 +31,8 @@ public partial class NodeView : ComponentBase
 	private async Task ExecuteAsync()
 	{
 		await Node.ExecuteAsync();
+		var port = Node.NodePorts.FirstOrDefault(p => p.GetNodeOutput?.Invoke() != null)?.Port;
+		SelectedThingyService.Instance.SelectPort(port);
 
 		StateHasChanged();
 	}

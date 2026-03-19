@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Piper.Core.Attributes;
@@ -149,6 +150,16 @@ public partial class PpNodeSerializerTest
 
 		// Act + Assert
 		await VerifyJson(PpNodeSerializer.SerializeGraphJson(g));
+	}
+
+	[TestMethod]
+	public void METHOD()
+	{
+		var e = new List<string>();
+
+		e.GetType().IsAssignableTo(typeof(IEnumerable))
+
+		var x = 2;
 	}
 }
 

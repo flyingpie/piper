@@ -35,7 +35,7 @@ public class SelectedThingyService
 	{
 		_selectedPort = port;
 
-		OnSelectedNode();
+		OnSelectedPort();
 	}
 
 	private void OnSelectedNode()

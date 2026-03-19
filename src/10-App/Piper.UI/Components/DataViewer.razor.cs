@@ -31,7 +31,11 @@ public partial class DataViewer : ComponentBase
 
 	protected override async Task OnInitializedAsync()
 	{
-		SelectedThingyService.Instance.OnSelectedPort(() => InvokeAsync(() => _grid.Reload()));
+		SelectedThingyService.Instance.OnSelectedPort(() =>
+		{
+			Console.WriteLine("ONSELECT");
+			InvokeAsync(() => _grid.Reload());
+		});
 	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
