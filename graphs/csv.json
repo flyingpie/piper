@@ -98,12 +98,7 @@
 		"ports": {
 			"InRecords1": {
 				"link": "node0017:OutResponses"
-			},
-			"InRecords2": {},
-			"InRecords3": {},
-			"InRecords4": {},
-			"InRecords5": {},
-			"OutRecords": {}
+			}
 		}
 	}
 ]

@@ -1,4 +1,8 @@
+@using Piper.UI.Components.CodeEditor
+
 <RadzenStack Orientation="Orientation.Vertical">
+
+	<PpCodeEditor Class="pp-query" Language="sql" @bind-Text="Query" />
 
 	@* <RadzenTextBox @bind-Value="SearchTerm" /> *@
 
@@ -61,3 +65,9 @@
 	</RadzenDataGrid>
 
 </RadzenStack>
+
+<style>
+	.pp-query .monaco-editor-container {
+		height: 150px !important;
+	}
+</style>

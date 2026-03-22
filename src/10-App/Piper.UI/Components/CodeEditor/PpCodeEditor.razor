@@ -26,6 +26,9 @@
 	private string _text = string.Empty;
 
 	[Parameter]
+	public string? Class { get; set; }
+
+	[Parameter]
 	public string? Text { get; set; }
 
 	[Parameter]
@@ -66,11 +69,13 @@
 
 }
 
-<StandaloneCodeEditor
-	@ref="_monaco"
-	OnDidInit="OnDidInitAsync"
-	ConstructionOptions="MonacoOptions"
-	OnDidChangeModelContent="OnChangeModelContentAsync"/>
+<div class="@Class">
+	<StandaloneCodeEditor
+		@ref="_monaco"
+		OnDidInit="OnDidInitAsync"
+		ConstructionOptions="MonacoOptions"
+		OnDidChangeModelContent="OnChangeModelContentAsync"/>
+</div>
 
 <style>
 	.monaco-editor-container {

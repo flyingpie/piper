@@ -12,6 +12,10 @@ public partial class DataViewer : ComponentBase
 {
 	private RadzenDataGrid<PpRecord> _grid = null!;
 	private string _searchTerm;
+	private string _query = """
+		select		*
+		from		$table
+		""";
 
 	public List<PpColumn> Columns = [];
 
@@ -25,6 +29,16 @@ public partial class DataViewer : ComponentBase
 		set
 		{
 			_searchTerm = value;
+			_grid.Reload();
+		}
+	}
+
+	public string Query
+	{
+		get => _query;
+		set
+		{
+			_query = value;
 			_grid.Reload();
 		}
 	}
