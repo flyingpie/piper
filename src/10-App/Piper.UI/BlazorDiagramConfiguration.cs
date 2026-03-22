@@ -82,6 +82,8 @@ public static class BlazorDiagramConfiguration
 		diagram.RegisterComponent<PpRdbmsNode, GenericNodeView>();
 		diagram.RegisterComponent<PpCSharpNode, GenericNodeView>();
 		diagram.RegisterComponent<PpFunctionNode, GenericNodeView>();
+		diagram.RegisterComponent<PpRazorNode, GenericNodeView>();
+		diagram.RegisterComponent<PpHttpNode, GenericNodeView>();
 
 		diagram.RegisterComponent<PpSMapNode, GenericNodeView>();
 

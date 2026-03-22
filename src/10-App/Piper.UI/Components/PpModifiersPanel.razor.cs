@@ -1,11 +1,33 @@
 using Microsoft.AspNetCore.Components;
 using Piper.Core.Data.Modifiers;
+using Piper.UI.Components.Modifiers;
 using Piper.UI.Services;
 
 namespace Piper.UI.Components;
 
 public partial class PpModifiersPanel : ComponentBase
 {
+	private static readonly Dictionary<Type, Type> _modelViewMappings = new()
+	{
+		//
+		// { typeof(PpXPathModifier), typeof(PpXPathModifierView) },
+	};
+
+	protected override async Task OnInitializedAsync()
+	{
+		SelectedThingyService.Instance.OnSelectedPort(() => InvokeAsync(StateHasChanged));
+	}
+
+	private static Type GetModifierViewType(PpModifier mod)
+	{
+		return _modelViewMappings.TryGetValue(mod.GetType(), out var viewType) ? viewType : typeof(GenericModifierView);
+	}
+
+	private static Dictionary<string, object> GetModifierViewParameters(PpModifier mod)
+	{
+		return new Dictionary<string, object>() { { nameof(GenericModifierView.Modifier), mod } };
+	}
+
 	private void AddModifier(string? type)
 	{
 		Console.WriteLine($"MOD:{type}");
@@ -39,6 +61,14 @@ public partial class PpModifiersPanel : ComponentBase
 
 			case "PP_MOD_XPATH":
 				mods.Add(new PpXPathModifier());
+				break;
+
+			case "PP_MOD_LIMIT":
+				mods.Add(new PpLimitModifier());
+				break;
+
+			case "PP_MOD_RAZOR":
+				mods.Add(new PpRazorModifier());
 				break;
 		}
 

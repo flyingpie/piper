@@ -1,7 +1,7 @@
 [
 	{
 		"id": "node0008:PpListFilesNode:List Files 01",
-		"pos": "233,149",
+		"pos": "116,120",
 		"params": {
 			"InPath": "/home/marco/workspace/flyingpie/",
 			"InPattern": "**/Directory.Packages.props",
@@ -23,7 +23,7 @@
 	},
 	{
 		"id": "node0010:PpReadFilesNode:Read Files 02",
-		"pos": "562,151",
+		"pos": "431,121",
 		"params": {
 			"InAttr": "path",
 			"MaxFileSize": "2000000"
@@ -38,20 +38,72 @@
 						"id": "PpXPathModifier:XPath",
 						"params": {
 							"SrcFieldName": "line",
-							"Query": "//@Include",
+							"Query": "//PackageVersion",
 							"DstFieldName": "xpath_1"
 						}
 					},
 					{
 						"id": "PpXPathModifier:XPath",
 						"params": {
-							"SrcFieldName": "line",
-							"Query": "//@Version",
-							"DstFieldName": "xpath_2"
+							"SrcFieldName": "xpath_1",
+							"Query": "string(//@Include)",
+							"DstFieldName": "pkg_incl"
+						}
+					},
+					{
+						"id": "PpXPathModifier:XPath",
+						"params": {
+							"SrcFieldName": "xpath_1",
+							"Query": "string(//@Version)",
+							"DstFieldName": "pkg_version"
+						}
+					},
+					{
+						"id": "PpLimitModifier:Limit",
+						"params": {
+							"Skip": "0",
+							"Take": "3"
+						}
+					},
+					{
+						"id": "PpRazorModifier:Razor",
+						"params": {
+							"DstFieldName": "rzr",
+							"Template": "https://azuresearch-usnc.nuget.org/query?q=packageid:@Rec.pkg_incl.ToLower()&prerelease=false"
 						}
 					}
 				]
 			}
+		}
+	},
+	{
+		"id": "node0017:PpHttpNode:HTTP 01",
+		"pos": "752,125",
+		"params": {
+			"InAttr": "rzr"
+		},
+		"ports": {
+			"InRequests": {
+				"link": "node0010:OutLines"
+			},
+			"OutResponses": {}
+		}
+	},
+	{
+		"id": "node0019:PpDuckNode:List Files 01",
+		"pos": "1053,119",
+		"params": {
+			"Query": "select\t\t*\n,\t\t\tjson_extract_string(resp, '$.response.data[0].versions[-1].version')\nfrom\t\t$table\n"
+		},
+		"ports": {
+			"InRecords1": {
+				"link": "node0017:OutResponses"
+			},
+			"InRecords2": {},
+			"InRecords3": {},
+			"InRecords4": {},
+			"InRecords5": {},
+			"OutRecords": {}
 		}
 	}
 ]

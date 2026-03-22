@@ -15,6 +15,7 @@
 		<PackageReference Include="Newtonsoft.Json" />
 		<PackageReference Include="NJsonSchema" />
 		<PackageReference Include="Npgsql" />
+		<PackageReference Include="RazorEngineCore" />
 		<PackageReference Include="Serilog" />
 		<PackageReference Include="Serilog.Extensions.Hosting" />
 		<PackageReference Include="Serilog.Extensions.Logging" />
@@ -25,9 +26,5 @@
 		<PackageReference Include="Z.Blazor.Diagrams" />
 		<PackageReference Include="Z.Blazor.Diagrams.Algorithms" />
 		<PackageReference Include="Z.Blazor.Diagrams.Core" />
-		<PackageReference Update="CSharpier.MSBuild">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 </Project>

@@ -2,6 +2,13 @@
 
 <RadzenStack Style="height: 100%;">
 
+	<!-- Menu -->
+	<RadzenMenu>
+		<RadzenMenuItem Text="Graphs" Disabled="true" />
+		<RadzenMenuItem Text="File" />
+		<RadzenMenuItem Text="Run" Icon="play_arrow" />
+	</RadzenMenu>
+
 	<RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Stretch">
 
 		<RadzenStack Orientation="Orientation.Horizontal">
@@ -9,27 +16,19 @@
 			<RadzenButton Text="Save As" Size="ButtonSize.Small" />
 		</RadzenStack>
 
-		<RadzenDataGrid
-			Data="@Graphs"
-		>
-			<Columns>
-				<RadzenDataGridColumn
-					Title="Name"
-					Property="@nameof(PpGraphFile.Name)"
-				/>
+		<RadzenStack Gap="1em">
 
-				<RadzenDataGridColumn Width="180px">
-					<Template Context="graphFile">
+			@foreach (var graph in Graphs)
+			{
+			<RadzenStack Orientation="Orientation.Horizontal" Gap=".4em" class="rz-p-0 rz-px-2">
+				<div style="flex: 1;">@graph.Name</div>
 
-						<RadzenStack Orientation="Orientation.Horizontal">
-							<RadzenButton class="pp-btn-load" Icon="folder_open" Text="Load" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graphFile)" />
-							<RadzenButton Icon="save" Text="Save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="() => SaveGraphFile(graphFile)" />
-						</RadzenStack>
+				<RadzenButton class="pp-btn-load" Icon="folder_open" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graph)" />
+				<RadzenButton Icon="save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="() => SaveGraphFile(graph)" />
+			</RadzenStack>
+			}
 
-					</Template>
-				</RadzenDataGridColumn>
-			</Columns>
-		</RadzenDataGrid>
+		</RadzenStack>
 
 	</RadzenStack>
 

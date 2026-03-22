@@ -157,7 +157,7 @@ public partial class PpNodeSerializerTest
 	{
 		var e = new List<string>();
 
-		e.GetType().IsAssignableTo(typeof(IEnumerable))
+		// e.GetType().IsAssignableTo(typeof(IEnumerable))
 
 		var x = 2;
 	}

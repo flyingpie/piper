@@ -4,7 +4,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Include debug symbols in the assemblies themselves, makes debugging so much easier -->
-		<DebugType>full</DebugType>
+		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 
 		<!-- Some features we use require a documentation file, like analyzers, and the docs manifest generation -->
@@ -30,6 +30,17 @@
 		<RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="$(Configuration) == 'Debug'">
+		<!--
+			Disable CSharpier (includes the analyzer and the formatter).
+		-->
+		<CSharpier_Bypass>true</CSharpier_Bypass>
+		<!--
+			Turn off code analysis.
+		-->
+		<RunAnalyzers>false</RunAnalyzers>
+	</PropertyGroup>
+
 	<!-- Test projects -->
 	<PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Test'))">
 		<EnableNETAnalyzers>false</EnableNETAnalyzers>
@@ -52,22 +63,22 @@
 	</ItemGroup>
 
 	<!-- Analyzers -->
-	<ItemGroup>
-		<PackageReference Include="CSharpier.MSBuild" />
-		<PackageReference
-			Include="Microsoft.VisualStudio.Threading.Analyzers"
-			PrivateAssets="All"
-			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
-		/>
-		<PackageReference
-			Include="SonarAnalyzer.CSharp"
-			PrivateAssets="All"
-			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
-		/>
-		<PackageReference
-			Include="StyleCop.Analyzers.Unstable"
-			PrivateAssets="All"
-			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
-		/>
-	</ItemGroup>
+	<!-- <ItemGroup> -->
+	<!-- 	<PackageReference Include="CSharpier.MSBuild" /> -->
+	<!-- 	<PackageReference -->
+	<!-- 		Include="Microsoft.VisualStudio.Threading.Analyzers" -->
+	<!-- 		PrivateAssets="All" -->
+	<!-- 		IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" -->
+	<!-- 	/> -->
+	<!-- 	<PackageReference -->
+	<!-- 		Include="SonarAnalyzer.CSharp" -->
+	<!-- 		PrivateAssets="All" -->
+	<!-- 		IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" -->
+	<!-- 	/> -->
+	<!-- 	<PackageReference -->
+	<!-- 		Include="StyleCop.Analyzers.Unstable" -->
+	<!-- 		PrivateAssets="All" -->
+	<!-- 		IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" -->
+	<!-- 	/> -->
+	<!-- </ItemGroup> -->
 </Project>

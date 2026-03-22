@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Globalization;
 using System.Reflection;
 using System.Text.Json.Nodes;
@@ -126,17 +127,21 @@ public static class PpNodeSerializer
 			if (attrParam != null)
 			{
 				var v = modProp.GetValue(mod);
+
+				// Int32
 				if (v is int vInt)
 				{
 					jsonMod.Params ??= new();
 					jsonMod.Params[modProp.Name] = vInt.ToString(CultureInfo.InvariantCulture);
 				}
-
-				if (v is string vStr)
+				// String
+				else if (v is string vStr)
 				{
 					jsonMod.Params ??= new();
 					jsonMod.Params[modProp.Name] = vStr;
 				}
+				// List
+				else if (v is IEnumerable asList) { }
 			}
 		}
 

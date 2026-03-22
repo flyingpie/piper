@@ -1,0 +1,53 @@
+<!-- @using Piper.UI.Components.Nodes -->
+<!---->
+<!-- <RadzenStack> -->
+<!---->
+<!-- 	XPATH MOD! -->
+<!---->
+<!-- 	@* @foreach (var prop in Modifier.Props) *@ -->
+<!-- 	@* { *@ -->
+<!-- 	@* 	if (prop is Core.PpNodeParam param) *@ -->
+<!-- 	@* 	{ *@ -->
+<!-- 	@* 		<PpNodeParam Param="param" IsInNode="true" /> *@ -->
+<!-- 	@* 	} *@ -->
+<!-- 	@* } *@ -->
+<!---->
+<!-- 	@foreach (var prop in Modifier.Queries) -->
+<!-- 	{ -->
+<!-- 		@* if (prop is Core.PpNodeParam param) *@ -->
+<!-- 		@* { *@ -->
+<!-- 		@* 	<PpNodeParam Param="param" IsInNode="true" /> *@ -->
+<!-- 		@* } *@ -->
+<!---->
+<!-- 		<RadzenFormField Text="Src Field" Style="width: 100%;"> -->
+<!-- 			<RadzenTextBox -->
+<!-- 				@bind-Value="@prop.SrcFieldName" -->
+<!-- 				@onmousedown:stopPropagation -->
+<!-- 				@onmousemove:stopPropagation -->
+<!-- 			/> -->
+<!-- 		</RadzenFormField> -->
+<!---->
+<!-- 		<RadzenFormField Text="Query" Style="width: 100%;"> -->
+<!-- 			<RadzenTextBox -->
+<!-- 				@bind-Value="@prop.Query" -->
+<!-- 				@onmousedown:stopPropagation -->
+<!-- 				@onmousemove:stopPropagation -->
+<!-- 			/> -->
+<!-- 		</RadzenFormField> -->
+<!---->
+<!-- 		<RadzenFormField Text="Dst Field" Style="width: 100%;"> -->
+<!-- 			<RadzenTextBox -->
+<!-- 				@bind-Value="@prop.DstFieldName" -->
+<!-- 				@onmousedown:stopPropagation -->
+<!-- 				@onmousemove:stopPropagation -->
+<!-- 			/> -->
+<!-- 		</RadzenFormField> -->
+<!---->
+<!-- 		<RadzenButton -->
+<!-- 			Icon="keyboard_arrow_up" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" /> -->
+<!-- 	} -->
+<!---->
+<!-- 	<RadzenButton -->
+<!-- 		Icon="keyboard_arrow_up" Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" Click="() => Modifier.Queries.Add(new())" /> -->
+<!---->
+<!-- </RadzenStack> -->

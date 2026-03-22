@@ -20,6 +20,11 @@ public partial class PpDiagram : ComponentBase
 
 	private void OnMenuItemClick(MouseEventArgs a1, MenuItemEventArgs args)
 	{
+		if (Diagram is null)
+		{
+			return;
+		}
+
 		if (args.Value?.ToString()?.Equals("child", StringComparison.OrdinalIgnoreCase) ?? false)
 		{
 			return;
@@ -126,6 +131,28 @@ public partial class PpDiagram : ComponentBase
 					{
 						//
 						Name = $"Function {++_idx:00}",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					}
+				);
+				break;
+
+			case "PP_NODE_RAZOR":
+				Diagram.Nodes.Add(
+					new PpRazorNode()
+					{
+						//
+						Name = $"Razor {++_idx:00}",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					}
+				);
+				break;
+
+			case "PP_NODE_HTTP":
+				Diagram.Nodes.Add(
+					new PpHttpNode()
+					{
+						//
+						Name = $"HTTP {++_idx:00}",
 						Position = new BD.Point(a1.ClientX, a1.ClientY),
 					}
 				);

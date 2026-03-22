@@ -42,8 +42,6 @@
 	}
 }
 
-@* @if (Param.Type.Is) *@
-
 @if (Param.Type == typeof(string))
 {
 	@* <PpCodeEditor Language="sql" @bind-Text="Param.ValueAsString" /> *@
@@ -51,6 +49,10 @@
 
 <style>
 	.pp-node .monaco-editor-container {
+		height: 150px !important;
+	}
+
+	.pp-modifier .monaco-editor-container {
 		height: 150px !important;
 	}
 </style>

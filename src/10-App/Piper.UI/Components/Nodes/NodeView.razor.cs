@@ -18,7 +18,7 @@ public partial class NodeView : ComponentBase
 
 	protected override Task OnInitializedAsync()
 	{
-		// SelectedThingyService.Instance.OnChanged(() => InvokeAsync(() => StateHasChanged()));
+		SelectedThingyService.Instance.OnSelectedNode(() => InvokeAsync(StateHasChanged));
 
 		return Task.CompletedTask;
 	}

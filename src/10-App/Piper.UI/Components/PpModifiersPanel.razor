@@ -3,6 +3,13 @@
 
 <RadzenStack>
 
+	<!-- Menu -->
+	<RadzenMenu>
+		<RadzenMenuItem Text="Modifiers" Disabled="true" />
+		<RadzenMenuItem Text="File" />
+		<RadzenMenuItem Text="Run" Icon="play_arrow" />
+	</RadzenMenu>
+
 	<!-- Panel header -->
 	<RadzenMenu Click="a => AddModifier(a.Value?.ToString())">
 		<RadzenMenuItem Text="Add">
@@ -12,6 +19,8 @@
 			<RadzenMenuItem Text="Reverse"	Value="@("PP_MOD_REVERSE")" />
 			<RadzenMenuItem Text="Select"	Value="@("PP_MOD_SELECT")" />
 			<RadzenMenuItem Text="XPath"	Value="@("PP_MOD_XPATH")" />
+			<RadzenMenuItem Text="Limit"	Value="@("PP_MOD_LIMIT")" />
+			<RadzenMenuItem Text="Razor"	Value="@("PP_MOD_RAZOR")" />
 		</RadzenMenuItem>
 	</RadzenMenu>
 
@@ -49,7 +58,8 @@
 				</RadzenStack>
 
 				<!-- Modifier properties -->
-				<GenericModifierView Modifier="mod" />
+				@* <GenericModifierView Modifier="mod" /> *@
+				<DynamicComponent Type="GetModifierViewType(mod)" Parameters="GetModifierViewParameters(mod)" />
 			</RadzenStack>
 		}
 

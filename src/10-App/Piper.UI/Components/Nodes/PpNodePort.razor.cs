@@ -23,7 +23,7 @@ public partial class PpNodePort : ComponentBase
 
 	public void OnClickModifiers()
 	{
-		//
+		OnClickShowData();
 	}
 
 	public void OnClickShowData()

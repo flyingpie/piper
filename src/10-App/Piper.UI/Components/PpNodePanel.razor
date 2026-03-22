@@ -1,14 +1,25 @@
 @using Piper.UI.Components.Nodes
 
-@if (SelectedNode != null)
-{
-	@(SelectedNode?.NodeType)
+<RadzenStack>
 
-	foreach (var prop in SelectedNode!.NodeProps)
+	<!-- Menu -->
+	<RadzenMenu>
+		<RadzenMenuItem Text="Node" Disabled="true" />
+		<RadzenMenuItem Text="File" />
+		<RadzenMenuItem Text="Run" Icon="play_arrow" />
+	</RadzenMenu>
+
+	@if (SelectedNode != null)
 	{
-		if (prop is Core.PpNodeParam param)
+		@(SelectedNode?.NodeType)
+
+		foreach (var prop in SelectedNode!.NodeProps)
 		{
-			<PpNodeParam Param="param" IsInNode="false" />
+			if (prop is Core.PpNodeParam param)
+			{
+				<PpNodeParam Param="param" IsInNode="false" />
+			}
 		}
 	}
-}
+
+</RadzenStack>
