@@ -1,0 +1,103 @@
+@using System.Text.Json
+@using System.Xml.Linq
+@using Piper.Core.Utils
+@using Piper.UI.Components.CodeEditor
+
+@switch (_langType)
+{
+	case LangType.Json:
+		<PpCodeEditor Class="pp-dyn-textbox long" Language="json" Text="@_val"/>
+		break;
+	case LangType.Xml:
+		<PpCodeEditor Class="pp-dyn-textbox long" Language="xml" Text="@_val"/>
+		break;
+	case LangType.PlainLong:
+		<PpCodeEditor Class="pp-dyn-textbox long" Language="http" Text="@_val"/>
+		break;
+	default:
+		<PpCodeEditor Class="pp-dyn-textbox" Text="@_val"/>
+		break;
+}
+
+@code {
+
+	private enum LangType
+	{
+		Plain,
+		PlainLong,
+		Json,
+		Xml,
+	}
+
+	private LangType _langType;
+	private string? _val;
+
+
+	[Parameter]
+	public string? Value
+	{
+		get;
+		set
+		{
+			_val = value;
+			DetermineLang();
+		}
+	}
+
+	private void DetermineLang()
+	{
+		// Empty
+		if (string.IsNullOrWhiteSpace(_val))
+		{
+			_langType = LangType.Plain;
+			return;
+		}
+
+		// Numbers
+		if (long.TryParse(_val, out _))
+		{
+			_langType = LangType.Plain;
+			return;
+		}
+
+		// Json
+		try
+		{
+			_val = PpJson.SerializeToString(PpJson.Deserialize<JsonElement>(_val ?? string.Empty));
+			_langType = LangType.Json;
+			return;
+		}
+		catch
+		{
+		}
+
+		// XML
+		try
+		{
+			// _val = PpJson.SerializeToString(PpJson.Deserialize<JsonElement>(_val ?? string.Empty));
+			_val = XElement.Parse(_val ?? string.Empty).ToString();
+			_langType = LangType.Xml;
+			return;
+		}
+		catch
+		{
+		}
+
+		if (_val.Contains('\n'))
+		{
+			_langType = LangType.PlainLong;
+			return;
+		}
+	}
+
+}
+
+<style>
+	.pp-dyn-textbox .monaco-editor-container {
+		height: 25px !important;
+	}
+
+	.pp-dyn-textbox.long .monaco-editor-container {
+		height: 150px !important;
+	}
+</style>

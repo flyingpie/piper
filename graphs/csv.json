@@ -16,28 +16,18 @@
 							"Expression": "file->>'path'",
 							"DstFieldName": "path"
 						}
-					}
-				]
-			}
-		}
-	},
-	{
-		"id": "node0010:PpReadFilesNode:Read Files 02",
-		"pos": "431,121",
-		"params": {
-			"InAttr": "path",
-			"MaxFileSize": "2000000"
-		},
-		"ports": {
-			"InFiles": {
-				"link": "node0008:OutFiles"
-			},
-			"OutLines": {
-				"mods": [
+					},
+					{
+						"id": "PpReadFilesModifier:Read Files",
+						"params": {
+							"SrcFieldName": "path",
+							"DstFieldName": "file_cont"
+						}
+					},
 					{
 						"id": "PpXPathModifier:XPath",
 						"params": {
-							"SrcFieldName": "line",
+							"SrcFieldName": "file_cont",
 							"Query": "//PackageVersion",
 							"DstFieldName": "xpath_1"
 						}
@@ -62,7 +52,7 @@
 						"id": "PpLimitModifier:Limit",
 						"params": {
 							"Skip": "0",
-							"Take": "3"
+							"Take": "5"
 						}
 					},
 					{
@@ -71,6 +61,13 @@
 							"DstFieldName": "rzr",
 							"Template": "https://azuresearch-usnc.nuget.org/query?q=packageid:@Rec.pkg_incl.ToLower()&prerelease=false"
 						}
+					},
+					{
+						"id": "PpRazorModifier:Razor",
+						"params": {
+							"DstFieldName": "rzr2",
+							"Template": "GET https://azuresearch-usnc.nuget.org/query?q=packageid:@Rec.pkg_incl.ToLower()&prerelease=false\nAccept: application/json\nPP-Header-1: sup"
+						}
 					}
 				]
 			}
@@ -78,26 +75,51 @@
 	},
 	{
 		"id": "node0017:PpHttpNode:HTTP 01",
-		"pos": "752,125",
+		"pos": "442,123",
 		"params": {
 			"InAttr": "rzr"
 		},
 		"ports": {
 			"InRequests": {
-				"link": "node0010:OutLines"
+				"link": "node0008:OutFiles"
 			},
 			"OutResponses": {}
 		}
 	},
 	{
 		"id": "node0019:PpDuckNode:List Files 01",
-		"pos": "1053,119",
+		"pos": "761,120",
 		"params": {
-			"Query": "select\t\t*\n,\t\t\tjson_extract_string(resp, '$.response.data[0].versions[-1].version')\nfrom\t\t$table\n"
+			"Query": "select\t\t*\n,\t\t\tjson_extract_string(resp, '$.response.data[0].versions[-1].version') as pkg_version_new\nfrom\t\t$table\n"
 		},
 		"ports": {
 			"InRecords1": {
 				"link": "node0017:OutResponses"
+			},
+			"OutRecords": {
+				"mods": [
+					{
+						"id": "PpRazorModifier:Razor",
+						"params": {
+							"DstFieldName": "xpath_query",
+							"Template": "//PackageVersion[@@Include='@Rec.pkg_incl']/@@Version"
+						}
+					}
+				]
+			}
+		}
+	},
+	{
+		"id": "node0023:PpXPathReplaceNode:XPath Replace 01",
+		"pos": "1093,117",
+		"params": {
+			"FilePathAttr": "path",
+			"XPathAttr": "xpath_query",
+			"ReplacementAttr": "pkg_version_new"
+		},
+		"ports": {
+			"InStuff": {
+				"link": "node0019:OutRecords"
 			}
 		}
 	}

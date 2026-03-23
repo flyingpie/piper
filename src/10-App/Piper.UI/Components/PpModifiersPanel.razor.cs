@@ -70,6 +70,10 @@ public partial class PpModifiersPanel : ComponentBase
 			case "PP_MOD_RAZOR":
 				mods.Add(new PpRazorModifier());
 				break;
+
+			case "PP_MOD_READFILES":
+				mods.Add(new PpReadFilesModifier());
+				break;
 		}
 
 		// SelectedThingyService.Instance.Changed();

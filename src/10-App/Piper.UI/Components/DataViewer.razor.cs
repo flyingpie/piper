@@ -10,6 +10,7 @@ namespace Piper.UI.Components;
 
 public partial class DataViewer : ComponentBase
 {
+	private PpRecord? _selectedRec;
 	private RadzenDataGrid<PpRecord> _grid = null!;
 	private string _searchTerm;
 	private string _query = """

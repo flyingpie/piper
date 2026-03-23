@@ -158,6 +158,17 @@ public partial class PpDiagram : ComponentBase
 				);
 				break;
 
+			case "PP_NODE_XPATHREPLACE":
+				Diagram.Nodes.Add(
+					new PpXPathReplaceNode()
+					{
+						//
+						Name = $"XPath Replace {++_idx:00}",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					}
+				);
+				break;
+
 			default:
 				Console.WriteLine($"Unknown context value '{args.Value}'");
 				break;

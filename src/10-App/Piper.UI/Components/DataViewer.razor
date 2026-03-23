@@ -2,72 +2,113 @@
 
 <RadzenStack Orientation="Orientation.Vertical">
 
-	<PpCodeEditor Class="pp-query" Language="sql" @bind-Text="Query" />
+	<RadzenSplitter>
+		<RadzenSplitterPane Size="70%">
 
-	@* <RadzenTextBox @bind-Value="SearchTerm" /> *@
+			@* Query Editor *@
+			<PpCodeEditor Class="pp-query" Language="sql" @bind-Text="Query"/>
 
-	<RadzenDataGrid
+			@* <RadzenTextBox @bind-Value="SearchTerm" /> *@
 
-		TItem="PpRecord"
+			@* Table *@
+			<RadzenDataGrid
 
-		@ref="_grid"
+				TItem="PpRecord"
 
-		AllowAlternatingRows="true"
-		AllowColumnPicking="true"
-		AllowColumnResize="true"
-		AllowFiltering="true"
-		AllowMultiColumnSorting="true"
-		AllowPaging="true"
-		AllowSorting="true"
+				@ref="_grid"
 
-		Density="Density.Compact"
-		FilterMode="FilterMode.SimpleWithMenu"
-		LogicalFilterOperator="LogicalFilterOperator.Or"
-		PagerHorizontalAlign="HorizontalAlign.Left"
-		PageSize="50"
-		SelectionMode="DataGridSelectionMode.Single"
-		ShowPagingSummary="true"
+				AllowAlternatingRows="true"
+				AllowColumnPicking="true"
+				AllowColumnResize="true"
+				AllowFiltering="true"
+				AllowMultiColumnSorting="true"
+				AllowPaging="true"
+				AllowSorting="true"
 
-		Data="@Records"
-		Count="@RecordCount"
-		LoadData="@LoadDataAsync"
+				Density="Density.Compact"
+				FilterMode="FilterMode.SimpleWithMenu"
+				LogicalFilterOperator="LogicalFilterOperator.Or"
+				PagerHorizontalAlign="HorizontalAlign.Left"
+				PageSize="50"
+				SelectionMode="DataGridSelectionMode.Single"
+				ShowPagingSummary="true"
 
-	>
-		<Columns>
+				Data="@Records"
+				Count="@RecordCount"
+				LoadData="@LoadDataAsync"
+				RowClick="rec => _selectedRec = rec.Data"
 
-			@foreach (var field in Columns)
-			{
-				<RadzenDataGridColumn
-					TItem="PpRecord"
-					Title="@field.Name"
-					Width="@GetWidth(field)"
-					TextAlign="@(GetAlign(field))"
-					Property="@field.Name"
-				>
-					<Template Context="item">
-						@switch (field.DataType)
+			>
+				<Columns>
+
+					@foreach (var field in Columns)
+					{
+						<RadzenDataGridColumn
+							TItem="PpRecord"
+							Title="@field.Name"
+							Width="@GetWidth(field)"
+							TextAlign="@(GetAlign(field))"
+							Property="@field.Name"
+						>
+							<Template Context="item">
+								@* @switch (field.DataType) *@
+								@* { *@
+									@* case PpDataType.PpDateTime: *@
+										@item.GetValue(field.Name)
+										@* break; *@
+
+								@* 	default: *@
+								@* 		<Tooltip Text="@(item.GetValue(field.Name)?.ToString())"> *@
+								@* 			@item.GetValue(field.Name) *@
+								@* 		</Tooltip> *@
+								@* 		break; *@
+								@* } *@
+							</Template>
+						</RadzenDataGridColumn>
+					}
+
+				</Columns>
+			</RadzenDataGrid>
+
+		</RadzenSplitterPane>
+		<RadzenSplitterPane>
+
+			<RadzenTabs TabPosition="TabPosition.Right">
+				<Tabs>
+
+					@* Row Details *@
+					<RadzenTabsItem Icon="table">
+
+						@if (_selectedRec is not null)
 						{
-							case PpDataType.PpDateTime:
-								@item.GetValue(field.Name)
-								break;
+							<RadzenStack Orientation="Orientation.Vertical">
+								@foreach (var field in _selectedRec.Fields)
+								{
+									@field.Key
+									<DynamicTextBox Value="@field.Value.ValueAsString" />
+									@* <RadzenFormField Text="@field.Key"> *@
+										@* <RadzenTextBox Value="@field.Value.ValueAsString" /> *@
 
-							default:
-								<Tooltip Text="@(item.GetValue(field.Name)?.ToString())">
-									@item.GetValue(field.Name)
-								</Tooltip>
-								break;
+									// </RadzenFormField>
+								}
+							</RadzenStack>
 						}
-					</Template>
-				</RadzenDataGridColumn>
-			}
 
-		</Columns>
-	</RadzenDataGrid>
+					</RadzenTabsItem>
 
+					@* Columns *@
+					<RadzenTabsItem Icon="table">
+
+					</RadzenTabsItem>
+				</Tabs>
+			</RadzenTabs>
+
+		</RadzenSplitterPane>
+	</RadzenSplitter>
 </RadzenStack>
 
 <style>
 	.pp-query .monaco-editor-container {
-		height: 150px !important;
+		height: 50px !important;
 	}
 </style>
