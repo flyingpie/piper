@@ -7,8 +7,8 @@
 }
 
 .pp-node.selected {
-	outline: 1px solid #fff;
-	/*box-shadow: 0 4px 8px 0 #fff, 0 6px 20px 0 #000;*/
+	outline: 1px solid #999;
+	box-shadow: 0 0 3px 3px #2f498a;
 }
 
 ::deep .pp-field {
