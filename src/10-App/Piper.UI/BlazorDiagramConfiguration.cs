@@ -74,19 +74,19 @@ public static class BlazorDiagramConfiguration
 		};
 
 		var diagram = new BlazorDiagram(options);
-		diagram.RegisterComponent<PpListFilesNode, GenericNodeView>();
-		diagram.RegisterComponent<PpReadFilesNode, GenericNodeView>();
-		diagram.RegisterComponent<PpDuckNode, GenericNodeView>();
-		diagram.RegisterComponent<PpReadCsvNode, GenericNodeView>();
-		diagram.RegisterComponent<PpReadXlsxNode, GenericNodeView>();
-		diagram.RegisterComponent<PpRdbmsNode, GenericNodeView>();
 		diagram.RegisterComponent<PpCSharpNode, GenericNodeView>();
+		diagram.RegisterComponent<PpDuckNode, GenericNodeView>();
 		diagram.RegisterComponent<PpFunctionNode, GenericNodeView>();
-		diagram.RegisterComponent<PpRazorNode, GenericNodeView>();
 		diagram.RegisterComponent<PpHttpNode, GenericNodeView>();
-		diagram.RegisterComponent<PpXPathReplaceNode, GenericNodeView>();
-
+		diagram.RegisterComponent<PpListFilesNode, GenericNodeView>();
+		diagram.RegisterComponent<PpRazorNode, GenericNodeView>();
+		diagram.RegisterComponent<PpRdbmsNode, GenericNodeView>();
+		diagram.RegisterComponent<PpReadCsvNode, GenericNodeView>();
+		diagram.RegisterComponent<PpReadFilesNode, GenericNodeView>();
+		diagram.RegisterComponent<PpReadXlsxNode, GenericNodeView>();
+		diagram.RegisterComponent<PpRegexNode, GenericNodeView>();
 		diagram.RegisterComponent<PpSMapNode, GenericNodeView>();
+		diagram.RegisterComponent<PpXPathReplaceNode, GenericNodeView>();
 
 		// diagram.LoadGraph(graph);
 

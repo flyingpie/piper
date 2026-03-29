@@ -1,12 +1,16 @@
 [
 	{
 		"id": "node0001:PpRegexNode:Regex 01",
-		"pos": "686,133",
+		"pos": "453,140",
 		"params": {
+			"InPattern": "#[A-Fa-f0-9]{6}",
+			"InAttribute": "content",
 			"OutAttribute": "capture"
 		},
 		"ports": {
-			"InRecords": {},
+			"InRecords": {
+				"link": "node0004:OutFiles"
+			},
 			"OutMatch": {},
 			"OutNoMatch": {}
 		}

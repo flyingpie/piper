@@ -169,6 +169,17 @@ public partial class PpDiagram : ComponentBase
 				);
 				break;
 
+			case "PP_NODE_REGEX":
+				Diagram.Nodes.Add(
+					new PpRegexNode()
+					{
+						//
+						Name = $"Regex {++_idx:00}",
+						Position = new BD.Point(a1.ClientX, a1.ClientY),
+					}
+				);
+				break;
+
 			default:
 				Console.WriteLine($"Unknown context value '{args.Value}'");
 				break;
