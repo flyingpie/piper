@@ -49,3 +49,19 @@ public enum PpDataType
 	[JsonStringEnumMemberName("string_array")]
 	PpStringArray,
 }
+
+[Flags]
+public enum PpDataTypeFlags
+{
+	None = 0,
+
+	HexColor,
+	Json,
+	MultiLine,
+	Xml,
+
+	// Number,
+	// Other,
+	// Plain,
+	// PlainLong,
+}

@@ -1,0 +1,116 @@
+@page "/test-page"
+@using Piper.UI.Components
+
+<RadzenLink Text="Back to safety" Path="/" />
+
+<h3>TestPage</h3>
+
+
+@code {
+
+	private readonly List<PpRecord> _records =
+	[
+		// Hex colors
+		new() { Fields = { { "hex-color-1", "#ff00ff" } } },
+		new() { Fields = { { "hex-color-2", "#00ffff" } } },
+
+		// Single-line JSON
+		new() { Fields = { { "single-line-json-1", """{ "id": 1234, "name": "The Name" }""" } } },
+		new() { Fields = { { "single-line-json-2", """{ "id": 4321, "name": "The Other Name" }""" } } },
+
+		// Multi-line JSON
+		new() { Fields = { { "multi-line-json-1",
+			"""
+			{
+				"id": 1234,
+				"name": "The Name"
+			}
+			"""
+		} } },
+		new() { Fields = { { "multi-line-json-2",
+			"""
+			{
+				"id": 4321,
+				"name": "The Other Name"
+			}
+			"""
+		} } },
+
+		// Single-line string
+		new() { Fields = { { "single-line-string-1", "Single-line string" } } },
+		new() { Fields = { { "single-line-string-2", "Another multi-line string" } } },
+
+		// Single-line string
+		new() { Fields = { { "multi-line-string-1",
+			"""
+			Multi
+			line
+			string
+			1
+			"""
+		} } },
+		new() { Fields = { { "multi-line-string-2",
+			"""
+			Another
+			multi
+			line
+			string
+			2
+			"""
+		} } },
+
+		// Single-line XML
+		new() { Fields = { { "single-line-xml-1", "<root><id>1234</id><name>The Name</name></root>" } } },
+		new() { Fields = { { "single-line-xml-2", "<root><id>4321</id><name>The Other Name</name></root>" } } },
+
+		// Multi-line XML
+		new() { Fields = { { "multi-line-xml-1",
+			"""
+			<a:root xmlns:a="urn:piper">
+				<id>1234</id>
+				<name>The Name</name>
+			</a:root>
+			"""
+		} } },
+		new() { Fields = { { "multi-line-json-2",
+			"""
+			<a:root xmlns:a="urn:piper">
+				<id>4321</id>
+				<name>The Other Name</name>
+			</a:root>
+			"""
+		} } },
+
+	];
+}
+
+<h2>DynamicValue</h2>
+
+<RadzenDataGrid Data="@_records" Density="Density.Compact">
+
+	<Columns>
+
+		<RadzenDataGridColumn
+			TItem="PpRecord"
+		>
+			<Template Context="item">
+				<DynamicValue Field="@item.Fields.First().Value" />
+			</Template>
+		</RadzenDataGridColumn>
+
+	</Columns>
+
+</RadzenDataGrid>
+
+<h2>DynamicTextBox</h2>
+
+@foreach (var rec in _records)
+{
+	<div class="rz-mb-4">
+		<div>Key: @rec.Fields.First().Key</div>
+		<div>DataType: @rec.Fields.First().Value.DataType</div>
+		<div>DataTypeFlags: @rec.Fields.First().Value.DataTypeFlags</div>
+		<div><DynamicTextBox Field="@rec.Fields.First().Value" /></div>
+	</div>
+	<hr/>
+}

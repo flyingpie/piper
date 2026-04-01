@@ -89,28 +89,6 @@ public class PpRegexNode : PpNode
 
 					appender.Add(rec);
 				}
-
-				// var match = regex.Match(f[InAttribute].ValueAsString);
-				// if (match.Success)
-				// {
-				// 	foreach (var grp in match.Groups.OfType<Group>())
-				// 	{
-				// 		if (!char.IsAsciiLetter(grp.Name[0]))
-				// 		{
-				// 			continue;
-				// 		}
-				//
-				// 		f[grp.Name] = new(grp.Value);
-				// 	}
-				//
-				// 	var rec2 = new PpRecord() { Fields = f, };
-				// 	await _match.AddAsync(rec2);
-				// }
-				// else
-				// {
-				// 	var rec2 = new PpRecord() { Fields = f, };
-				// 	await _noMatch.AddAsync(rec2);
-				// }
 			}
 		}
 

@@ -5,6 +5,13 @@ using shortid;
 
 namespace Piper.Core;
 
+public class PpStubNode : PpNode
+{
+	public override bool SupportsProgress => false;
+
+	protected override Task OnExecuteAsync() => Task.CompletedTask;
+}
+
 public abstract class PpNode : NodeModel
 {
 	private readonly List<IPpNodeProperty> _fixedNodeProps;

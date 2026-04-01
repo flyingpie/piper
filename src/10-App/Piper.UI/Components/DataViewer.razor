@@ -55,7 +55,8 @@
 								@* @switch (field.DataType) *@
 								@* { *@
 									@* case PpDataType.PpDateTime: *@
-										@item.GetValue(field.Name)
+								<DynamicValue Field="@item.GetField(field.Name)" />
+										@* @item.GetValue(field.Name) *@
 										@* break; *@
 
 								@* 	default: *@

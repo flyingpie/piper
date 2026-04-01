@@ -1,0 +1,41 @@
+@*
+Dynamic value display control, showing a label for the specified PpField, taking into account any data type flags.
+
+I.e., applies highlighting based on the text format, and makes the editor higher for multi-line content.
+*@
+
+@switch (Field?.DataTypeFlags ?? PpDataTypeFlags.None)
+{
+	@* Hex Color *@
+	case PpDataTypeFlags.HexColor:
+		<div style="@($"background-color: {Field?.ValueAsString}; font-family: monospace; text-shadow: 1px 1px 2px black;")">@Field?.ValueAsString</div>
+		break;
+
+	@* JSON *@
+	case PpDataTypeFlags.Json:
+		<div style="font-family: monospace;">@Field?.ValueAsString</div>
+		break;
+
+	@* Multi-Line *@
+	case PpDataTypeFlags.MultiLine:
+		<div>@Field?.ValueAsString</div>
+		break;
+
+	@* XML *@
+	case PpDataTypeFlags.Xml:
+		<div style="font-family: monospace;">@Field?.ValueAsString</div>
+		break;
+
+	@* Anything else *@
+	default:
+		<div>@Field?.Value</div>
+		break;
+
+}
+
+@code {
+
+	[Parameter]
+	public PpField? Field { get; set; }
+
+}

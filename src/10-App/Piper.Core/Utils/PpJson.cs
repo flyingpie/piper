@@ -1,6 +1,5 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Piper.Core.Serialization;
@@ -33,10 +32,27 @@ public static class PpJson
 		WriteIndented = true,
 	};
 
-	public static T? Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json, _jsonOpts);
+	public static T Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json, _jsonOpts)!;
 
 	public static T DeserializeRequired<T>(string json) =>
 		Deserialize<T>(json) ?? throw new InvalidOperationException($"Json '{json}' deserialized to null.");
+
+	public static bool TryDeserialize<T>(string json, out T? result)
+	{
+		result = default;
+
+		// Json
+		try
+		{
+			result = Deserialize<T>(json);
+			return true;
+		}
+		catch { }
+
+		return false;
+	}
+
+	public static bool LooksLikeJson(string str) => (str?.StartsWith('[') ?? false) || (str?.StartsWith('{') ?? false);
 
 	public static string SerializeToString(object? obj) => JsonSerializer.Serialize(obj, _jsonOpts);
 
@@ -54,4 +70,9 @@ public static class PpYaml
 		.Build();
 
 	public static string SerializeToString(object? obj) => _serializer.Serialize(obj);
+}
+
+public static class PpXml
+{
+	public static bool LooksLikeXml(string str) => str?.StartsWith('<') ?? false;
 }

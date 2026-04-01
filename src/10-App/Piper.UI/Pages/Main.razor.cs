@@ -2,7 +2,7 @@ using Blazor.Diagrams;
 using Microsoft.AspNetCore.Components;
 using Piper.UI.Services;
 
-namespace Piper.UI.Pages.Welcome;
+namespace Piper.UI.Pages;
 
 public partial class Main
 {

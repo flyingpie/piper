@@ -19,7 +19,7 @@
 		"id": "node0004:PpListFilesNode:List Files 02",
 		"pos": "129,135",
 		"params": {
-			"InPath": "/home/marco/workspace/flyingpie/hk_1",
+			"InPath": "/home/marco/workspace/flyingpie/hk_1/src",
 			"InPattern": "**/*",
 			"MaxFiles": "10000"
 		},
@@ -42,6 +42,23 @@
 					}
 				]
 			}
+		}
+	},
+	{
+		"id": "node0010:PpDuckNode:List Files 01",
+		"pos": "789,139",
+		"params": {
+			"Query": "select\t\tcapture\n,\t\t\tcount(1) as count\nfrom\t\t$table\ngroup by\tcapture\norder by\tcount(1) desc\n,\t\t\tcapture"
+		},
+		"ports": {
+			"InRecords1": {
+				"link": "node0001:OutMatch"
+			},
+			"InRecords2": {},
+			"InRecords3": {},
+			"InRecords4": {},
+			"InRecords5": {},
+			"OutRecords": {}
 		}
 	}
 ]
