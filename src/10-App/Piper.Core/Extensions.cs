@@ -126,6 +126,7 @@ public static class Extensions
 					{
 						//
 						GetNodeInput = () => (PpNodeInput)prop.GetValue(node)!,
+						Size = new(15, 15),
 					};
 					node.AddPort(pp);
 					yield return pp;
@@ -136,6 +137,7 @@ public static class Extensions
 					{
 						//
 						GetNodeOutput = () => (PpNodeOutput)prop.GetValue(node)!,
+						Size = new(15, 15),
 					};
 					node.AddPort(pp);
 					yield return pp;

@@ -10,9 +10,7 @@
 		"ports": {
 			"InRecords": {
 				"link": "node0004:OutFiles"
-			},
-			"OutMatch": {},
-			"OutNoMatch": {}
+			}
 		}
 	},
 	{
@@ -53,12 +51,7 @@
 		"ports": {
 			"InRecords1": {
 				"link": "node0001:OutMatch"
-			},
-			"InRecords2": {},
-			"InRecords3": {},
-			"InRecords4": {},
-			"InRecords5": {},
-			"OutRecords": {}
+			}
 		}
 	}
 ]

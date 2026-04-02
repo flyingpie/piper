@@ -16,8 +16,8 @@
 }
 
 <div
-	class="diagram-node pp-node @((SelectedThingyService.Instance.IsNodeSelected(Node) ? "selected" : ""))"
-	style="background-color: var(--rz-base-800); border-radius: .2em;" @onmousedown="() => SelectedThingyService.Instance.SelectNode(Node)">
+	class="diagram-node pp-node @((SelectedThingyService.Instance.IsNodeSelected(Node) ? "selected" : "")) @(Node.IsExecuting ? "is-executing" : "")"
+	@onmousedown="() => SelectedThingyService.Instance.SelectNode(Node)">
 
 	<RadzenStack Orientation="Orientation.Vertical" Gap="1em">
 		<RadzenStack
@@ -45,7 +45,7 @@
 					Icon="menu"
 					Size="ButtonSize.ExtraSmall"
 					Style="height: 2em; width: 3em;"
-					Variant="Variant.Outlined"
+					Variant="Variant.Text"
 				/>
 				<RadzenButton
 					ButtonStyle="ButtonStyle.Light"
@@ -53,7 +53,7 @@
 					Icon="play_arrow"
 					Size="ButtonSize.ExtraSmall"
 					Style="height: 2em; width: 3em;"
-					Variant="Variant.Outlined"
+					Variant="Variant.Text"
 				/>
 			</RadzenStack>
 		</RadzenStack>
@@ -68,4 +68,8 @@
 		margin: -10px -10px 0 -10px;
 		padding: .4em .75em;
 	}
+
+
+
+
 </style>

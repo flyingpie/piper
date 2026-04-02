@@ -25,6 +25,7 @@ public abstract class PpNode : NodeModel
 		_fixedNodeProps = this.GetNodeProps().ToList();
 		NodeParams = NodeProps.OfType<PpNodeParam>().ToList();
 		NodePorts = NodeProps.OfType<PpNodePort>().ToList();
+		Size = new(300, 300);
 	}
 
 	public string NodeId { get; set; } = PpId.Instance.NextNode(); //ShortId.Generate(new ShortIdOptions(useNumbers: true, useSpecialCharacters: false));
@@ -43,7 +44,9 @@ public abstract class PpNode : NodeModel
 
 	public double Progress { get; set; } // 0-1
 
-	public TimeSpan? Duration { get; set; }
+	private readonly Stopwatch _sw = new();
+
+	public TimeSpan? Duration => _sw.ElapsedMilliseconds <= 0 ? null : _sw.Elapsed;
 
 	public PpLogs Logs { get; } = new();
 
@@ -67,7 +70,7 @@ public abstract class PpNode : NodeModel
 		Logs.Clear();
 		Logs.Info($"Executing node '{GetType().FullName}'");
 
-		var sw = Stopwatch.StartNew();
+		_sw.Restart();
 
 		IsExecuting = true;
 
@@ -104,11 +107,12 @@ public abstract class PpNode : NodeModel
 			Logs.Error($"Error executing node '{GetType().FullName}': {ex.Message}");
 		}
 
-		Duration = sw.Elapsed;
+		// Duration = sw.Elapsed;
+		_sw.Stop();
 
 		IsExecuting = false;
 
-		Logs.Info($"Executed node '{GetType().FullName}', took {sw.Elapsed}");
+		Logs.Info($"Executed node '{GetType().FullName}', took {_sw.Elapsed}");
 	}
 
 	protected abstract Task OnExecuteAsync();

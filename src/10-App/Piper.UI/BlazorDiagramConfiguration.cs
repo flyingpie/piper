@@ -63,13 +63,16 @@ public static class BlazorDiagramConfiguration
 			Links =
 			{
 				DefaultColor = "#aaaaaa",
-				DefaultPathGenerator = new SmoothPathGenerator(),
-				DefaultRouter = new NormalRouter(),
+				// DefaultPathGenerator = new SmoothPathGenerator(),
+				DefaultPathGenerator = new StraightPathGenerator(),
+				// DefaultRouter = new NormalRouter(),
+				DefaultRouter = new OrthogonalRouter(),
 				EnableSnapping = true,
 				SnappingRadius = 15,
 				// Factory =
 			},
-			GridSnapToCenter = true,
+			// GridSize = 20,
+			// GridSnapToCenter = true,
 			Zoom = { Enabled = true, Inverse = true },
 		};
 

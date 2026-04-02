@@ -1,14 +1,48 @@
 .pp-node {
-	width: 260px;
-	/*width: 300px;*/
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	outline: 1px solid black;
 	padding: 10px;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	width: 260px;
+	width: 300px;
+
+	background: var(--rz-base-800);
+
+	border: solid 1px transparent;
+	border-radius: 2px;
+
+	--border-angle: 0turn;
+	--main-bg: conic-gradient( from var(--border-angle), var(--rz-base-800), var(--rz-base-800) 0%, var(--rz-base-800) 100%, #000 100% );
+	--gradient-border: conic-gradient(from var(--border-angle), transparent 25%, var(--rz-primary), var(--rz-secondary) 99%, transparent);
+
+	&.is-executing {
+		animation: bg-spin 1s linear infinite;
+		background: var(--main-bg) padding-box, var(--gradient-border) border-box, var(--main-bg) border-box;
+	}
 }
 
-.pp-node.selected {
-	outline: 1px solid #999;
-	box-shadow: 0 0 3px 3px #2f498a;
+/*.pp-node .loader {*/
+/*	inset: -10px;*/
+/*	!*background-color: red;*!*/
+/*}*/
+
+/*.pp-node.is-running {*/
+/*	--border-angle: 0turn;*/
+/*	--main-bg: conic-gradient( from var(--border-angle), #000, var(--rz-base-800) 0%, var(--rz-base-800) 100%, #000 100% );*/
+/*	--gradient-border: conic-gradient(from var(--border-angle), transparent 25%, var(--rz-primary), var(--rz-secondary) 99%, transparent);*/
+
+/*	background: var(--main-bg) padding-box, var(--gradient-border) border-box, var(--main-bg) border-box;*/
+/*	border: solid 2px transparent;*/
+/*	animation: bg-spin 1s linear infinite;*/
+
+/*	&:hover {*/
+/*		animation-play-state: paused;*/
+/*	}*/
+/*}*/
+
+.pp-node.selected:not(.is-executing) {
+	/*outline: 1px solid #999;*/
+	/*box-shadow: 0 0 3px 3px #2f498a;*/
+	/*border-bottom: 1px var(--rz-primary) solid;*/
 }
 
 ::deep .pp-field {
@@ -21,4 +55,16 @@
 
 .piper-field {
 	position: relative;
+}
+
+@keyframes bg-spin {
+	to {
+		--border-angle: 1turn;
+	}
+}
+
+@property --border-angle {
+	syntax: "<angle>";
+	inherits: true;
+	initial-value: 0turn;
 }

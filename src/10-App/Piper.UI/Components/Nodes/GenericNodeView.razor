@@ -13,24 +13,28 @@
 		}
 	}
 
-	@if (Node.IsExecuting)
-	{
-		if (Node.SupportsProgress)
+	@* @if (Node.IsExecuting) *@
+	@* { *@
+	@* 	if (Node.SupportsProgress) *@
+	@* 	{ *@
+	@* 		<RadzenProgressBar Min="0" Max="1" @bind-Value="Node.Progress" ShowValue="false" ProgressBarStyle="ProgressBarStyle.Light" /> *@
+	@* 	} *@
+	@* 	else *@
+	@* 	{ *@
+	@* 		<RadzenProgressBar Mode="ProgressBarMode.Indeterminate" Value="100" ShowValue="false" ProgressBarStyle="ProgressBarStyle.Light" /> *@
+	@* 	} *@
+	@* } *@
+
+	<RadzenStack Orientation="Orientation.Horizontal" class="rz-color-base-500 rz-mt-2" JustifyContent="JustifyContent.Center">
+		@if (Node.Duration != null)
 		{
-			<RadzenProgressBar Min="0" Max="1" @bind-Value="Node.Progress" ShowValue="false" ProgressBarStyle="ProgressBarStyle.Light" />
+			@* <RadzenIcon Icon="timer" /> *@
+			@(Node.Duration.Value.ToString(@"mm\:ss\.fff"))
 		}
 		else
 		{
-			<RadzenProgressBar Mode="ProgressBarMode.Indeterminate" Value="100" ShowValue="false" ProgressBarStyle="ProgressBarStyle.Light" />
+			<span>-</span>
 		}
-	}
-
-	@if (Node.Duration != null)
-	{
-		<RadzenStack Orientation="Orientation.Horizontal" class="rz-color-base-500">
-			<RadzenIcon Icon="timer" />
-			@(Node.Duration.Value.ToString(@"mm\:hh\:ss\.fff"))
-		</RadzenStack>
-	}
+	</RadzenStack>
 
 </NodeView>
