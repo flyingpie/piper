@@ -30,7 +30,20 @@ I.e., applies highlighting based on the text format, and makes the editor higher
 
 	@* Anything else *@
 	default:
-		<RadzenTextBox Value="@Field?.ValueAsString" />
+		if (Field?.Value is List<string> stringList)
+		{
+			<RadzenStack Orientation="Orientation.Vertical">
+				@foreach (var str in stringList)
+				{
+					@* <div>@(string.Join(", ", stringList))</div> *@
+					<RadzenTextBox Value="@str" />
+				}
+			</RadzenStack>
+		}
+		else
+		{
+			<RadzenTextBox Value="@Field?.ValueAsString" />
+		}
 		break;
 }
 

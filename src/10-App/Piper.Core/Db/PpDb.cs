@@ -78,6 +78,8 @@ public class PpDb : IPpDb
 	{
 		await OpenAsync();
 
+		table.Columns.Clear();
+
 		IEnumerable<DuckDbTableDescription> res = null!;
 
 		try

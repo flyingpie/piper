@@ -46,7 +46,7 @@
 		"id": "node0010:PpDuckNode:List Files 01",
 		"pos": "789,139",
 		"params": {
-			"Query": "select\t\tcapture\n,\t\t\tcount(1) as count\nfrom\t\t$table\ngroup by\tcapture\norder by\tcount(1) desc\n,\t\t\tcapture"
+			"Query": "select\t\tcapture\n,\t\t\tarray_agg(path) as paths\n,\t\t\tcount(1) as count\nfrom\t\t$table\ngroup by\tcapture\norder by\tcount(1) desc\n,\t\t\tcapture"
 		},
 		"ports": {
 			"InRecords1": {

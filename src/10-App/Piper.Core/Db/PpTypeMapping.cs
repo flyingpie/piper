@@ -17,7 +17,7 @@ public static class PpTypeMapping
 		{ typeof(long),				PpDataType.PpInt64 },
 		// { typeof(object),			PpDataType.PpJson },
 		{ typeof(string),			PpDataType.PpString },
-		{ typeof(string[]),			PpDataType.PpStringArray },
+		{ typeof(List<string>),		PpDataType.PpStringArray },
 	};
 
 	private static readonly Dictionary<DuckDBType, PpDataType> _duckTypeToPpType = new()

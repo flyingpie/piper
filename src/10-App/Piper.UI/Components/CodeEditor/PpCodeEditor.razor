@@ -51,7 +51,14 @@
 
 		if (Text != _text)
 		{
-			await _monaco.SetValue(Text ?? string.Empty);
+			try
+			{
+				await _monaco.SetValue(Text ?? string.Empty);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"PpCodeEditor issue: {ex.Message}");
+			}
 		}
 	}
 

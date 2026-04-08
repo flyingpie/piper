@@ -28,7 +28,14 @@ I.e., applies highlighting based on the text format, and makes the editor higher
 
 	@* Anything else *@
 	default:
-		<div>@Field?.Value</div>
+		if (Field?.Value is List<string> stringList)
+		{
+			<div>@(string.Join(", ", stringList))</div>
+		}
+		else
+		{
+			<div>@Field?.Value</div>
+		}
 		break;
 
 }

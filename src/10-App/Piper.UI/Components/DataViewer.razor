@@ -87,7 +87,7 @@
 								@foreach (var field in _selectedRec.Fields)
 								{
 									@field.Key
-									<DynamicTextBox Value="@field.Value.ValueAsString" />
+									<DynamicTextBox Field="@field.Value" />
 									@* <RadzenFormField Text="@field.Key"> *@
 										@* <RadzenTextBox Value="@field.Value.ValueAsString" /> *@
 

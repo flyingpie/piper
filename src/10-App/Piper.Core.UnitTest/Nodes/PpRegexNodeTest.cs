@@ -19,8 +19,9 @@ public class PpRegexNodeTest
 		var outRecords = new PpNodeOutput(stubNode, "Out");
 		outRecords.BaseTable.Columns =
 		[
-			new(PpDataType.PpString, "src"),
+			new(PpString, "src"),
 		];
+
 		await outRecords.BaseTable.ClearAsync();
 
 		{

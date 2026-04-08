@@ -78,7 +78,7 @@ public sealed class PpDbAppender(DuckDBAppender appender, IPpTable table) : IAsy
 					row.AppendValue(asString);
 					break;
 
-				case string[] asStringArray:
+				case List<string> asStringArray:
 					row.AppendValue(asStringArray);
 					break;
 
