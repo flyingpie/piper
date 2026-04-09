@@ -1,0 +1,15 @@
+﻿[
+  {
+    id: node0003:PpTestNode:My Node 1,
+    pos: 0,0,
+    ports: {
+      InPort1: {
+        mods: [
+          {
+            id: PpTestMod:TestMod1
+          }
+        ]
+      }
+    }
+  }
+]

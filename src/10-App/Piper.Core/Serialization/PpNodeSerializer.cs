@@ -159,8 +159,10 @@ public static class PpNodeSerializer
 	{
 		var graph = new PpGraph();
 
-		var nodeTypes = typeof(PpNode) // TODO: Pull from all loaded assemblies
-			.Assembly.GetTypes()
+		var nodeTypes = AppDomain
+			.CurrentDomain
+			.GetAssemblies()
+			.SelectMany(ass => ass.GetTypes())
 			.Where(t => !t.IsAbstract)
 			.Where(t => t.IsAssignableTo(typeof(PpNode)))
 			.ToDictionary(t => t.Name, t => t, StringComparer.OrdinalIgnoreCase);
@@ -215,7 +217,7 @@ public static class PpNodeSerializer
 
 			foreach (var port in jsonNode.Ports ?? [])
 			{
-				if (port.Value == null)
+				if (port.Value?.Link == null)
 				{
 					continue;
 				}

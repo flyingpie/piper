@@ -1,0 +1,16 @@
+﻿[
+  {
+    id: node0001:PpTestNode:My Node 1,
+    pos: 0,0,
+    ports: {}
+  },
+  {
+    id: node0003:PpTestNode:My Node 2,
+    pos: 0,0,
+    ports: {
+      InPort1: {
+        link: node0001:OutPort1
+      }
+    }
+  }
+]
