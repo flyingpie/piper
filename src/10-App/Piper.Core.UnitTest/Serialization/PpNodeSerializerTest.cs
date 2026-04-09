@@ -24,7 +24,7 @@ public partial class PpNodeSerializerTest
 	/// Empty node, should result in mostly empty JSON.
 	/// </summary>
 	[TestMethod]
-	public async Task Node_Empty()
+	public async Task Serialize_Node_Empty()
 	{
 		// Arrange
 		var g = new PpGraph()
@@ -45,7 +45,7 @@ public partial class PpNodeSerializerTest
 	}
 
 	[TestMethod]
-	public async Task Node_Param()
+	public async Task Serialize_Node_Param()
 	{
 		// Arrange
 		var g = new PpGraph()
@@ -67,7 +67,7 @@ public partial class PpNodeSerializerTest
 	}
 
 	[TestMethod]
-	public async Task Node_Port_In_WithMod_WithoutParams()
+	public async Task Serialize_Node_Port_In_WithMod_WithoutParams()
 	{
 		// Arrange
 		var n1 = new PpTestNode() { Name = "My Node 1", InPort1 = { } };
@@ -98,7 +98,7 @@ public partial class PpNodeSerializerTest
 	}
 
 	[TestMethod]
-	public async Task Node_Port_In_WithMod_WithParams()
+	public async Task Serialize_Node_Port_In_WithMod_WithParams()
 	{
 		// Arrange
 		var n1 = new PpTestNode() { Name = "My Node 1", InPort1 = { } };
@@ -129,7 +129,7 @@ public partial class PpNodeSerializerTest
 	}
 
 	[TestMethod]
-	public async Task Node_Connected()
+	public async Task Serialize_Node_Connected()
 	{
 		// Arrange
 		var n1 = new PpTestNode() { Name = "My Node 1", InPort1 = { } };
@@ -153,13 +153,34 @@ public partial class PpNodeSerializerTest
 	}
 
 	[TestMethod]
-	public void METHOD()
+	public void Deserialize_Node_Empty()
 	{
-		var e = new List<string>();
+		var graph = PpNodeSerializer.DeserializeGraph(
+			"""
+			[
+				{
+					"id": "node0042:PpTestNode:Test Node 1",
+					"pos": "1234,4321",
+					"params": {
+						"Param1": "Param1 Value"
+					},
+					"ports": {
+						"InPort1": {},
+						"OutPort1": {}
+					}
+				}
+			]
+			"""
+		);
 
-		// e.GetType().IsAssignableTo(typeof(IEnumerable))
+		Assert.IsNotNull(graph);
+		Assert.HasCount(1, graph.Nodes);
 
-		var x = 2;
+		var node1 = graph.Nodes[0];
+		Assert.AreEqual("Test Node 1", node1.Name);
+		Assert.AreEqual("node0042", node1.NodeId);
+		Assert.AreEqual(1234, node1.Position.X);
+		Assert.AreEqual(4321, node1.Position.Y);
 	}
 }
 
