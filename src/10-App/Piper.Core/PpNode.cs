@@ -1,7 +1,6 @@
 using Blazor.Diagrams.Core.Models;
 using Piper.Core.Data;
 using Piper.Core.Logging;
-using shortid;
 
 namespace Piper.Core;
 
@@ -28,7 +27,7 @@ public abstract class PpNode : NodeModel
 		Size = new(300, 300);
 	}
 
-	public string NodeId { get; set; } = PpId.Instance.NextNode(); //ShortId.Generate(new ShortIdOptions(useNumbers: true, useSpecialCharacters: false));
+	public string NodeId { get; set; } = PpId.Instance.NextNode();
 
 	public virtual string NodeType => GetType().Name;
 

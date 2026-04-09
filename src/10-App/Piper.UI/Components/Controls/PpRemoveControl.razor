@@ -1,0 +1,15 @@
+@using Blazor.Diagrams.Core.Controls.Default
+@using Blazor.Diagrams.Core.Models.Base
+
+<svg xmlns="http://www.w3.org/2000/svg" fill="white" width="20" height="20" viewBox="0 0 512 512" style="transform: translate(-10px, -10px)">
+	<path d="M256 512a256 256 0 1 0 0-512 256 256 0 1 0 0 512zM167 167c9.4-9.4 24.6-9.4 33.9 0l55 55 55-55c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-55 55 55 55c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-55-55-55 55c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l55-55-55-55c-9.4-9.4-9.4-24.6 0-33.9z"/>
+</svg>
+
+@code
+{
+	[Parameter]
+	public RemoveControl Control { get; set; } = null!;
+
+	[Parameter]
+	public Model Model { get; set; } = null!;
+}

@@ -3,7 +3,7 @@
 		"id": "node0008:PpListFilesNode:List Files 01",
 		"pos": "116,120",
 		"params": {
-			"InPath": "/home/marco/workspace/flyingpie/",
+			"InPath": "/home/marco/workspace/flyingpie/wtq_1",
 			"InPattern": "**/Directory.Packages.props",
 			"MaxFiles": "10000"
 		},
@@ -52,7 +52,7 @@
 						"id": "PpLimitModifier:Limit",
 						"params": {
 							"Skip": "0",
-							"Take": "5"
+							"Take": "5000"
 						}
 					},
 					{

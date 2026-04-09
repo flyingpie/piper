@@ -1,9 +1,12 @@
 using System.IO;
 using Blazor.Diagrams;
 using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Controls;
+using Blazor.Diagrams.Core.Controls.Default;
 using Blazor.Diagrams.Core.Models;
 using Blazor.Diagrams.Core.Models.Base;
 using Blazor.Diagrams.Core.PathGenerators;
+using Blazor.Diagrams.Core.Positions;
 using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +14,7 @@ using Piper.Core;
 using Piper.Core.Nodes;
 using Piper.Core.Nodes.Unix;
 using Piper.Core.Serialization;
+using Piper.UI.Components.Controls;
 using Piper.UI.Components.Nodes;
 
 namespace Piper.UI;
@@ -69,14 +73,27 @@ public static class BlazorDiagramConfiguration
 				DefaultRouter = new OrthogonalRouter(),
 				EnableSnapping = true,
 				SnappingRadius = 15,
-				// Factory =
+				Factory = (diagram, source, targetAnchor) =>
+				{
+					Anchor sourceAnchor = source switch
+					{
+						NodeModel node => new ShapeIntersectionAnchor(node),
+						PortModel port => new SinglePortAnchor(port),
+						_ => throw new NotImplementedException()
+					};
+					var link = new LinkModel(sourceAnchor, targetAnchor);
+					// diagram.Controls.AddFor(link).Add(new RemoveControl());
+					diagram.Controls.AddFor(link, ControlsType.OnSelection).Add(new RemoveControl(new LinkPathPositionProvider(.5)));
+					return link;
+				}
 			},
-			// GridSize = 20,
-			// GridSnapToCenter = true,
+			GridSize = 20,
+			GridSnapToCenter = true,
 			Zoom = { Enabled = true, Inverse = true },
 		};
 
 		var diagram = new BlazorDiagram(options);
+		diagram.RegisterComponent<RemoveControl, PpRemoveControl>(replace: true);
 		diagram.RegisterComponent<PpCSharpNode, GenericNodeView>();
 		diagram.RegisterComponent<PpDuckNode, GenericNodeView>();
 		diagram.RegisterComponent<PpFunctionNode, GenericNodeView>();

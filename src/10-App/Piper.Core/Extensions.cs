@@ -1,6 +1,10 @@
 using System.Reflection;
 using Blazor.Diagrams;
+using Blazor.Diagrams.Core.Anchors;
+using Blazor.Diagrams.Core.Controls;
+using Blazor.Diagrams.Core.Controls.Default;
 using Blazor.Diagrams.Core.Models;
+using Blazor.Diagrams.Core.Positions;
 using Microsoft.Extensions.Logging;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
@@ -57,7 +61,12 @@ public static class Extensions
 
 						if (t == t2)
 						{
-							diagram.Links.Add(new LinkModel(p2, p));
+							// var linkModel = new LinkModel(p2, p);
+
+
+							var linkModel = (LinkModel)diagram.Options.Links.Factory(diagram, p2, new SinglePortAnchor(p));
+							diagram.Links.Add(linkModel);
+							// diagram.Controls.AddFor(linkModel, ControlsType.OnHover).Add(new RemoveControl(new LinkPathPositionProvider(.5)));
 						}
 					}
 				}

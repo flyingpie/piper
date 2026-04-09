@@ -8,17 +8,22 @@ namespace Piper.Core;
 /// Subclasses BlazorDiagram's <see cref="PortModel"/>, to add sync between the diagram model and the Piper one
 /// (the one that actually executed things and is serialized).
 /// </summary>
-public class PpNodePort(
-	string name,
-	NodeModel parent,
-	PortAlignment alignment = PortAlignment.Bottom,
-	Point? position = null,
-	Size? size = null
-) : PortModel(parent, alignment, position, size), IPpNodeProperty
+public class PpNodePort : PortModel, IPpNodeProperty
 {
 	private Action<PpNodePort>? _onChange;
 
-	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
+	public PpNodePort(string name,
+		NodeModel parent,
+		PortAlignment alignment = PortAlignment.Bottom,
+		Point? position = null,
+		Size? size = null) : base(parent, alignment, position, size)
+	{
+		Name = Guard.Against.NullOrWhiteSpace(name);
+
+		// Changed += m =>
+	}
+
+	public string Name { get; }
 
 	public Func<PpNodeInput>? GetNodeInput { get; set; }
 
