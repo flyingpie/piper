@@ -39,6 +39,8 @@
 			Turn off code analysis.
 		-->
 		<RunAnalyzers>false</RunAnalyzers>
+
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<!-- Test projects -->

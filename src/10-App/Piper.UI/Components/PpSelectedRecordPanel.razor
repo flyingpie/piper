@@ -1,0 +1,14 @@
+@if (SelectedRecord is null)
+{
+	<div>No record selected</div>
+}
+else
+{
+	<RadzenStack Orientation="Orientation.Vertical">
+		@foreach (var field in SelectedRecord.Fields)
+		{
+			@field.Key
+			<DynamicTextBox Field="@field.Value" />
+		}
+	</RadzenStack>
+}

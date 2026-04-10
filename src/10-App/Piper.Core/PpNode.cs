@@ -24,7 +24,7 @@ public abstract class PpNode : NodeModel
 		_fixedNodeProps = this.GetNodeProps().ToList();
 		NodeParams = NodeProps.OfType<PpNodeParam>().ToList();
 		NodePorts = NodeProps.OfType<PpNodePort>().ToList();
-		Size = new(300, 300);
+		Size = new(350, 300);
 	}
 
 	public string NodeId { get; set; } = PpId.Instance.NextNode();

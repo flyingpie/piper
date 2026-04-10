@@ -1,5 +1,6 @@
 using System.Reflection;
 using Blazor.Diagrams;
+using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Anchors;
 using Blazor.Diagrams.Core.Controls;
 using Blazor.Diagrams.Core.Controls.Default;
@@ -22,14 +23,14 @@ public static class Extensions
 		public long OutCount => port.GetNodeOutput?.Invoke()?.Table?.Count ?? 0;
 	}
 
-	public static PpGraph GetGraph(this BlazorDiagram diagram)
+	public static PpGraph GetGraph(this Diagram diagram)
 	{
 		var graph = new PpGraph() { Nodes = diagram.Nodes.Cast<PpNode>().ToList() };
 
 		return graph;
 	}
 
-	public static void LoadGraph(this BlazorDiagram diagram, PpGraph graph)
+	public static void LoadGraph(this Diagram diagram, PpGraph graph)
 	{
 		var log = Log.For(typeof(Extensions));
 		log.LogInformation("Loading graph '{Graph}'", graph);
@@ -62,7 +63,6 @@ public static class Extensions
 						if (t == t2)
 						{
 							// var linkModel = new LinkModel(p2, p);
-
 
 							var linkModel = (LinkModel)diagram.Options.Links.Factory(diagram, p2, new SinglePortAnchor(p));
 							diagram.Links.Add(linkModel);

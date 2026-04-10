@@ -79,17 +79,24 @@ public static class BlazorDiagramConfiguration
 					{
 						NodeModel node => new ShapeIntersectionAnchor(node),
 						PortModel port => new SinglePortAnchor(port),
-						_ => throw new NotImplementedException()
+						_ => throw new NotImplementedException(),
 					};
 					var link = new LinkModel(sourceAnchor, targetAnchor);
 					// diagram.Controls.AddFor(link).Add(new RemoveControl());
 					diagram.Controls.AddFor(link, ControlsType.OnSelection).Add(new RemoveControl(new LinkPathPositionProvider(.5)));
 					return link;
-				}
+				},
 			},
 			GridSize = 20,
 			GridSnapToCenter = true,
-			Zoom = { Enabled = true, Inverse = true },
+			Zoom =
+			{
+				Enabled = true,
+				Inverse = true,
+				Minimum = .05,
+				Maximum = 5,
+				ScaleFactor = 1.025,
+			},
 		};
 
 		var diagram = new BlazorDiagram(options);

@@ -1,7 +1,7 @@
 [
 	{
 		"id": "node0008:PpListFilesNode:List Files 01",
-		"pos": "116,120",
+		"pos": "60,30",
 		"params": {
 			"InPath": "/home/marco/workspace/flyingpie/wtq_1",
 			"InPattern": "**/Directory.Packages.props",
@@ -75,7 +75,7 @@
 	},
 	{
 		"id": "node0017:PpHttpNode:HTTP 01",
-		"pos": "442,123",
+		"pos": "480,30",
 		"params": {
 			"InAttr": "rzr"
 		},
@@ -88,7 +88,7 @@
 	},
 	{
 		"id": "node0019:PpDuckNode:List Files 01",
-		"pos": "761,120",
+		"pos": "900,30",
 		"params": {
 			"Query": "select\t\t*\n,\t\t\tjson_extract_string(resp, '$.response.data[0].versions[-1].version') as pkg_version_new\nfrom\t\t$table\n"
 		},
@@ -96,6 +96,10 @@
 			"InRecords1": {
 				"link": "node0017:OutResponses"
 			},
+			"InRecords2": {},
+			"InRecords3": {},
+			"InRecords4": {},
+			"InRecords5": {},
 			"OutRecords": {
 				"mods": [
 					{
@@ -111,7 +115,7 @@
 	},
 	{
 		"id": "node0023:PpXPathReplaceNode:XPath Replace 01",
-		"pos": "1093,117",
+		"pos": "1320,30",
 		"params": {
 			"FilePathAttr": "path",
 			"XPathAttr": "xpath_query",

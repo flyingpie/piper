@@ -8,3 +8,8 @@
 	--vscode-editor-background: #111111 !important;
 	--vscode-editorGutter-background: #111111 !important;
 }
+
+/* Splitter panes usually hide scroll, but in some cases we want to scroll, like with data grids */
+.rz-splitter-pane.scroll {
+	overflow-y: scroll;
+}

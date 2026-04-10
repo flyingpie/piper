@@ -1,116 +1,85 @@
 @using Piper.UI.Components.CodeEditor
+@using Piper.UI.Services
 
-<RadzenStack Orientation="Orientation.Vertical">
+<RadzenSplitter>
+	<RadzenSplitterPane Size="80%" class="scroll">
 
-	<RadzenSplitter>
-		<RadzenSplitterPane Size="70%">
+		@* <RadzenTextBox @bind-Value="SearchTerm" /> *@
 
-			@* Query Editor *@
-			<PpCodeEditor Class="pp-query" Language="sql" @bind-Text="Query"/>
+		@* Table *@
+		<RadzenDataGrid
 
-			@* <RadzenTextBox @bind-Value="SearchTerm" /> *@
+			TItem="PpRecord"
 
-			@* Table *@
-			<RadzenDataGrid
+			@ref="_grid"
 
-				TItem="PpRecord"
+			AllowAlternatingRows="true"
+			AllowColumnPicking="false"
+			AllowColumnResize="true"
+			AllowFiltering="false"
+			AllowMultiColumnSorting="true"
+			AllowPaging="true"
+			AllowSorting="true"
 
-				@ref="_grid"
+			Density="Density.Compact"
+			FilterMode="FilterMode.SimpleWithMenu"
+			LogicalFilterOperator="LogicalFilterOperator.Or"
+			PagerHorizontalAlign="HorizontalAlign.Left"
+			PageSize="50"
+			SelectionMode="DataGridSelectionMode.Single"
+			ShowPagingSummary="true"
 
-				AllowAlternatingRows="true"
-				AllowColumnPicking="false"
-				AllowColumnResize="true"
-				AllowFiltering="false"
-				AllowMultiColumnSorting="true"
-				AllowPaging="true"
-				AllowSorting="true"
+			Data="@Records"
+			Count="@RecordCount"
+			LoadData="@LoadDataAsync"
+			RowClick="rec => SelectedThingyService.Instance.SelectRecord(rec.Data)"
+		>
+			<Columns>
 
-				Density="Density.Compact"
-				FilterMode="FilterMode.SimpleWithMenu"
-				LogicalFilterOperator="LogicalFilterOperator.Or"
-				PagerHorizontalAlign="HorizontalAlign.Left"
-				PageSize="50"
-				SelectionMode="DataGridSelectionMode.Single"
-				ShowPagingSummary="true"
+				@foreach (var field in Columns)
+				{
+					<RadzenDataGridColumn
+						TItem="PpRecord"
+						Title="@field.Name"
+						Width="@GetWidth(field)"
+						TextAlign="@(GetAlign(field))"
+						Property="@field.Name"
+					>
+						<Template Context="item">
+							<DynamicValue Field="@item.GetField(field.Name)" />
+						</Template>
+					</RadzenDataGridColumn>
+				}
 
-				Data="@Records"
-				Count="@RecordCount"
-				LoadData="@LoadDataAsync"
-				RowClick="rec => _selectedRec = rec.Data"
+			</Columns>
+		</RadzenDataGrid>
 
-			>
-				<Columns>
+	</RadzenSplitterPane>
+	<RadzenSplitterPane>
 
-					@foreach (var field in Columns)
-					{
-						<RadzenDataGridColumn
-							TItem="PpRecord"
-							Title="@field.Name"
-							Width="@GetWidth(field)"
-							TextAlign="@(GetAlign(field))"
-							Property="@field.Name"
-						>
-							<Template Context="item">
-								@* TODO: Dynamic value thing, with hex color support *@
-								@* @switch (field.DataType) *@
-								@* { *@
-									@* case PpDataType.PpDateTime: *@
-								<DynamicValue Field="@item.GetField(field.Name)" />
-										@* @item.GetValue(field.Name) *@
-										@* break; *@
+		<RadzenTabs TabPosition="TabPosition.Right" Style="height: 100%;">
+			<Tabs>
 
-								@* 	default: *@
-								@* 		<Tooltip Text="@(item.GetValue(field.Name)?.ToString())"> *@
-								@* 			@item.GetValue(field.Name) *@
-								@* 		</Tooltip> *@
-								@* 		break; *@
-								@* } *@
-							</Template>
-						</RadzenDataGridColumn>
-					}
+				@* Columns *@
+				<RadzenTabsItem Icon="table">
 
-				</Columns>
-			</RadzenDataGrid>
+					@* Query Editor *@
+					<PpCodeEditor Class="pp-query" Language="sql" @bind-Text="Query"/>
 
-		</RadzenSplitterPane>
-		<RadzenSplitterPane>
+				</RadzenTabsItem>
 
-			<RadzenTabs TabPosition="TabPosition.Right">
-				<Tabs>
+				@* Columns *@
+				<RadzenTabsItem Icon="table">
 
-					@* Row Details *@
-					<RadzenTabsItem Icon="table">
+				</RadzenTabsItem>
+			</Tabs>
+		</RadzenTabs>
 
-						@if (_selectedRec is not null)
-						{
-							<RadzenStack Orientation="Orientation.Vertical">
-								@foreach (var field in _selectedRec.Fields)
-								{
-									@field.Key
-									<DynamicTextBox Field="@field.Value" />
-									@* <RadzenFormField Text="@field.Key"> *@
-										@* <RadzenTextBox Value="@field.Value.ValueAsString" /> *@
-
-									// </RadzenFormField>
-								}
-							</RadzenStack>
-						}
-
-					</RadzenTabsItem>
-
-					@* Columns *@
-					<RadzenTabsItem Icon="table">
-
-					</RadzenTabsItem>
-				</Tabs>
-			</RadzenTabs>
-
-		</RadzenSplitterPane>
-	</RadzenSplitter>
-</RadzenStack>
+	</RadzenSplitterPane>
+</RadzenSplitter>
 
 <style>
-	.pp-query .monaco-editor-container {
-		height: 50px !important;
+	.pp-query, .pp-query .monaco-editor-container {
+		height: 100%;
 	}
 </style>

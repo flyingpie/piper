@@ -25,6 +25,7 @@ public partial class PpGraphsPanel : ComponentBase
 		var graph = PpNodeSerializer.DeserializeGraph(File.ReadAllText(file.Path));
 
 		Diagram.LoadGraph(graph);
+		Diagram.ZoomToFit(25);
 	}
 
 	private void SaveGraphFile(PpGraphFile file)

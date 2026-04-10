@@ -19,6 +19,7 @@
 					<RadzenMenuItem Text="Run" Icon="play_arrow" />
 					<RadzenMenuItem Text="Test Page" Path="/test-page" />
 					<RadzenMenuItem Text="Zoom Fit" Click="() => Diagram?.ZoomToFit(margin: 70)" />
+					<RadzenMenuItem Text="Zoom Reset" Click="() => { Diagram?.ZoomToFit(margin: 70); Diagram?.SetZoom(1); }" />
 				</RadzenMenu>
 
 				<!-- Diagram -->
@@ -51,25 +52,12 @@
 
 						</RadzenTabsItem>
 
-						<!-- @* Row Details *@ -->
-						<!-- <RadzenTabsItem Icon="table"> -->
-						<!---->
-						<!-- 	@if (_selectedRec is not null) -->
-						<!-- 	{ -->
-						<!-- 		<RadzenStack Orientation="Orientation.Vertical"> -->
-						<!-- 			@foreach (var field in _selectedRec.Fields) -->
-						<!-- 			{ -->
-						<!-- 				@field.Key -->
-						<!-- 				<DynamicTextBox Value="@field.Value.ValueAsString" /> -->
-						<!-- 				@* <RadzenFormField Text="@field.Key"> *@ -->
-						<!-- 					@* <RadzenTextBox Value="@field.Value.ValueAsString" /> *@ -->
-						<!---->
-						<!-- 				// </RadzenFormField> -->
-						<!-- 			} -->
-						<!-- 		</RadzenStack> -->
-						<!-- 	} -->
-						<!---->
-						<!-- </RadzenTabsItem> -->
+						@* Row Details *@
+						<RadzenTabsItem Icon="table">
+
+							<PpSelectedRecordPanel />
+
+						</RadzenTabsItem>
 
 					</Tabs>
 				</RadzenTabs>
