@@ -101,6 +101,9 @@ public partial class DataViewer : ComponentBase
 	private async Task LoadDataAsync(LoadDataArgs args)
 	{
 		Console.WriteLine("LoadDataAsync");
+		Console.WriteLine(
+			$"FILTERS: {string.Join(", ", (args.Filters ?? []).Select(f => $"{f.Property} {f.FilterOperator} {f.FilterValue}"))}"
+		);
 
 		try
 		{

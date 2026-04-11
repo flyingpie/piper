@@ -1,82 +1,63 @@
-@using Piper.UI.Components.CodeEditor
 @using Piper.UI.Services
 
-<RadzenSplitter>
-	<RadzenSplitterPane Size="80%" class="scroll">
+@* <RadzenTextBox @bind-Value="SearchTerm" /> *@
 
-		@* <RadzenTextBox @bind-Value="SearchTerm" /> *@
+<RadzenDataGrid
 
-		@* Table *@
-		<RadzenDataGrid
+	TItem="PpRecord"
 
-			TItem="PpRecord"
+	@ref="_grid"
 
-			@ref="_grid"
+	AllowAlternatingRows="true"
+	AllowColumnPicking="false"
+	AllowColumnResize="true"
+	AllowFiltering="true"
+	AllowMultiColumnSorting="true"
+	AllowPaging="true"
+	AllowSorting="true"
+	AllowVirtualization="true"
 
-			AllowAlternatingRows="true"
-			AllowColumnPicking="false"
-			AllowColumnResize="true"
-			AllowFiltering="false"
-			AllowMultiColumnSorting="true"
-			AllowPaging="true"
-			AllowSorting="true"
+	Density="Density.Compact"
+	FilterMode="FilterMode.Simple"
+	LogicalFilterOperator="LogicalFilterOperator.Or"
+	PagerHorizontalAlign="HorizontalAlign.Left"
+	PageSize="50"
+	SelectionMode="DataGridSelectionMode.Single"
+	ShowPagingSummary="true"
 
-			Density="Density.Compact"
-			FilterMode="FilterMode.SimpleWithMenu"
-			LogicalFilterOperator="LogicalFilterOperator.Or"
-			PagerHorizontalAlign="HorizontalAlign.Left"
-			PageSize="50"
-			SelectionMode="DataGridSelectionMode.Single"
-			ShowPagingSummary="true"
+	Data="@Records"
+	Count="@RecordCount"
+	LoadData="@LoadDataAsync"
+	RowClick="rec => SelectedThingyService.Instance.SelectRecord(rec.Data)"
+>
+	<Columns>
 
-			Data="@Records"
-			Count="@RecordCount"
-			LoadData="@LoadDataAsync"
-			RowClick="rec => SelectedThingyService.Instance.SelectRecord(rec.Data)"
-		>
-			<Columns>
+		@foreach (var field in Columns)
+		{
+			<RadzenDataGridColumn
+				TItem="PpRecord"
+				Title="@field.Name"
+				Width="@GetWidth(field)"
+				TextAlign="@(GetAlign(field))"
+				Property="@field.Name"
+				Visible="@field.IsVisible"
+			>
+				<HeaderTemplate>
+					<RadzenStack Orientation="Orientation.Horizontal">
+						<RadzenLabel Text="@field.Name" />
+						<RadzenLabel Text="@field.DataType.ToString()" class="rz-color-base-600" />
+						@* <RadzenButton Text="Sort" Size="ButtonSize.ExtraSmall" /> *@
+						<RadzenButton Icon="close" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" IconColor="@Colors.Base50" Click="() => field.IsVisible = !field.IsVisible" />
+					</RadzenStack>
+				</HeaderTemplate>
+				<Template Context="item">
+					<DynamicValue Field="@item.GetField(field.Name)" />
+				</Template>
+			</RadzenDataGridColumn>
+		}
 
-				@foreach (var field in Columns)
-				{
-					<RadzenDataGridColumn
-						TItem="PpRecord"
-						Title="@field.Name"
-						Width="@GetWidth(field)"
-						TextAlign="@(GetAlign(field))"
-						Property="@field.Name"
-					>
-						<Template Context="item">
-							<DynamicValue Field="@item.GetField(field.Name)" />
-						</Template>
-					</RadzenDataGridColumn>
-				}
-
-			</Columns>
-		</RadzenDataGrid>
-
-	</RadzenSplitterPane>
-	<RadzenSplitterPane>
-
-		<RadzenTabs TabPosition="TabPosition.Right" Style="height: 100%;">
-			<Tabs>
-
-				@* Columns *@
-				<RadzenTabsItem Icon="table">
-
-					@* Query Editor *@
-					<PpCodeEditor Class="pp-query" Language="sql" @bind-Text="Query"/>
-
-				</RadzenTabsItem>
-
-				@* Columns *@
-				<RadzenTabsItem Icon="table">
-
-				</RadzenTabsItem>
-			</Tabs>
-		</RadzenTabs>
-
-	</RadzenSplitterPane>
-</RadzenSplitter>
+	</Columns>
+</RadzenDataGrid>
 
 <style>
 	.pp-query, .pp-query .monaco-editor-container {

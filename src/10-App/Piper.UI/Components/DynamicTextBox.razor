@@ -10,7 +10,7 @@ I.e., applies highlighting based on the text format, and makes the editor higher
 {
 	@* Hex color *@
 	case PpDataTypeFlags.HexColor:
-		<RadzenTextBox Style="@($"background-color: {Field?.ValueAsString}; font-family: monospace; text-shadow: 1px 1px 2px black;")" Value="@Field?.ValueAsString" />
+		<RadzenTextBox Style="@($"background-color: {Field?.Value}; font-family: monospace; text-shadow: 1px 1px 2px black;")" Value="@Field?.ValueAsString" />
 		break;
 
 	@* JSON *@
@@ -30,13 +30,16 @@ I.e., applies highlighting based on the text format, and makes the editor higher
 
 	@* Anything else *@
 	default:
-		if (Field?.Value is List<string> stringList)
+		if (Field?.ValueAsList is not null)
 		{
 			<RadzenStack Orientation="Orientation.Vertical">
-				@foreach (var str in stringList)
+				@foreach (var field in Field.ValueAsList)
 				{
 					@* <div>@(string.Join(", ", stringList))</div> *@
-					<RadzenTextBox Value="@str" />
+					@* <RadzenTextBox Value="@str" /> *@
+					@* <RadzenLabel Text="@str" /> *@
+					@* <DynamicTextBox Field="field" /> *@
+					<DynamicValue Field="field" />
 				}
 			</RadzenStack>
 		}

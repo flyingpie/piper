@@ -1,5 +1,3 @@
-using System.Text.Json;
-using System.Xml.Linq;
 using Piper.Core.Utils;
 
 namespace Piper.Core.Data;
@@ -7,6 +5,7 @@ namespace Piper.Core.Data;
 public class PpField(PpDataType type, object? value)
 {
 	private PpDataTypeFlags? _flags;
+	private List<PpField>? _listOfFields;
 
 	public PpDataType DataType { get; } = Guard.Against.Null(type);
 
@@ -14,7 +13,26 @@ public class PpField(PpDataType type, object? value)
 
 	public object? Value { get; } = value;
 
-	public string? ValueAsString => Value as string;
+	public string? ValueAsString => Value as string ?? Value?.ToString();
+
+	public List<PpField>? ValueAsList
+	{
+		get
+		{
+			if (_listOfFields is not null)
+			{
+				return _listOfFields;
+			}
+
+			if (Value is List<string> listOfStrings)
+			{
+				_listOfFields = listOfStrings.Select(s => new PpField(PpDataType.PpString, s)).ToList();
+				return _listOfFields;
+			}
+
+			return null;
+		}
+	}
 
 	public static implicit operator PpField(bool? valueAsBool) => new(PpDataType.PpBool, valueAsBool);
 

@@ -4,10 +4,10 @@
 }
 else
 {
-	<RadzenStack Orientation="Orientation.Vertical">
+	<RadzenStack Orientation="Orientation.Vertical" Gap="0">
 		@foreach (var field in SelectedRecord.Fields)
 		{
-			@field.Key
+			<div class="rz-mt-2">@field.Key</div>
 			<DynamicTextBox Field="@field.Value" />
 		}
 	</RadzenStack>

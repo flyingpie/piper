@@ -16,4 +16,6 @@ public class PpColumn(PpDataType dataType, string name)
 	/// Name of the column, must be SQL friendly (i.e. preferably cased_like_this).
 	/// </summary>
 	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
+
+	public bool IsVisible { get; set; } = true;
 }
