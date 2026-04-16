@@ -34,7 +34,13 @@ public class PpField(PpDataType type, object? value)
 		}
 	}
 
+	public static implicit operator PpField((string name, string? value) f) => new(PpDataType.PpBool, valueAsBool);
+
 	public static implicit operator PpField(bool? valueAsBool) => new(PpDataType.PpBool, valueAsBool);
+
+	public static implicit operator PpField(decimal? valueAsInt) => new(PpDataType.PpDouble, valueAsInt);
+
+	public static implicit operator PpField(double? valueAsInt) => new(PpDataType.PpDouble, valueAsInt);
 
 	public static implicit operator PpField(int? valueAsInt) => new(PpDataType.PpInt32, valueAsInt);
 

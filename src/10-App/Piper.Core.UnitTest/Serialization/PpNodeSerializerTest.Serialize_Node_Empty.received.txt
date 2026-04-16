@@ -1,7 +1,0 @@
-﻿[
-  {
-    id: node0001:PpTestNode:My Node 1,
-    pos: 123,321,
-    ports: {}
-  }
-]

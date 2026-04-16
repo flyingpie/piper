@@ -16,13 +16,15 @@ public class PpNullTable : IPpTable
 
 	public string Name => "_null";
 
-	public Task ClearAsync(CancellationToken ct = default) => Task.CompletedTask;
+	public Task AddRangeAsync(IEnumerable<PpRecord> records, CancellationToken ct = default) => Task.CompletedTask;
+
+	public Task<IPpTable> ClearAsync(CancellationToken ct = default) => Task.FromResult<IPpTable>(this);
 
 	public Task FetchAsync(CancellationToken ct = default) => Task.CompletedTask;
 
 	public Task<long> CountAsync(CancellationToken ct = default) => Task.FromResult(0L);
 
-	public Task DoneAsync(CancellationToken ct = default) => Task.CompletedTask;
+	public Task<IPpTable> DoneAsync(CancellationToken ct = default) => Task.FromResult<IPpTable>(this);
 
 	public IAsyncEnumerable<PpRecord> QueryAllAsync(CancellationToken ct = default) => AsyncEnumerable.Empty<PpRecord>();
 

@@ -14,12 +14,23 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 	/// <inheritdoc/>
 	public List<PpColumn> Columns { get; set; } = (columns ?? []).ToList();
 
+	public static IPpTable Create()
+
 	/// <inheritdoc/>
-	public async Task ClearAsync(CancellationToken ct = default)
+	public async Task AddRangeAsync(IEnumerable<PpRecord> records, CancellationToken ct = default)
+	{
+		await using var appender = await CreateAppenderAsync(ct);
+		appender.AddRange(records);
+	}
+
+	/// <inheritdoc/>
+	public async Task<IPpTable> ClearAsync(CancellationToken ct = default)
 	{
 		await PpDb.Instance.CreateTableAsync(this, ct);
 
 		Count = await CountAsync(ct);
+
+		return this;
 	}
 
 	/// <inheritdoc/>
@@ -31,9 +42,11 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 	}
 
 	/// <inheritdoc/>
-	public async Task DoneAsync(CancellationToken ct = default)
+	public async Task<IPpTable> DoneAsync(CancellationToken ct = default)
 	{
 		Count = await CountAsync(ct);
+
+		return this;
 	}
 
 	/// <inheritdoc/>

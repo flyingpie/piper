@@ -7,4 +7,6 @@ public class PpLog(LogLevel level, string message)
 	public LogLevel Level { get; } = level;
 
 	public string Message { get; } = Guard.Against.NullOrWhiteSpace(message);
+
+	public override string ToString() => $"[{Level}] {Message}";
 }

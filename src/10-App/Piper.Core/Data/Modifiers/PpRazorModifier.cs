@@ -9,9 +9,6 @@ public class PpRazorModifier : PpModifier
 {
 	public override string Name { get; set; } = "Razor";
 
-	// [PpParam("Source Field")]
-	// public string? SrcFieldName { get; set; }
-
 	[PpParam("Destination Field")]
 	public string? DstFieldName { get; set; }
 
@@ -21,11 +18,6 @@ public class PpRazorModifier : PpModifier
 	public override async Task ExecuteAsync(IPpTable source, CancellationToken ct = default)
 	{
 		Guard.Against.Null(source);
-
-		// if (string.IsNullOrWhiteSpace(SrcFieldName))
-		// {
-		// 	return;
-		// }
 
 		if (string.IsNullOrWhiteSpace(DstFieldName))
 		{
@@ -43,26 +35,30 @@ public class PpRazorModifier : PpModifier
 		await Table.ClearAsync(ct);
 
 		var engine = new RazorEngine();
-		var tpl = await engine.CompileAsync<CustomRazorTemplate>(Template, cancellationToken: ct);
+		IRazorEngineCompiledTemplate<CustomRazorTemplate>? tpl;
+
+		try
+		{
+			tpl = await engine.CompileAsync<CustomRazorTemplate>(Template, cancellationToken: ct);
+		}
+		catch (Exception ex)
+		{
+			Logs.Error($"Error compiling Razor template: {ex.Message}");
+			return;
+		}
 
 		await using var appender = await Table.CreateAppenderAsync(ct);
 
 		await foreach (var rec in source.QueryAllAsync(ct))
 		{
+			var newRec = new PpRecord()
+			{
+				//
+				Fields = new Dictionary<string, PpField>(rec.Fields, StringComparer.OrdinalIgnoreCase),
+			};
+
 			try
 			{
-				// if (!rec.Fields.TryGetValue(SrcFieldName, out var src))
-				// {
-				// 	appender.Add(CreateRecord(rec, $"No field named '{SrcFieldName}'"));
-				// 	break;
-				// }
-
-				// var doc = XElement.Parse(src.ValueAsString);
-				// var q = (IEnumerable)doc.XPathEvaluate(Query);
-				// var b = new StringBuilder();
-				// if (q is string)
-				// {
-
 				var eo = new ExpandoObject();
 				var eoColl = (ICollection<KeyValuePair<string, object>>)eo;
 				foreach (var kv in rec.Fields)
@@ -72,15 +68,14 @@ public class PpRazorModifier : PpModifier
 
 				var res = tpl.Run(inst => inst.Rec = eo);
 
-				var newRec = new PpRecord()
-				{
-					//
-					Fields = new Dictionary<string, PpField>(rec.Fields, StringComparer.OrdinalIgnoreCase),
-				};
 				newRec.Fields.Add(DstFieldName, res);
-				appender.Add(newRec);
 			}
-			catch (Exception ex) { }
+			catch (Exception ex)
+			{
+				newRec.Fields.Add(DstFieldName, $"Error running Razor template: {ex.Message}");
+			}
+
+			appender.Add(newRec);
 		}
 
 		await Table.DoneAsync(ct);

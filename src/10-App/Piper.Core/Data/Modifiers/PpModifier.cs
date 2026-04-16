@@ -1,3 +1,5 @@
+using Piper.Core.Logging;
+
 namespace Piper.Core.Data.Modifiers;
 
 public abstract class PpModifier
@@ -11,9 +13,9 @@ public abstract class PpModifier
 
 	public string Id { get; set; } = PpId.Instance.NextMod();
 
-	public abstract string Name { get; set; }
+	public PpLogs Logs { get; } = new();
 
-	// public abstract string ModifierType { get; set; }
+	public abstract string Name { get; set; }
 
 	public IEnumerable<IPpNodeProperty> Props => _fixedNodeProps;
 

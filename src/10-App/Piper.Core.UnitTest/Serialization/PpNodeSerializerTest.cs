@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Piper.Core.Attributes;
@@ -17,6 +16,7 @@ public partial class PpNodeSerializerTest
 	[TestInitialize]
 	public void Setup()
 	{
+		// Reset ID generator, so we get the same sequence every test.
 		PpId.Instance.Reset();
 	}
 
