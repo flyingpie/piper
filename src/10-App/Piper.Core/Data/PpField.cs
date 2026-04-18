@@ -2,16 +2,31 @@ using Piper.Core.Utils;
 
 namespace Piper.Core.Data;
 
-public class PpField(PpDataType type, object? value)
+public class PpField
 {
 	private PpDataTypeFlags? _flags;
 	private List<PpField>? _listOfFields;
 
-	public PpDataType DataType { get; } = Guard.Against.Null(type);
+	public PpField(PpDataType type, object? value)
+	{
+		DataType = Guard.Against.Null(type);
+		Value = value;
+	}
+
+	public PpField(string name, PpDataType type, object? value)
+	{
+		Name = name;
+		DataType = Guard.Against.Null(type);
+		Value = value;
+	}
+
+	public string Name { get; set; }
+
+	public PpDataType DataType { get; }
 
 	public PpDataTypeFlags DataTypeFlags => _flags ??= GetFlags();
 
-	public object? Value { get; } = value;
+	public object? Value { get; }
 
 	public string? ValueAsString => Value as string ?? Value?.ToString();
 
@@ -34,7 +49,13 @@ public class PpField(PpDataType type, object? value)
 		}
 	}
 
-	public static implicit operator PpField((string name, string? value) f) => new(PpDataType.PpBool, valueAsBool);
+	public static implicit operator PpField((string Name, PpDataType Type, object? Value) f) => new(f.Name, f.Type, f.Value);
+
+	public static implicit operator PpField((string Name, string? Value) f) => new(f.Name, PpDataType.PpString, f.Value);
+
+	public static implicit operator PpField((string Name, bool? Value) f) => new(f.Name, PpDataType.PpBool, f.Value);
+
+	//
 
 	public static implicit operator PpField(bool? valueAsBool) => new(PpDataType.PpBool, valueAsBool);
 
@@ -49,6 +70,8 @@ public class PpField(PpDataType type, object? value)
 	public static implicit operator PpField(string? str) => new(PpDataType.PpString, str);
 
 	public static implicit operator PpField(string[] str) => new(PpDataType.PpStringArray, str);
+
+	public PpColumn AsColumn() => new PpColumn(DataType, Name);
 
 	public override string ToString() => Value?.ToString() ?? "(empty)";
 

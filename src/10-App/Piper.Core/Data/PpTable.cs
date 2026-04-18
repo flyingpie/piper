@@ -8,27 +8,43 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 	/// <inheritdoc/>
 	public long Count { get; set; }
 
+	public bool IsInitialized { get; private set; }
+
 	/// <inheritdoc/>
 	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name ?? PpId.Instance.NextTable());
 
 	/// <inheritdoc/>
 	public List<PpColumn> Columns { get; set; } = (columns ?? []).ToList();
 
-	public static IPpTable Create()
+	/// <inheritdoc/>
+	public async Task AddAsync(params IEnumerable<PpRecord> records)
+	{
+		await using var appender = await CreateAppenderAsync();
+		appender.AddRange(records);
+	}
 
 	/// <inheritdoc/>
-	public async Task AddRangeAsync(IEnumerable<PpRecord> records, CancellationToken ct = default)
+	public PpTable Clear()
 	{
-		await using var appender = await CreateAppenderAsync(ct);
-		appender.AddRange(records);
+		IsInitialized = false;
+
+		// await PpDb.Instance.CreateTableAsync(this, ct);
+
+		// Count = await CountAsync(ct);
+		// Count = await PpDb.Instance.CountAsync(this, ct);
+
+		return this;
 	}
 
 	/// <inheritdoc/>
 	public async Task<IPpTable> ClearAsync(CancellationToken ct = default)
 	{
-		await PpDb.Instance.CreateTableAsync(this, ct);
+		IsInitialized = false;
 
-		Count = await CountAsync(ct);
+		// await PpDb.Instance.CreateTableAsync(this, ct);
+
+		// Count = await CountAsync(ct);
+		// Count = await PpDb.Instance.CountAsync(this, ct);
 
 		return this;
 	}
@@ -44,13 +60,61 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 	/// <inheritdoc/>
 	public async Task<IPpTable> DoneAsync(CancellationToken ct = default)
 	{
-		Count = await CountAsync(ct);
+		// Count = await CountAsync(ct);
+		Count = await PpDb.Instance.CountAsync(this, ct);
 
 		return this;
 	}
 
+	public void Init()
+	{
+		if (IsInitialized)
+		{
+			return;
+		}
+
+		PpDb.Instance.CreateTableAsync(this).GetAwaiter().GetResult();
+
+		IsInitialized = true;
+	}
+
+	// /// <inheritdoc/>
+	// public static async Task<PpTable> CreateAsync(params PpRecord[] records)
+	// {
+	// 	var cols = records[0](r => r.Fields2.Select(f => f.AsColumn()));
+	// 	var table = new PpTable(null, cols);
+	//
+	// 	await PpDb.Instance.CreateTableAsync(table);
+	//
+	// 	// Count = await CountAsync();
+	//
+	// 	return table;
+	// }
+
+	// /// <inheritdoc/>
+	// public static async Task<IPpTable> CreateAsync(PpTable from, params PpRecord[] records)
+	// {
+	// 	var table = new PpTable();
+	//
+	// 	await PpDb.Instance.CreateTableAsync(table);
+	//
+	// 	// Count = await CountAsync();
+	//
+	// 	return table;
+	// }
+
+	// /// <inheritdoc/>
+	// public async Task<IPpTable> RecreateAsync(CancellationToken ct = default)
+	// {
+	// 	await PpDb.Instance.CreateTableAsync(this, ct);
+	//
+	// 	Count = await CountAsync(ct);
+	//
+	// 	return this;
+	// }
+
 	/// <inheritdoc/>
-	public Task<long> CountAsync(CancellationToken ct = default) => PpDb.Instance.CountAsync(this, ct);
+	// public Task<long> CountAsync(CancellationToken ct = default) => PpDb.Instance.CountAsync(this, ct);
 
 	/// <inheritdoc/>
 	public IAsyncEnumerable<PpRecord> QueryAllAsync(CancellationToken ct = default) => QueryAsync($"select * from {Name}", ct);
@@ -59,5 +123,65 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 	public IAsyncEnumerable<PpRecord> QueryAsync(string sql, CancellationToken ct = default) => PpDb.Instance.QueryAsync(this, sql, ct);
 
 	/// <inheritdoc/>
-	public Task<PpDbAppender> CreateAppenderAsync(CancellationToken ct = default) => PpDb.Instance.CreateAppenderAsync(this, ct);
+	public Task<PpDbAppender> CreateAppenderAsync(CancellationToken ct = default)
+	{
+		return PpDb.Instance.CreateAppenderAsync(this, ct);
+	}
+
+	// public PpTable WithRecords(params PpRecord[] record)
+	// {
+	// 	throw new NotImplementedException();
+	// }
+
+	// public IPpTable WithRecords()
+	// {
+	// 	throw new NotImplementedException();
+	// }
+
+	// public PpTable Clear()
+	// {
+	// 	ClearColumns();
+	//
+	// 	return this;
+	// }
+
+	// public PpTable ClearColumns()
+	// {
+	// 	Columns.Clear();
+	//
+	// 	return this;
+	// }
+
+	// public PpTable WithColumns(params IEnumerable<PpColumn> columns)
+	// {
+	// 	Columns.AddRange(columns);
+	//
+	// 	return this;
+	// }
+
+	//
+	// public PpTable WithColumns() { }
+	//
+	// public PpTable WithRecord(params PpRecord[] record);
+	//
+	// public PpTable WithRecord(IDictionary<string, PpField> record);
+	//
+	// public PpTable WithRecords(params IEnumerable<PpRecord> records);
 }
+
+// public class PpTableBuilder
+// {
+// 	// private PpTableBuilder() { }
+//
+// 	// public PpTableBuilder New() => new();
+//
+// 	public PpTableBuilder WithColumns(params IEnumerable<PpColumn> columns) { }
+//
+// 	public IPpTable WithColumns() { }
+//
+// 	public IPpTable WithRecord(params PpRecord[] record);
+//
+// 	public IPpTable WithRecord(IDictionary<string, PpField> record);
+//
+// 	public IPpTable WithRecords(params IEnumerable<PpRecord> records);
+// }

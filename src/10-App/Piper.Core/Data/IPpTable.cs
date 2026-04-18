@@ -12,13 +12,13 @@ public interface IPpTable
 
 	string Name { get; }
 
-	Task AddRangeAsync(IEnumerable<PpRecord> records, CancellationToken ct = default);
+	Task AddAsync(params IEnumerable<PpRecord> records);
 
 	Task<IPpTable> ClearAsync(CancellationToken ct = default);
 
 	Task FetchAsync(CancellationToken ct = default);
 
-	Task<long> CountAsync(CancellationToken ct = default);
+	// Task<long> CountAsync(CancellationToken ct = default);
 
 	Task<IPpTable> DoneAsync(CancellationToken ct = default);
 
@@ -27,14 +27,4 @@ public interface IPpTable
 	IAsyncEnumerable<PpRecord> QueryAsync(string sql, CancellationToken ct = default);
 
 	Task<PpDbAppender> CreateAppenderAsync(CancellationToken ct = default);
-
-	IPpTable WithColumn(PpDataType type, string name);
-
-	IPpTable WithColumns();
-
-	IPpTable WithRecord(params PpRecord[] record);
-
-	// IPpTable WithRecord(IDictionary<string, PpField> record);
-
-	IPpTable WithRecords();
 }

@@ -44,6 +44,20 @@ public class PpReadFilesModifier : PpModifier
 		Table.Columns = cols;
 		await Table.ClearAsync(ct);
 
+		// // New table creating syntax
+		// {
+		// 	await Table
+		// 		//
+		// 		.ClearColumns()
+		// 		.WithColumns(source)
+		// 		.WithColumns((PpString, DstFieldName))
+		// 		.RecreateAsync(ct);
+		//
+		// 	// Table.WithColumns(source);
+		// 	// Table.WithColumns((PpString, DstFieldName));
+		// 	// await Table.ClearAsync();
+		// }
+
 		// var engine = new RazorEngine();
 		// var tpl = await engine.CompileAsync<CustomRazorTemplate>(Template, cancellationToken: ct);
 
@@ -51,14 +65,16 @@ public class PpReadFilesModifier : PpModifier
 
 		await foreach (var rec in source.QueryAllAsync(ct))
 		{
+			if (!rec.Fields.TryGetValue(SrcFieldName, out var src))
+			{
+				appender.Add(CreateRecord(rec, $"No field named '{SrcFieldName}'"));
+				break;
+			}
+
+			var path = src.ValueAsString;
+
 			try
 			{
-				if (!rec.Fields.TryGetValue(SrcFieldName, out var src))
-				{
-					appender.Add(CreateRecord(rec, $"No field named '{SrcFieldName}'"));
-					break;
-				}
-
 				// var doc = XElement.Parse(src.ValueAsString);
 				// var q = (IEnumerable)doc.XPathEvaluate(Query);
 				// var b = new StringBuilder();
@@ -76,10 +92,10 @@ public class PpReadFilesModifier : PpModifier
 
 				// if(string.IsNullOrWhiteSpace())
 				// {
-				// 	throw new 
+				// 	throw new
 				// }
 
-				var fileCont = await File.ReadAllTextAsync(src.ValueAsString);
+				var fileCont = await File.ReadAllTextAsync(path);
 
 				var newRec = new PpRecord()
 				{
@@ -88,10 +104,18 @@ public class PpReadFilesModifier : PpModifier
 				};
 				newRec.Fields.Add(DstFieldName, fileCont);
 				appender.Add(newRec);
+
+				// New table creating syntax
+				{
+					var res = PpRecord.From(rec).With((DstFieldName, fileCont));
+
+					appender.Add(res);
+				}
 			}
 			catch (Exception ex)
 			{
 				_log.LogError(ex, "Error reading file: {Message}", ex.Message);
+				Logs.Error($"Error reading file at path '{src.ValueAsString}': {ex.Message}");
 			}
 		}
 

@@ -18,6 +18,8 @@ public class PpNullTable : IPpTable
 
 	public Task AddRangeAsync(IEnumerable<PpRecord> records, CancellationToken ct = default) => Task.CompletedTask;
 
+	public Task AddAsync(params IEnumerable<PpRecord> records) => Task.CompletedTask;
+
 	public Task<IPpTable> ClearAsync(CancellationToken ct = default) => Task.FromResult<IPpTable>(this);
 
 	public Task FetchAsync(CancellationToken ct = default) => Task.CompletedTask;
@@ -32,4 +34,24 @@ public class PpNullTable : IPpTable
 
 	public Task<PpDbAppender> CreateAppenderAsync(CancellationToken ct = default) =>
 		throw new InvalidOperationException("Can't append to NULL table.");
+
+	public IPpTable WithColumn(PpDataType type, string name)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IPpTable WithColumns()
+	{
+		throw new NotImplementedException();
+	}
+
+	public IPpTable WithRecord(params PpRecord[] record)
+	{
+		throw new NotImplementedException();
+	}
+
+	public IPpTable WithRecords()
+	{
+		throw new NotImplementedException();
+	}
 }
