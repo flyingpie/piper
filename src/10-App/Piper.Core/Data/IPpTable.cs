@@ -12,7 +12,9 @@ public interface IPpTable
 
 	string Name { get; }
 
-	Task AddAsync(params IEnumerable<PpRecord> records);
+	Task<IPpTable> AddAsync(params IEnumerable<PpRecord> records);
+
+	IPpTable Clear();
 
 	Task<IPpTable> ClearAsync(CancellationToken ct = default);
 

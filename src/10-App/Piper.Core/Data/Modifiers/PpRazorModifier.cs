@@ -29,10 +29,11 @@ public class PpRazorModifier : PpModifier
 			return;
 		}
 
-		var cols = source.Columns.ToList();
-		cols.AddRange([new(PpString, DstFieldName)]);
-		Table.Columns = cols;
-		await Table.ClearAsync(ct);
+		// var cols = source.Columns.ToList();
+		// cols.AddRange([new(PpString, DstFieldName)]);
+		// Table.Columns = cols;
+		// await Table.ClearAsync(ct);
+		Table.Clear();
 
 		var engine = new RazorEngine();
 		IRazorEngineCompiledTemplate<CustomRazorTemplate>? tpl;
@@ -51,28 +52,31 @@ public class PpRazorModifier : PpModifier
 
 		await foreach (var rec in source.QueryAllAsync(ct))
 		{
-			var newRec = new PpRecord()
-			{
-				//
-				Fields = new Dictionary<string, PpField>(rec.Fields, StringComparer.OrdinalIgnoreCase),
-			};
+			// var newRec = new PpRecord()
+			// {
+			// 	//
+			// 	Fields = new Dictionary<string, PpField>(rec.Fields, StringComparer.OrdinalIgnoreCase),
+			// };
+			var newRec = PpRecord.From(rec);
 
 			try
 			{
 				var eo = new ExpandoObject();
-				var eoColl = (ICollection<KeyValuePair<string, object>>)eo;
-				foreach (var kv in rec.Fields)
+				ICollection<KeyValuePair<string, object?>> eoColl = eo;
+				foreach (var kv in rec.Fields2)
 				{
-					eoColl.Add(new KeyValuePair<string, object>(kv.Key, kv.Value.ValueAsString ?? string.Empty));
+					eoColl.Add(new KeyValuePair<string, object?>(kv.Name, kv.Value));
 				}
 
 				var res = tpl.Run(inst => inst.Rec = eo);
 
-				newRec.Fields.Add(DstFieldName, res);
+				// newRec.Fields.Add(DstFieldName, res);
+				newRec.With((DstFieldName, res));
 			}
 			catch (Exception ex)
 			{
-				newRec.Fields.Add(DstFieldName, $"Error running Razor template: {ex.Message}");
+				// newRec.Fields.Add(DstFieldName, $"Error running Razor template: {ex.Message}");
+				newRec.With((DstFieldName, $"Error running Razor template: {ex.Message}"));
 			}
 
 			appender.Add(newRec);
@@ -81,8 +85,8 @@ public class PpRazorModifier : PpModifier
 		await Table.DoneAsync(ct);
 	}
 
-	private PpRecord CreateRecord(PpRecord file, string val) =>
-		new() { Fields = new Dictionary<string, PpField>(file.Fields, StringComparer.OrdinalIgnoreCase) { { DstFieldName, val } } };
+	// private PpRecord CreateRecord(PpRecord file, string val) =>
+	// 	new() { Fields = new Dictionary<string, PpField>(file.Fields, StringComparer.OrdinalIgnoreCase) { { DstFieldName, val } } };
 
 	public class CustomRazorTemplate : RazorEngineTemplateBase
 	{

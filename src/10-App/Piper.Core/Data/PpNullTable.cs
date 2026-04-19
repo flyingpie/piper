@@ -18,7 +18,9 @@ public class PpNullTable : IPpTable
 
 	public Task AddRangeAsync(IEnumerable<PpRecord> records, CancellationToken ct = default) => Task.CompletedTask;
 
-	public Task AddAsync(params IEnumerable<PpRecord> records) => Task.CompletedTask;
+	public Task<IPpTable> AddAsync(params IEnumerable<PpRecord> records) => Task.FromResult<IPpTable>(this);
+
+	public IPpTable Clear() => this;
 
 	public Task<IPpTable> ClearAsync(CancellationToken ct = default) => Task.FromResult<IPpTable>(this);
 

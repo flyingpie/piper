@@ -1,0 +1,19 @@
+﻿[
+  {
+    Name: col1,
+    Value: false,
+    ValueAsString: False
+  },
+  {
+    Name: col2,
+    DataType: PpString,
+    Value: Another Text,
+    ValueAsString: Another Text
+  },
+  {
+    Name: rzr_dst,
+    DataType: PpString,
+    Value: The value of 'col1' is 'False',
+    ValueAsString: The value of 'col1' is 'False'
+  }
+]

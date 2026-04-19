@@ -73,7 +73,8 @@ public class PpField
 
 	public PpColumn AsColumn() => new PpColumn(DataType, Name);
 
-	public override string ToString() => Value?.ToString() ?? "(empty)";
+	// public override string ToString() => Value?.ToString() ?? "(empty)";
+	public override string ToString() => $"({Name}, \"{Value}\"::{DataType})";
 
 	private static readonly Regex _hexRegex = new("^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$", RegexOptions.Compiled);
 

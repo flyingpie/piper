@@ -17,14 +17,16 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 	public List<PpColumn> Columns { get; set; } = (columns ?? []).ToList();
 
 	/// <inheritdoc/>
-	public async Task AddAsync(params IEnumerable<PpRecord> records)
+	public async Task<IPpTable> AddAsync(params IEnumerable<PpRecord> records)
 	{
 		await using var appender = await CreateAppenderAsync();
 		appender.AddRange(records);
+
+		return this;
 	}
 
 	/// <inheritdoc/>
-	public PpTable Clear()
+	public IPpTable Clear()
 	{
 		IsInitialized = false;
 
@@ -60,18 +62,26 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 	/// <inheritdoc/>
 	public async Task<IPpTable> DoneAsync(CancellationToken ct = default)
 	{
-		// Count = await CountAsync(ct);
-		Count = await PpDb.Instance.CountAsync(this, ct);
+		if (IsInitialized)
+		{
+			// Count = await CountAsync(ct);
+			Count = await PpDb.Instance.CountAsync(this, ct);
+		}
 
 		return this;
 	}
 
-	public void Init()
+	public void Init(PpRecord record)
 	{
+		Guard.Against.Null(record);
+
 		if (IsInitialized)
 		{
 			return;
 		}
+
+		Columns.Clear();
+		Columns.AddRange(record.Select(rec => rec.AsColumn()));
 
 		PpDb.Instance.CreateTableAsync(this).GetAwaiter().GetResult();
 
@@ -117,10 +127,26 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 	// public Task<long> CountAsync(CancellationToken ct = default) => PpDb.Instance.CountAsync(this, ct);
 
 	/// <inheritdoc/>
-	public IAsyncEnumerable<PpRecord> QueryAllAsync(CancellationToken ct = default) => QueryAsync($"select * from {Name}", ct);
+	public IAsyncEnumerable<PpRecord> QueryAllAsync(CancellationToken ct = default)
+	{
+		if (!IsInitialized)
+		{
+			return AsyncEnumerable.Empty<PpRecord>();
+		}
+
+		return QueryAsync($"select * from {Name}", ct);
+	}
 
 	/// <inheritdoc/>
-	public IAsyncEnumerable<PpRecord> QueryAsync(string sql, CancellationToken ct = default) => PpDb.Instance.QueryAsync(this, sql, ct);
+	public IAsyncEnumerable<PpRecord> QueryAsync(string sql, CancellationToken ct = default)
+	{
+		if (!IsInitialized)
+		{
+			return AsyncEnumerable.Empty<PpRecord>();
+		}
+
+		return PpDb.Instance.QueryAsync(this, sql, ct);
+	}
 
 	/// <inheritdoc/>
 	public Task<PpDbAppender> CreateAppenderAsync(CancellationToken ct = default)

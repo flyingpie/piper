@@ -11,14 +11,24 @@ public class PpRecord : IEnumerable<PpField>
 {
 	public PpRecord() { }
 
-	public PpRecord(Dictionary<string, PpField> fields)
+	// public PpRecord(Dictionary<string, PpField> fields)
+	// {
+	// 	Fields = Guard.Against.Null(fields);
+	// }
+
+	public PpRecord(IEnumerable<PpField> fields)
 	{
-		Fields = Guard.Against.Null(fields);
+		_fields = new(fields);
 	}
 
 	public PpRecord(ReadOnlySpan<PpField> fields)
 	{
 		_fields = new(fields.ToArray());
+	}
+
+	public PpField? this[string name]
+	{
+		get => Fields2.FirstOrDefault(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 	}
 
 	public static PpRecord Create(ReadOnlySpan<PpField> fields) => new(fields);
@@ -28,6 +38,22 @@ public class PpRecord : IEnumerable<PpField>
 	public IReadOnlyCollection<PpField> Fields2 => _fields;
 
 	private List<PpField> _fields = [];
+
+	public bool TryGetField(string name, [NotNullWhen(true)] out PpField? field)
+	{
+		field = Fields2.FirstOrDefault(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+		return field != null;
+	}
+
+	public bool TryGetField(PpColumn column, [NotNullWhen(true)] out PpField? field)
+	{
+		// field = Fields2.FirstOrDefault(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+		//
+		// return field != null;
+
+		return TryGetField(column.Name, out field);
+	}
 
 	// public static PpRecord Create(params PpField[] fields) => null;
 
@@ -54,7 +80,8 @@ public class PpRecord : IEnumerable<PpField>
 
 	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-	public override string ToString() => string.Join(", ", Fields);
+	// public override string ToString() => string.Join(", ", Fields);
+	public override string ToString() => $"[{string.Join(", ", Fields2)}]";
 
 	public PpField? GetField(string name)
 	{

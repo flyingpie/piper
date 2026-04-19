@@ -36,10 +36,17 @@ public class PpDb : IPpDb
 	/// <inheritdoc/>
 	public async Task<PpDbAppender> CreateAppenderAsync(IPpTable table, CancellationToken ct = default)
 	{
-		await using var cmd = await CreateCommandAsync();
-		var appender = _conn.CreateAppender(table.Name);
+		// await using var cmd = await CreateCommandAsync();
+		// var appender = _conn.CreateAppender(table.Name);
 
-		return new PpDbAppender(appender, table);
+		return new PpDbAppender(
+			appenderFactory: async () =>
+			{
+				await using var cmd = await CreateCommandAsync();
+				return _conn.CreateAppender(table.Name);
+			},
+			table
+		);
 	}
 
 	/// <inheritdoc/>
@@ -102,7 +109,7 @@ public class PpDb : IPpDb
 	{
 		_log.LogInformation("Executing query '{Query}' on table '{Table}'", query, table);
 
-		return QueryAsync([table], query);
+		return QueryAsync([table], query, ct);
 
 		// await using var cmd = await CreateCommandAsync();
 		//
@@ -144,21 +151,25 @@ public class PpDb : IPpDb
 			cmd.CommandText = cmd.CommandText.Replace("$table", $"\"{tables[0].Name}\"");
 		}
 
-		var reader = await cmd.ExecuteReaderAsync();
-		while (await reader.ReadAsync())
+		var reader = await cmd.ExecuteReaderAsync(ct);
+		while (await reader.ReadAsync(ct))
 		{
-			var dict = new Dictionary<string, PpField>();
+			// var dict = new Dictionary<string, PpField>();
+			var fields = new List<PpField>();
 
 			for (var i = 0; i < reader.FieldCount; i++)
 			{
 				var name = reader.GetName(i);
 				var type = reader.GetFieldType(i);
-				var val2 = reader.GetValue(i);
+				var ppType = type.ToPpDataType();
+				var val = reader.GetValue(i);
 
-				dict[name] = new(type.ToPpDataType(), val2);
+				// dict[name] = new(type.ToPpDataType(), val2);
+				fields.Add(new PpField(name, ppType, val));
 			}
 
-			yield return new PpRecord() { Fields = dict };
+			// yield return new PpRecord() { Fields = dict };
+			yield return new PpRecord(fields);
 		}
 	}
 
