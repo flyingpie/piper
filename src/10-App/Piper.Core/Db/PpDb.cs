@@ -98,10 +98,12 @@ public class PpDb : IPpDb
 			// TODO
 		}
 
-		foreach (var col in res ?? [])
-		{
-			table.Columns.Add(new(col.column_type.ToPpDataType(), col.column_name));
-		}
+		// foreach (var col in res ?? [])
+		// {
+		// 	table.Columns.Add(new(col.column_type.ToPpDataType(), col.column_name));
+		// }
+
+		table.Init((res ?? []).Select(col => new PpColumn(col.column_type.ToPpDataType(), col.column_name)), false);
 	}
 
 	/// <inheritdoc/>

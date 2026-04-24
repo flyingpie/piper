@@ -71,7 +71,27 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 		return this;
 	}
 
-	public void Init(PpRecord record)
+	public void Init(IEnumerable<PpColumn> columns, bool createTable = true)
+	{
+		// Guard.Against.Null(record);
+
+		if (IsInitialized)
+		{
+			return;
+		}
+
+		Columns.Clear();
+		Columns.AddRange(columns);
+
+		if (createTable)
+		{
+			PpDb.Instance.CreateTableAsync(this).GetAwaiter().GetResult();
+		}
+
+		IsInitialized = true;
+	}
+
+	public void Init(PpRecord record, bool createTable = true)
 	{
 		Guard.Against.Null(record);
 
@@ -83,7 +103,10 @@ public class PpTable(string? name = null, ICollection<PpColumn>? columns = null)
 		Columns.Clear();
 		Columns.AddRange(record.Select(rec => rec.AsColumn()));
 
-		PpDb.Instance.CreateTableAsync(this).GetAwaiter().GetResult();
+		if (createTable)
+		{
+			PpDb.Instance.CreateTableAsync(this).GetAwaiter().GetResult();
+		}
 
 		IsInitialized = true;
 	}

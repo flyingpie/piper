@@ -51,6 +51,8 @@ public class PpField
 
 	public static implicit operator PpField((string Name, PpDataType Type, object? Value) f) => new(f.Name, f.Type, f.Value);
 
+	public static implicit operator PpField((string Name, Guid? Value) f) => new(f.Name, PpDataType.PpGuid, f.Value);
+
 	public static implicit operator PpField((string Name, string? Value) f) => new(f.Name, PpDataType.PpString, f.Value);
 
 	public static implicit operator PpField((string Name, bool? Value) f) => new(f.Name, PpDataType.PpBool, f.Value);

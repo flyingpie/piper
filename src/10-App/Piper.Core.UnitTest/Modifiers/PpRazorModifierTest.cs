@@ -3,14 +3,12 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Piper.Core.Data;
 using Piper.Core.Data.Modifiers;
-using VerifyMSTest;
 using static Piper.Core.Data.PpDataType;
 
 namespace Piper.Core.UnitTest.Modifiers;
 
 [TestClass]
-[UsesVerify]
-public partial class PpRazorModifierTest
+public class PpRazorModifierTest
 {
 	/// <summary>
 	/// Successful execution, with various types.

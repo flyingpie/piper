@@ -1,12 +1,13 @@
 using System.Dynamic;
 using Piper.Core.Attributes;
 using RazorEngineCore;
-using static Piper.Core.Data.PpDataType;
 
 namespace Piper.Core.Data.Modifiers;
 
 public class PpRazorModifier : PpModifier
 {
+	private readonly IRazorEngine _engine = new RazorEngine();
+
 	public override string Name { get; set; } = "Razor";
 
 	[PpParam("Destination Field")]
@@ -29,22 +30,11 @@ public class PpRazorModifier : PpModifier
 			return;
 		}
 
-		// var cols = source.Columns.ToList();
-		// cols.AddRange([new(PpString, DstFieldName)]);
-		// Table.Columns = cols;
-		// await Table.ClearAsync(ct);
 		Table.Clear();
 
-		var engine = new RazorEngine();
-		IRazorEngineCompiledTemplate<CustomRazorTemplate>? tpl;
-
-		try
+		var tpl = await CompileTemplateAsync(ct);
+		if (tpl == null)
 		{
-			tpl = await engine.CompileAsync<CustomRazorTemplate>(Template, cancellationToken: ct);
-		}
-		catch (Exception ex)
-		{
-			Logs.Error($"Error compiling Razor template: {ex.Message}");
 			return;
 		}
 
@@ -52,30 +42,21 @@ public class PpRazorModifier : PpModifier
 
 		await foreach (var rec in source.QueryAllAsync(ct))
 		{
-			// var newRec = new PpRecord()
-			// {
-			// 	//
-			// 	Fields = new Dictionary<string, PpField>(rec.Fields, StringComparer.OrdinalIgnoreCase),
-			// };
 			var newRec = PpRecord.From(rec);
 
 			try
 			{
-				var eo = new ExpandoObject();
-				ICollection<KeyValuePair<string, object?>> eoColl = eo;
-				foreach (var kv in rec.Fields2)
-				{
-					eoColl.Add(new KeyValuePair<string, object?>(kv.Name, kv.Value));
-				}
+				// Turn current record into template parameter.
+				var tplRec = CreateTemplateParams(rec);
 
-				var res = tpl.Run(inst => inst.Rec = eo);
+				// Execute template.
+				var res = await tpl.RunAsync(inst => inst.Rec = tplRec);
 
-				// newRec.Fields.Add(DstFieldName, res);
+				// Add result field.
 				newRec.With((DstFieldName, res));
 			}
 			catch (Exception ex)
 			{
-				// newRec.Fields.Add(DstFieldName, $"Error running Razor template: {ex.Message}");
 				newRec.With((DstFieldName, $"Error running Razor template: {ex.Message}"));
 			}
 
@@ -85,11 +66,35 @@ public class PpRazorModifier : PpModifier
 		await Table.DoneAsync(ct);
 	}
 
-	// private PpRecord CreateRecord(PpRecord file, string val) =>
-	// 	new() { Fields = new Dictionary<string, PpField>(file.Fields, StringComparer.OrdinalIgnoreCase) { { DstFieldName, val } } };
-
-	public class CustomRazorTemplate : RazorEngineTemplateBase
+	private static ExpandoObject CreateTemplateParams(PpRecord rec)
 	{
-		public dynamic Rec { get; set; }
+		var eo = new ExpandoObject();
+		ICollection<KeyValuePair<string, object?>> eoColl = eo;
+		foreach (var kv in rec.Fields2)
+		{
+			eoColl.Add(new KeyValuePair<string, object?>(kv.Name, kv.Value));
+		}
+
+		return eo;
+	}
+
+	private async Task<IRazorEngineCompiledTemplate<CustomRazorTemplate>?> CompileTemplateAsync(CancellationToken ct)
+	{
+		IRazorEngineCompiledTemplate<CustomRazorTemplate>? tpl;
+
+		try
+		{
+			return await _engine.CompileAsync<CustomRazorTemplate>(Template, cancellationToken: ct);
+		}
+		catch (Exception ex)
+		{
+			Logs.Error($"Error compiling Razor template: {ex.Message}");
+			return null;
+		}
+	}
+
+	private class CustomRazorTemplate : RazorEngineTemplateBase
+	{
+		public dynamic Rec { get; set; } = null!;
 	}
 }

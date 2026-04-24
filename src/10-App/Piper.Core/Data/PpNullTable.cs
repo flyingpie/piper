@@ -30,6 +30,10 @@ public class PpNullTable : IPpTable
 
 	public Task<IPpTable> DoneAsync(CancellationToken ct = default) => Task.FromResult<IPpTable>(this);
 
+	public void Init(IEnumerable<PpColumn> columns, bool createTable = true) { }
+
+	public void Init(PpRecord record, bool createTable = true) { }
+
 	public IAsyncEnumerable<PpRecord> QueryAllAsync(CancellationToken ct = default) => AsyncEnumerable.Empty<PpRecord>();
 
 	public IAsyncEnumerable<PpRecord> QueryAsync(string sql, CancellationToken ct = default) => AsyncEnumerable.Empty<PpRecord>();

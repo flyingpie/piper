@@ -24,6 +24,10 @@ public interface IPpTable
 
 	Task<IPpTable> DoneAsync(CancellationToken ct = default);
 
+	void Init(IEnumerable<PpColumn> columns, bool createTable = true);
+
+	void Init(PpRecord record, bool createTable = true);
+
 	IAsyncEnumerable<PpRecord> QueryAllAsync(CancellationToken ct = default);
 
 	IAsyncEnumerable<PpRecord> QueryAsync(string sql, CancellationToken ct = default);
