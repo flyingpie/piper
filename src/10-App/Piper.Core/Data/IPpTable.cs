@@ -12,7 +12,9 @@ public interface IPpTable
 
 	string Name { get; }
 
-	Task AddAsync(params IEnumerable<PpRecord> records);
+	Task<IPpTable> AddAsync(params IEnumerable<PpRecord> records);
+
+	IPpTable Clear();
 
 	Task<IPpTable> ClearAsync(CancellationToken ct = default);
 
@@ -21,6 +23,10 @@ public interface IPpTable
 	// Task<long> CountAsync(CancellationToken ct = default);
 
 	Task<IPpTable> DoneAsync(CancellationToken ct = default);
+
+	void Init(IEnumerable<PpColumn> columns, bool createTable = true);
+
+	void Init(PpRecord record, bool createTable = true);
 
 	IAsyncEnumerable<PpRecord> QueryAllAsync(CancellationToken ct = default);
 

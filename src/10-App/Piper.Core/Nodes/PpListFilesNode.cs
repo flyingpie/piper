@@ -1,6 +1,7 @@
 using Microsoft.Extensions.FileSystemGlobbing;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
+using Piper.Core.Utils;
 using static Piper.Core.Data.PpDataType;
 using static Piper.Core.Data.PpPortDirection;
 
@@ -47,21 +48,22 @@ public class PpListFilesNode : PpNode
 			return;
 		}
 
-		OutFiles.BaseTable.Columns =
-		[
-			new(PpGuid, "rec__uuid"),
-			// new("file", PpDataType.PpJson),
-			new(PpDataType.PpString, "file"),
-			// new("file__createdutc", PpDateTime),
-			// new("file__dir", PpString),
-			// new("file__ext", PpString),
-			// new("file__name", PpString),
-			// new("file__name_without_ext", PpString),
-			// new("file__path", PpString),
-			// new("file__size", PpInt32),
-		];
+		// OutFiles.BaseTable.Columns =
+		// [
+		// 	new(PpGuid, "rec__uuid"),
+		// 	// new("file", PpDataType.PpJson),
+		// 	new(PpDataType.PpString, "file"),
+		// 	// new("file__createdutc", PpDateTime),
+		// 	// new("file__dir", PpString),
+		// 	// new("file__ext", PpString),
+		// 	// new("file__name", PpString),
+		// 	// new("file__name_without_ext", PpString),
+		// 	// new("file__path", PpString),
+		// 	// new("file__size", PpInt32),
+		// ];
 
-		await OutFiles.BaseTable.ClearAsync();
+		// await OutFiles.BaseTable.ClearAsync();
+		OutFiles.BaseTable.Clear();
 
 		var matcher = new Matcher();
 		matcher.AddIncludePatterns([InPattern]);
@@ -80,49 +82,34 @@ public class PpListFilesNode : PpNode
 					break;
 				}
 
-				var fi = new FileInfo(path);
-
 				appender.Add(
-					new PpRecord()
-					{
-						Fields =
-						{
-							{ "rec__uuid", new(PpGuid, Guid.CreateVersion7()) },
-							{
-								"file",
-								new(
-									PpString,
-									// PpDataType.PpJson,
-									Piper.Core.Utils.PpJson.SerializeToString(
-										new
-										{
-											createdutc = fi.CreationTimeUtc,
-											dir = Path.GetDirectoryName(path),
-											ext = Path.GetExtension(path),
-											name = Path.GetFileName(path),
-											name_without_ext = Path.GetFileNameWithoutExtension(path),
-											path = Path.GetFullPath(path),
-											size = (int)fi.Length,
-										}
-									)
-								)
-							},
-							// { "file__createdutc", new(PpDateTime, fi.CreationTimeUtc) },
-							// { "file__dir", new(PpString, Path.GetDirectoryName(path)) },
-							// { "file__ext", new(PpString, Path.GetExtension(path)) },
-							// { "file__name", new(PpString, Path.GetFileName(path)) },
-							// { "file__name_without_ext", new(PpString, Path.GetFileNameWithoutExtension(path)) },
-							// { "file__path", new(PpString, Path.GetFullPath(path)) },
-							// { "file__size", new(PpInt32, (int)fi.Length) },
-						},
-					}
+					new PpRecord([
+						//
+						("rec__uuid", Guid.CreateVersion7()),
+						("file", FileInfoToJsonObject(path)),
+					])
 				);
 			}
 		}
 
 		await OutFiles.BaseTable.DoneAsync();
-		// await OutFiles.Table.DoneAsync();
+	}
 
-		// await Task.Delay(TimeSpan.FromMilliseconds(1500));
+	private static string FileInfoToJsonObject(string path)
+	{
+		var fi = new FileInfo(path);
+
+		return PpJson.SerializeToString(
+			new
+			{
+				createdutc = fi.CreationTimeUtc,
+				dir = Path.GetDirectoryName(path),
+				ext = Path.GetExtension(path),
+				name = Path.GetFileName(path),
+				name_without_ext = Path.GetFileNameWithoutExtension(path),
+				path = Path.GetFullPath(path),
+				size = (int)fi.Length,
+			}
+		);
 	}
 }

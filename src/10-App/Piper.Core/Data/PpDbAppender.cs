@@ -2,10 +2,17 @@ using DuckDB.NET.Data;
 
 namespace Piper.Core.Data;
 
-public sealed class PpDbAppender(DuckDBAppender appender, IPpTable table) : IAsyncDisposable
+public sealed class PpDbAppender(
+	// DuckDBAppender appender,
+	Func<Task<DuckDBAppender>> appenderFactory,
+	IPpTable table
+) : IAsyncDisposable
 {
-	private readonly DuckDBAppender _appender = Guard.Against.Null(appender);
-	private readonly IPpTable _table = Guard.Against.Null(table);
+	// private readonly DuckDBAppender _appender = Guard.Against.Null(appender);
+	private readonly Func<Task<DuckDBAppender>> _appenderFactory = Guard.Against.Null(appenderFactory);
+	private readonly PpTable _table = (PpTable)Guard.Against.Null(table);
+
+	private DuckDBAppender? _appender;
 
 	private int _i;
 
@@ -17,12 +24,12 @@ public sealed class PpDbAppender(DuckDBAppender appender, IPpTable table) : IAsy
 		}
 	}
 
-	public void Add(string json)
-	{
-		var row = appender.CreateRow();
-		row.AppendValue(json);
-		row.EndRow();
-	}
+	// public void Add(string json)
+	// {
+	// 	var row = appender.CreateRow();
+	// 	row.AppendValue(json);
+	// 	row.EndRow();
+	// }
 
 	public void Add(PpRecord record)
 	{
@@ -34,17 +41,23 @@ public sealed class PpDbAppender(DuckDBAppender appender, IPpTable table) : IAsy
 			_i = 0;
 		}
 
-		var row = appender.CreateRow();
+		if (_appender == null)
+		{
+			_table.Init(record);
+			_appender = appenderFactory().GetAwaiter().GetResult(); // TODO: Fix
+		}
+
+		var row = _appender.CreateRow();
 
 		foreach (var col in _table.Columns)
 		{
-			if (!record.Fields.TryGetValue(col.Name, out var val))
+			if (!record.TryGetField(col.Name, out var field))
 			{
 				row.AppendNullValue();
 				continue;
 			}
 
-			switch (val.Value)
+			switch (field.Value)
 			{
 				case bool asBool:
 					row.AppendValue(asBool);
@@ -88,7 +101,7 @@ public sealed class PpDbAppender(DuckDBAppender appender, IPpTable table) : IAsy
 					break;
 
 				default:
-					throw new InvalidOperationException($"Unsupported data type '{val.Value.GetType().FullName}'.");
+					throw new InvalidOperationException($"Unsupported data type '{field.Value.GetType().FullName}'.");
 			}
 		}
 
@@ -97,7 +110,7 @@ public sealed class PpDbAppender(DuckDBAppender appender, IPpTable table) : IAsy
 
 	public async ValueTask DisposeAsync()
 	{
-		_appender.Dispose();
+		_appender?.Dispose();
 		// await _conn.DisposeAsync();
 	}
 }
