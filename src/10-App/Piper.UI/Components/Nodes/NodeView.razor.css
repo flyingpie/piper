@@ -39,6 +39,14 @@
 /*		animation-play-state: paused;*/
 /*	}*/
 /*}*/
+.pp-node.selected::after {
+	content: " ";
+	position: absolute;
+	inset: -10px;
+	border: 1px gray dashed;
+	/*border-radius: 6px;*/
+	pointer-events: none;
+}
 
 .pp-node.selected:not(.is-executing) {
 	/*outline: 1px solid #999;*/
