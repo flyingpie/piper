@@ -22,7 +22,7 @@ public class PpRegexNodeTest
 		// 	new(PpString, "src"),
 		// ];
 
-		outRecords.BaseTable.Clear();
+		outRecords.BaseTable.ClearAsync();
 
 		{
 			await using var appender = await outRecords.BaseTable.CreateAppenderAsync();

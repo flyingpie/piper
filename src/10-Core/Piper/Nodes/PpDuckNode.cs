@@ -88,7 +88,7 @@ public class PpDuckNode : PpNode
 				if (appender == null)
 				{
 					// OutRecords.BaseTable.Columns = rec.Fields.Select(kv => new PpColumn(kv.Value.DataType, kv.Key)).ToList();
-					OutRecords.BaseTable.Clear();
+					await OutRecords.BaseTable.ClearAsync();
 					appender = await OutRecords.BaseTable.CreateAppenderAsync();
 				}
 

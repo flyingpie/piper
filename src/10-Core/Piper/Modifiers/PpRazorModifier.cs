@@ -30,7 +30,7 @@ public class PpRazorModifier : PpModifier
 			return;
 		}
 
-		Table.Clear();
+		await Table.ClearAsync();
 
 		var tpl = await CompileTemplateAsync(ct);
 		if (tpl == null)

@@ -27,9 +27,9 @@ public sealed class PpNullTable : IPpTable
 		return Task.FromResult<IPpTable>(this);
 	}
 
-	public IPpTable Clear()
+	public Task<IPpTable> ClearAsync(CancellationToken ct = default)
 	{
-		return this;
+		return Task.FromResult<IPpTable>(this);
 	}
 
 	public Task<PpDbAppender> CreateAppenderAsync(CancellationToken ct = default)

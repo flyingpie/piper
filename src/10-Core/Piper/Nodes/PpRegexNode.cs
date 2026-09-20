@@ -67,7 +67,7 @@ public class PpRegexNode : PpNode
 		// var cols1 = inTable._columns.ToList();
 		// cols1.AddRange([new(PpString, OutAttribute)]);
 		// OutMatch.BaseTable.Columns = cols1;
-		OutMatch.BaseTable.Clear();
+		await OutMatch.BaseTable.ClearAsync();
 
 		var regex = new Regex(InPattern ?? string.Empty, RegexOptions.Compiled);
 

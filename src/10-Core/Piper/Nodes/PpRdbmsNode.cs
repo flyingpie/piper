@@ -83,7 +83,7 @@ public class PpRdbmsNode : PpNode
 					// var cols = await ReadColumnsAsync(reader);
 					// OutRecords.BaseTable._columns.Clear();
 					// OutRecords.BaseTable._columns.AddRange(cols);
-					OutRecords.BaseTable.Clear();
+					await OutRecords.BaseTable.ClearAsync();
 
 					appender = await OutRecords.BaseTable.CreateAppenderAsync();
 				}

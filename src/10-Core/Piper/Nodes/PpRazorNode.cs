@@ -55,7 +55,7 @@ public class PpRazorNode : PpNode
 		// var cols = inTable._columns.ToList();
 		// cols.AddRange([new(PpString, "razor")]);
 		// OutRecords.BaseTable.Columns = cols;
-		OutRecords.BaseTable.Clear();
+		await OutRecords.BaseTable.ClearAsync();
 
 		{
 			await using var appender = await OutRecords.BaseTable.CreateAppenderAsync();

@@ -55,7 +55,7 @@ public class PpReadFilesNode : PpNode
 		// var cols = inTable.Columns.ToList();
 		// cols.AddRange([new(PpString, "idx"), new(PpString, "line")]);
 		// OutLines.BaseTable.Columns = cols;
-		OutLines.BaseTable.Clear();
+		await OutLines.BaseTable.ClearAsync();
 
 		{
 			await using var appender = await OutLines.BaseTable.CreateAppenderAsync();

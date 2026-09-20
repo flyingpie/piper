@@ -60,7 +60,7 @@ public class PpListFilesNode : PpNode
 		// ];
 
 		// await OutFiles.BaseTable.ClearAsync();
-		OutFiles.BaseTable.Clear();
+		await OutFiles.BaseTable.ClearAsync();
 
 		var matcher = new Matcher();
 		matcher.AddIncludePatterns([InPattern]);

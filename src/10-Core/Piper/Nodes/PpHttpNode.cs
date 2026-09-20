@@ -58,7 +58,7 @@ public class PpHttpNode : PpNode
 		// var cols = inTable._columns.ToList();
 		// cols.AddRange([new(PpString, "resp")]);
 		// OutResponses.BaseTable.Columns = cols;
-		OutResponses.BaseTable.Clear();
+		await OutResponses.BaseTable.ClearAsync();
 
 		var http = new HttpClient();
 

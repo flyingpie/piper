@@ -14,7 +14,10 @@ public interface IPpTable
 
 	Task<IPpTable> AddAsync(params ICollection<PpRecord> records);
 
-	IPpTable Clear();
+	/// <summary>
+	/// Drops the table, making it ready for re-creating.
+	/// </summary>
+	Task<IPpTable> ClearAsync(CancellationToken ct = default);
 
 	Task<PpDbAppender> CreateAppenderAsync(CancellationToken ct = default);
 

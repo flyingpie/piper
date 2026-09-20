@@ -48,12 +48,14 @@ public sealed class PpTable : IPpTable
 	}
 
 	/// <inheritdoc/>
-	public IPpTable Clear()
+	public async Task<IPpTable> ClearAsync(CancellationToken ct = default)
 	{
 		_log.LogDebug("[PpTable:{Table}] Clearing", Name);
 
 		// Mark the table to be recreated on the next operation.
 		_isInitialized = false;
+
+		await PpDb.Instance.LowLevel.ExecuteNonQueryAsync($"drop table {Name}", ct);
 
 		return this;
 	}

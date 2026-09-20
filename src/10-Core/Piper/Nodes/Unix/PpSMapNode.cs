@@ -45,7 +45,7 @@ public class PpSMapNode : PpNode
 					{
 						// OutProcesses.BaseTable._columns.Clear();
 						// OutProcesses.BaseTable._columns.AddRange(recs.First().Fields.Select(f => new PpColumn(PpDataType.PpString, f.Key)));
-						OutProcesses.BaseTable.Clear();
+						await OutProcesses.BaseTable.ClearAsync();
 						appender = await OutProcesses.BaseTable.CreateAppenderAsync();
 						isInit = true;
 					}
