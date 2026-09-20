@@ -1,0 +1,46 @@
+@using Microsoft.AspNetCore.Components.Web
+@namespace B.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+	<base href="~/"/>
+
+	<link rel="stylesheet" href="_content/Blazorise.Icons.FontAwesome/v6/css/all.min.css"/>
+	<link rel="stylesheet" href="_content/Radzen.Blazor/css/standard-dark.css"/>
+	<link rel="stylesheet" href="_content/Z.Blazor.Diagrams/style.min.css"/>
+	<link rel="stylesheet" href="_content/Z.Blazor.Diagrams/default.styles.min.css"/>
+	<link rel="stylesheet" href="Piper.Host.Photino.styles.css"/>
+	<link rel="stylesheet" href="Piper.Host.BlazorServer.styles.css"/>
+	<link rel="stylesheet" href="app.css"/>
+	<style>
+		:root {
+			--rz-base-700: #181818;
+			--rz-base-800: #151516;
+			--rz-base-900: #111111;
+		}
+
+		body {
+			background: #111111 !important;
+		}
+	</style>
+
+	<component type="typeof(HeadOutlet)" render-mode="ServerPrerendered"/>
+</head>
+<body>
+
+@RenderBody()
+
+<script src="_content/BlazorMonaco/jsInterop.js"></script>
+<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js"></script>
+<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js"></script>
+<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+<script src="_content/Z.Blazor.Diagrams/script.min.js"></script>
+
+<script src="_framework/blazor.server.js"></script>
+</body>
+</html>

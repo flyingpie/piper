@@ -1,16 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<AssemblyName>Piper.Test</AssemblyName>
-		<RootNamespace>@(AssemblyName)</RootNamespace>
+		<RootNamespace>Piper.Test</RootNamespace>
 		<OutputType>Exe</OutputType>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Playwright.MSTest.v4" />
 		<PackageReference Include="Verify.ImageHash" />
 		<PackageReference Include="Verify.Playwright" />
-		<PackageReference Update="coverlet.collector">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 </Project>

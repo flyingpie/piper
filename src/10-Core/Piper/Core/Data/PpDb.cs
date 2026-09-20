@@ -1,0 +1,193 @@
+using System.Runtime.CompilerServices;
+using Dapper;
+using DuckDB.NET.Data;
+using DuckDB.NET.Native;
+using Microsoft.Extensions.Logging;
+using Piper.Core.Utils;
+
+namespace Piper.Core.Data;
+
+public sealed class PpDb : IPpDb
+{
+	private readonly ILogger _log = Log.For<PpDb>();
+	private readonly DuckDBConnection _conn = new("DataSource=:memory:?cache=shared");
+	private readonly SemaphoreSlim _lock = new(1);
+
+	private bool _isOpen;
+
+	private PpDb()
+	{
+		LowLevel = new PpDbLowLevel(CreateCommandAsync);
+	}
+
+	public static IPpDb Instance { get; } = new PpDb();
+
+	/// <inheritdoc/>
+	public IPpDbLowLevel LowLevel { get; }
+
+	/// <inheritdoc/>
+	public async Task<long> CountAsync(IPpTable table, CancellationToken ct = default)
+	{
+		Guard.Against.Null(table);
+
+		return await LowLevel.ExecuteScalarAsync($"select count(1) from {table.Name}", ct);
+	}
+
+	/// <inheritdoc/>
+	public async Task<PpDbAppender> CreateAppenderAsync(IPpTable table, CancellationToken ct = default)
+	{
+		return new PpDbAppender(
+			appenderFactory: async () =>
+			{
+				await using var cmd = await CreateCommandAsync();
+				return _conn.CreateAppender(table.Name);
+			},
+			table
+		);
+	}
+
+	/// <inheritdoc/>
+	public async Task CreateTableAsync(IPpTable table, CancellationToken ct = default)
+	{
+		var sb1 = new StringBuilder();
+		sb1.Append(
+			$"""
+			CREATE TABLE "{table.Name}"
+			(
+			"""
+		);
+
+		foreach (var col in table.Columns)
+		{
+			sb1.Append(
+				$"""
+					{col.ToDuckDbColumnSql()},
+
+				"""
+			);
+		}
+
+		sb1.Append(
+			"""
+			)
+			"""
+		);
+
+		var sql = sb1.ToString();
+
+		await LowLevel.ExecuteNonQueryAsync(sql);
+	}
+
+	/// <inheritdoc/>
+	public async Task<IReadOnlyList<PpColumn>> GetColumnsAsync(string objectName, CancellationToken ct = default)
+	{
+		await OpenAsync();
+
+		// table.Columns.Clear();
+
+		IEnumerable<DuckDbTableDescription> res = null!;
+
+		try
+		{
+			res = await _conn.QueryAsync<DuckDbTableDescription>($"describe {objectName}", ct);
+		}
+		catch (DuckDBException ex) when (ex.Message?.Contains("does not exist", StringComparison.OrdinalIgnoreCase) ?? false)
+		{
+			// TODO
+		}
+
+		return [.. (res ?? []).Select(col => new PpColumn(col.column_type.ToPpDataType(), col.column_name))];
+	}
+
+	/// <inheritdoc/>
+	public IAsyncEnumerable<PpRecord> QueryAsync(IPpTable table, string query, CancellationToken ct = default)
+	{
+		_log.LogInformation("Executing query '{Query}' on table '{Table}'", query, table);
+
+		return QueryAsync([table], query, ct);
+	}
+
+	/// <inheritdoc/>
+	public async IAsyncEnumerable<PpRecord> QueryAsync(
+		IList<IPpTable> tables,
+		string query,
+		[EnumeratorCancellation] CancellationToken ct = default
+	)
+	{
+		await using var cmd = await CreateCommandAsync();
+
+		cmd.CommandText = query;
+
+		for (var i = 0; i < tables.Count; i++)
+		{
+			var table = tables[i];
+			cmd.CommandText = cmd.CommandText.Replace($"$table{i}", $"\"{table.Name}\"");
+		}
+
+		if (tables.Count > 0)
+		{
+			cmd.CommandText = cmd.CommandText.Replace("$table", $"\"{tables[0].Name}\"");
+		}
+
+		var reader = await cmd.ExecuteReaderAsync(ct);
+		while (await reader.ReadAsync(ct))
+		{
+			var fields = new List<PpField>();
+
+			for (var i = 0; i < reader.FieldCount; i++)
+			{
+				var name = reader.GetName(i);
+				var type = reader.GetFieldType(i);
+				var ppType = type.ToPpDataType();
+				var val = reader.GetValue(i);
+
+				fields.Add(new PpField(name, ppType, val));
+			}
+
+			yield return new PpRecord(fields);
+		}
+	}
+
+	#region Connection
+
+	private async Task OpenAsync()
+	{
+		if (_isOpen)
+		{
+			return;
+		}
+
+		await _lock.WaitAsync();
+
+		try
+		{
+			if (_isOpen)
+			{
+				return;
+			}
+
+			await _conn.OpenAsync();
+			_isOpen = true;
+		}
+		finally
+		{
+			_lock.Release();
+		}
+	}
+
+	private async Task<DuckDBCommand> CreateCommandAsync()
+	{
+		await OpenAsync();
+
+		return _conn.CreateCommand();
+	}
+
+	#endregion
+
+	private sealed class DuckDbTableDescription
+	{
+		public string column_name { get; set; }
+
+		public DuckDBType column_type { get; set; }
+	}
+}

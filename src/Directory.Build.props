@@ -1,14 +1,13 @@
 <Project>
+	<!--
+		General
+	-->
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 
-		<!-- Include debug symbols in the assemblies themselves, makes debugging so much easier -->
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-
-		<!-- Some features we use require a documentation file, like analyzers, and the docs manifest generation -->
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
 		<!--
 			Set compiler in "strict" mode, which enables some checks that weren't enabled by default, due to them being
@@ -16,46 +15,78 @@
 		-->
 		<Features>strict</Features>
 
-		<!-- Put any generated stuff (including "bin" and  "obj" folders, and NuGet packages) in an "artifacts" folder, instead of spread out across the source. -->
+		<!--
+			Put any generated stuff (including "bin" and  "obj" folders, and NuGet packages) in an "artifacts" folder, instead of spread out across the source.
+		-->
 		<ArtifactsPath>$(MSBuildThisFileDirectory)/../art</ArtifactsPath>
 		<BasePath>$(MSBuildThisFileDirectory)/../out/$(MSBuildProjectName)</BasePath>
 		<BaseOutputPath>$(BasePath)/bin</BaseOutputPath>
 		<BaseIntermediateOutputPath>$(BasePath)/obj</BaseIntermediateOutputPath>
 		<OutputPath>$(BasePath)/bin</OutputPath>
+		<!-- <OutDir>$(MSBuildThisFileDirectory)..\artifacts\bin</OutDir> -->
+		<!-- <UseCommonOutputDirectory>true</UseCommonOutputDirectory> -->
 
 		<!--
 			Faster NuGet restores
 			https://learn.microsoft.com/en-us/nuget/release-notes/nuget-5.5#summary-whats-new-in-55
 		-->
 		<RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
-	</PropertyGroup>
 
-	<PropertyGroup Condition="$(Configuration) == 'Debug'">
+		<CSharpier_UnformattedAsWarnings>true</CSharpier_UnformattedAsWarnings>
+
 		<!--
-			Disable CSharpier (includes the analyzer and the formatter).
+			Turn off any non-essential stuff by default (explicitly enabled in release builds).
 		-->
 		<CSharpier_Bypass>true</CSharpier_Bypass>
-		<!--
-			Turn off code analysis.
-		-->
-		<RunAnalyzers>false</RunAnalyzers>
-
-		<GenerateDocumentationFile>false</GenerateDocumentationFile>
-	</PropertyGroup>
-
-	<!-- Test projects -->
-	<PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Test'))">
 		<EnableNETAnalyzers>false</EnableNETAnalyzers>
 		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 		<RunAnalyzers>false</RunAnalyzers>
+		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 
-		<IsPackable>false</IsPackable>
+		<Deterministic>true</Deterministic>
+		<UseSharedCompilation>true</UseSharedCompilation>
+	</PropertyGroup>
+
+	<!--
+		Analyzers
+	-->
+	<PropertyGroup Condition="$(Configuration) == 'Release'">
+		<CSharpier_Bypass>false</CSharpier_Bypass>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<!--
+			Some features we use require a documentation file, like analyzers, and the docs manifest generation.
+		-->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<RunAnalyzers>true</RunAnalyzers>
+		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+	</PropertyGroup>
+
+	<!--
+		Test projects - Settings
+	-->
+	<PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Test'))">
+		<!--
+			Necessary for some tools to pick up tests.
+		-->
 		<IsTestProject>true</IsTestProject>
+
+		<!--
+			Enable Microsoft.Testing.Platform, this is an opt-in feature.
+		-->
 		<EnableMSTestRunner>true</EnableMSTestRunner>
 		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+
+		<!--
+			Displays error on console in addition to the log file. Note that this feature comes with a performance impact.
+		-->
 		<TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
 	</PropertyGroup>
 
+	<!--
+		Test projects - Packages
+	-->
 	<ItemGroup Condition="$(MSBuildProjectName.EndsWith('Test'))">
 		<PackageReference Include="coverlet.collector" />
 		<PackageReference Include="Moq" />
@@ -64,23 +95,13 @@
 		<PackageReference Include="Verify.MSTest" />
 	</ItemGroup>
 
-	<!-- Analyzers -->
-	<!-- <ItemGroup> -->
-	<!-- 	<PackageReference Include="CSharpier.MSBuild" /> -->
-	<!-- 	<PackageReference -->
-	<!-- 		Include="Microsoft.VisualStudio.Threading.Analyzers" -->
-	<!-- 		PrivateAssets="All" -->
-	<!-- 		IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" -->
-	<!-- 	/> -->
-	<!-- 	<PackageReference -->
-	<!-- 		Include="SonarAnalyzer.CSharp" -->
-	<!-- 		PrivateAssets="All" -->
-	<!-- 		IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" -->
-	<!-- 	/> -->
-	<!-- 	<PackageReference -->
-	<!-- 		Include="StyleCop.Analyzers.Unstable" -->
-	<!-- 		PrivateAssets="All" -->
-	<!-- 		IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" -->
-	<!-- 	/> -->
-	<!-- </ItemGroup> -->
+	<!--
+		Analyzers
+	-->
+	<ItemGroup>
+		<PackageReference Include="CSharpier.MSBuild" />
+		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+		<PackageReference Include="SonarAnalyzer.CSharp" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+		<PackageReference Include="StyleCop.Analyzers.Unstable" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+	</ItemGroup>
 </Project>

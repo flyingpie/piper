@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<AssemblyName>Piper.UI</AssemblyName>
+		<RootNamespace>Piper.UI</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\10-Core\Piper\Piper.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Blazorise.Icons.FontAwesome" />
+		<PackageReference Include="BlazorMonaco" />
+		<PackageReference Include="Newtonsoft.Json" />
+		<PackageReference Include="Radzen.Blazor" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="wwwroot\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+</Project>

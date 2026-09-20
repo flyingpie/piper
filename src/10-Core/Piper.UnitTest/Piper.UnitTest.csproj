@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<AssemblyName>Piper.UnitTest</AssemblyName>
+		<RootNamespace>Piper.UnitTest</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Piper\Piper.csproj" />
+	</ItemGroup>
+</Project>

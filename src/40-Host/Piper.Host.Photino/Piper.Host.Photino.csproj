@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<PropertyGroup>
+		<AssemblyName>Piper.Host.Photino</AssemblyName>
+		<RootNamespace>Piper.Host.Photino</RootNamespace>
+
+		<OutputType>WinExe</OutputType>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\10-Core\Piper\Piper.csproj" />
+		<ProjectReference Include="..\..\20-UI\Piper.UI\Piper.UI.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components" />
+		<PackageReference Include="Photino.Blazor" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="Graphs\*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+</Project>
