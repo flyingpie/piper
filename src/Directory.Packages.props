@@ -34,7 +34,9 @@
 		<!-- GUI -->
 		<PackageVersion Include="Blazorise.Icons.FontAwesome" Version="2.3.2" />
 		<PackageVersion Include="BlazorMonaco" Version="3.5.0" />
-		<PackageVersion Include="Photino.Blazor" Version="4.0.13" />
+		<PackageVersion Include="PhotinoX.App" Version="5.3.3" />
+		<PackageVersion Include="PhotinoX.Blazor" Version="5.3.3" />
+		<PackageVersion Include="PhotinoX.Native" Version="5.3.3" />
 		<PackageVersion Include="Radzen.Blazor" Version="11.4.1" />
 		<PackageVersion Include="Z.Blazor.Diagrams" Version="3.0.4.1" />
 		<PackageVersion Include="Z.Blazor.Diagrams.Algorithms" Version="3.0.4.1" />

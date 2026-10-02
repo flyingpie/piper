@@ -1,4 +1,4 @@
-using System.Drawing;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Photino.Blazor;
@@ -9,21 +9,23 @@ namespace Piper.UI;
 
 internal static class Program
 {
-	public static void Main(string[] args)
+	public static async Task<int> Main(string[] args)
 	{
-		var builder = PhotinoBlazorAppBuilder.CreateDefault();
+		var builder = PhotinoBlazorApp.CreateBuilder(args);
 
 		builder.Services.AddPiper();
 		builder.Services.AddSingleton<ILoggerProvider>(BlazorLoggerProvider.Instance);
 
 		builder.RootComponents.Add<App>("app");
 
-		var app = builder.Build();
+		await using var app = builder.Build();
 
 		Log.Factory = app.Services.GetRequiredService<ILoggerFactory>();
 
-		app.MainWindow.SetLogVerbosity(0).SetSize(new Size(1920, 900)).SetTitle("Piper");
+		app.MainWindow.SetLogVerbosity(0).SetSize(1920, 900).SetTitle("Piper");
 
 		app.Run();
+
+		return 0;
 	}
 }
