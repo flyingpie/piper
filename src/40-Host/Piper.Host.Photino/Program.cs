@@ -1,9 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Photino.Blazor;
-using Piper.Core;
 using Piper.Core.Utils;
 using Piper.UI.Components.Logs;
 
@@ -20,15 +18,13 @@ internal static class Program
 
 		builder.RootComponents.Add<App>("app");
 
-		var app = builder.Build();
+		await using var app = builder.Build();
 
 		Log.Factory = app.Services.GetRequiredService<ILoggerFactory>();
 
-		await using var piperApp = app;
+		app.MainWindow.SetLogVerbosity(0).SetSize(1920, 900).SetTitle("Piper");
 
-		piperApp.MainWindow.SetLogVerbosity(0).SetSize(1920, 900).SetTitle("Piper");
-
-		piperApp.Run();
+		app.Run();
 
 		return 0;
 	}
