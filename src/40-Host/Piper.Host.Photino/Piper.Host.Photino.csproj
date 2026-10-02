@@ -19,8 +19,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageVersion Include="PhotinoX.App" Version="5.3.1" />
-		<PackageVersion Include="PhotinoX.Native" Version="5.3.1" />
-		<PackageVersion Include="PhotinoX.Blazor" Version="5.3.1" />
+		<Content Update="Graphs\*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 </Project>
