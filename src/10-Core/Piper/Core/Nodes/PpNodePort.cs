@@ -12,11 +12,14 @@ public class PpNodePort : PortModel, IPpNodeProperty
 {
 	private Action<PpNodePort>? _onChange;
 
-	public PpNodePort(string name,
+	public PpNodePort(
+		string name,
 		NodeModel parent,
 		PortAlignment alignment = PortAlignment.Bottom,
 		Point? position = null,
-		Size? size = null) : base(parent, alignment, position, size)
+		Size? size = null
+	)
+		: base(parent, alignment, position, size)
 	{
 		Name = Guard.Against.NullOrWhiteSpace(name);
 

@@ -2,10 +2,7 @@ using DuckDB.NET.Data;
 
 namespace Piper.Core.Data;
 
-public sealed class PpDbAppender(
-	Func<Task<DuckDBAppender>> appenderFactory,
-	IPpTable table
-) : IAsyncDisposable
+public sealed class PpDbAppender(Func<Task<DuckDBAppender>> appenderFactory, IPpTable table) : IAsyncDisposable
 {
 	private readonly Func<Task<DuckDBAppender>> _appenderFactory = Guard.Against.Null(appenderFactory);
 	private readonly PpTable _table = (PpTable)Guard.Against.Null(table);

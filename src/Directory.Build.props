@@ -32,27 +32,30 @@
 		-->
 		<RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
 
-		<CSharpier_UnformattedAsWarnings>true</CSharpier_UnformattedAsWarnings>
+		<!-- <CSharpier_UnformattedAsWarnings>true</CSharpier_UnformattedAsWarnings> -->
 
 		<!--
 			Turn off any non-essential stuff by default (explicitly enabled in release builds).
 		-->
-		<CSharpier_Bypass>true</CSharpier_Bypass>
-		<EnableNETAnalyzers>false</EnableNETAnalyzers>
-		<EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
-		<GenerateDocumentationFile>false</GenerateDocumentationFile>
-		<RunAnalyzers>false</RunAnalyzers>
-		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+		<!-- <CSharpier_Bypass>true</CSharpier_Bypass> -->
+		<!-- <EnableNETAnalyzers>false</EnableNETAnalyzers> -->
+		<!-- <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild> -->
+		<!-- <GenerateDocumentationFile>false</GenerateDocumentationFile> -->
+		<!-- <RunAnalyzers>false</RunAnalyzers> -->
+		<!-- <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild> -->
 
 		<Deterministic>true</Deterministic>
 		<UseSharedCompilation>true</UseSharedCompilation>
+
+		<Verify_SponsorshipExemption>OpenSource</Verify_SponsorshipExemption>
+		<Verify_SponsorshipExemptionUntil>2027-10</Verify_SponsorshipExemptionUntil>
 	</PropertyGroup>
 
 	<!--
 		Analyzers
 	-->
 	<PropertyGroup Condition="$(Configuration) == 'Release'">
-		<CSharpier_Bypass>false</CSharpier_Bypass>
+		<!-- <CSharpier_Bypass>false</CSharpier_Bypass> -->
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<!--
@@ -100,8 +103,20 @@
 	-->
 	<ItemGroup>
 		<PackageReference Include="CSharpier.MSBuild" />
-		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
-		<PackageReference Include="SonarAnalyzer.CSharp" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
-		<PackageReference Include="StyleCop.Analyzers.Unstable" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+		<PackageReference
+			Include="Microsoft.VisualStudio.Threading.Analyzers"
+			PrivateAssets="All"
+			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
+		/>
+		<PackageReference
+			Include="SonarAnalyzer.CSharp"
+			PrivateAssets="All"
+			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
+		/>
+		<PackageReference
+			Include="StyleCop.Analyzers.Unstable"
+			PrivateAssets="All"
+			IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"
+		/>
 	</ItemGroup>
 </Project>

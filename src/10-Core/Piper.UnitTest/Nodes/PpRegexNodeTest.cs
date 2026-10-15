@@ -26,27 +26,11 @@ public class PpRegexNodeTest
 
 		{
 			await using var appender = await outRecords.BaseTable.CreateAppenderAsync();
-			appender.AddAsync(new PpRecord()
-			{
-				Fields = 
-				{
-					{ "src", new(PpString, "Some text some more text and even more text") },
-				},
-			});
-			appender.AddAsync(new PpRecord()
-			{
-				Fields = 
-				{
-					{ "src", new(PpString, "Some text #aabbcc some more text") },
-				},
-			});
-			appender.AddAsync(new PpRecord()
-			{
-				Fields = 
-				{
-					{ "src", new(PpString, "Some text #aabbcc some more text #002244 and even more text") },
-				},
-			});
+			appender.AddAsync(new PpRecord() { Fields = { { "src", new(PpString, "Some text some more text and even more text") } } });
+			appender.AddAsync(new PpRecord() { Fields = { { "src", new(PpString, "Some text #aabbcc some more text") } } });
+			appender.AddAsync(
+				new PpRecord() { Fields = { { "src", new(PpString, "Some text #aabbcc some more text #002244 and even more text") } } }
+			);
 		}
 
 		await outRecords.Table.DoneAsync();
@@ -55,12 +39,12 @@ public class PpRegexNodeTest
 		{
 			InAttribute = "src",
 			InPattern = @"#[A-Fa-f0-9]{6}\b",
-			InRecords = { Output = outRecords, },
+			InRecords = { Output = outRecords },
 		};
 
 		// Act
 		await node.ExecuteAsync();
-	
+
 		// Assert
 		var res = node.OutMatch.Table;
 		var x = await res.QueryAllAsync().ToListAsync();
