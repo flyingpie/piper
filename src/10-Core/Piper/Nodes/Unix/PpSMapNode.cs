@@ -1,8 +1,7 @@
-using Piper.Core.Attributes;
-using Piper.Core.Data;
+using Piper.Core.Nodes;
 using static Piper.Core.Data.PpPortDirection;
 
-namespace Piper.Core.Nodes.Unix;
+namespace Piper.Nodes.Unix;
 
 public class PpSMapNode : PpNode
 {

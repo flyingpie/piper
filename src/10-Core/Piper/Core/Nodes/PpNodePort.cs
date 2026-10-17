@@ -1,8 +1,7 @@
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-using Piper.Core.Data;
 
-namespace Piper.Core;
+namespace Piper.Core.Nodes;
 
 /// <summary>
 /// Subclasses BlazorDiagram's <see cref="PortModel"/>, to add sync between the diagram model and the Piper one

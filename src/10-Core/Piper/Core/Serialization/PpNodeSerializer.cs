@@ -5,8 +5,9 @@ using System.Text.Json.Nodes;
 using Blazor.Diagrams.Core.Geometry;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
-using Piper.Core.Data.Modifiers;
-using Piper.Core.Utils;
+using Piper.Core.Modifiers;
+using Piper.Core.Nodes;
+using Piper.Utils;
 
 namespace Piper.Core.Serialization;
 

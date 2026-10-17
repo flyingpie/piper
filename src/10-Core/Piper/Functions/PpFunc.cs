@@ -1,7 +1,6 @@
 using System.IO.Compression;
-using Piper.Core.Data;
 
-namespace Piper.Core.Functions;
+namespace Piper.Functions;
 
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class PpFuncAttribute(string name) : Attribute

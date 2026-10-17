@@ -7,7 +7,7 @@ public partial class PpNodeParam : ComponentBase
 {
 	[EditorRequired]
 	[Parameter]
-	public Core.PpNodeParam Param { get; set; } = null!;
+	public Core.Nodes.PpNodeParam Param { get; set; } = null!;
 
 	[EditorRequired]
 	[Parameter]

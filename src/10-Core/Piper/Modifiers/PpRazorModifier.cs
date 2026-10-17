@@ -1,8 +1,9 @@
 using System.Dynamic;
-using Piper.Core.Attributes;
+using Piper.Core.Modifiers;
+using Piper.Core.Nodes;
 using RazorEngineCore;
 
-namespace Piper.Core.Data.Modifiers;
+namespace Piper.Modifiers;
 
 public class PpRazorModifier : PpModifier
 {

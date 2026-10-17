@@ -1,3 +1,5 @@
+using Piper.Core.Nodes;
+
 namespace Piper.Core.Data;
 
 /// <summary>

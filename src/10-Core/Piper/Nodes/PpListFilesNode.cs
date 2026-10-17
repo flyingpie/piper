@@ -1,5 +1,7 @@
 using Microsoft.Extensions.FileSystemGlobbing;
 using Piper.Core;
+using Piper.Core.Nodes;
+using Piper.Utils;
 using static Piper.Core.Data.PpPortDirection;
 
 namespace Piper.Nodes;

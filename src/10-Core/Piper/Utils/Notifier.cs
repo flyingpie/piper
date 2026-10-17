@@ -1,4 +1,4 @@
-namespace Piper.Core;
+namespace Piper.Utils;
 
 /// <summary>
 /// When state is spread across components, Blazor can lose track of what components should be

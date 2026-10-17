@@ -6,5 +6,5 @@ public partial class PpNodeParamLarge : ComponentBase
 {
 	[EditorRequired]
 	[Parameter]
-	public Core.PpNodeParam Param { get; set; } = null!;
+	public Core.Nodes.PpNodeParam Param { get; set; } = null!;
 }

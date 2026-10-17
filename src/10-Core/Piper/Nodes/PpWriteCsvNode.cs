@@ -1,9 +1,8 @@
 using System.Globalization;
 using CsvHelper;
-using Piper.Core.Attributes;
-using Piper.Core.Data;
+using Piper.Core.Nodes;
 
-namespace Piper.Core.Nodes;
+namespace Piper.Nodes;
 
 public class PpWriteCsvNode : PpNode
 {

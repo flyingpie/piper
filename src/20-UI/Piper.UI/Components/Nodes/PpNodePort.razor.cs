@@ -7,7 +7,7 @@ public partial class PpNodePort : ComponentBase
 {
 	[EditorRequired]
 	[Parameter]
-	public Core.PpNodePort NodePort { get; set; } = null!;
+	public Core.Nodes.PpNodePort NodePort { get; set; } = null!;
 
 	private bool IsPortSelected => SelectedThingyService.Instance.IsNodePortSelected(NodePort.Port);
 

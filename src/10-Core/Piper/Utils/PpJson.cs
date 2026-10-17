@@ -6,7 +6,7 @@ using Piper.Core.Serialization;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace Piper.Core.Utils;
+namespace Piper.Utils;
 
 public static class PpJson
 {

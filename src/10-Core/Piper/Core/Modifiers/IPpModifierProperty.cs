@@ -1,8 +1,6 @@
-using Piper.Core.Data;
-
-namespace Piper.Core;
-
-public interface IPpModifierProperty
-{
-	string Name { get; }
-}
+// namespace Piper.Core.Modifiers;
+//
+// public interface IPpModifierProperty
+// {
+// 	string Name { get; }
+// }

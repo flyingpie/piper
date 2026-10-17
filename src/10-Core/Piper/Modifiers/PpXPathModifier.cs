@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using Piper.Core.Attributes;
-using static Piper.Core.Data.PpDataType;
+using Piper.Core.Modifiers;
 
-namespace Piper.Core.Data.Modifiers;
+namespace Piper.Modifiers;
 
 public class PpXPathModifier : PpModifier
 {

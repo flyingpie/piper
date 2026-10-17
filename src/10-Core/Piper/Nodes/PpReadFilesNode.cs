@@ -1,9 +1,7 @@
-using Piper.Core.Attributes;
-using Piper.Core.Data;
-using static Piper.Core.Data.PpDataType;
+using Piper.Core.Nodes;
 using static Piper.Core.Data.PpPortDirection;
 
-namespace Piper.Core.Nodes;
+namespace Piper.Nodes;
 
 public class PpReadFilesNode : PpNode
 {

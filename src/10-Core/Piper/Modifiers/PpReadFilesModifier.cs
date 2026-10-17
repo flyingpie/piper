@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Logging;
-using Piper.Core.Utils;
-using static Piper.Core.Data.PpDataType;
+using Piper.Core.Modifiers;
+using Piper.Utils;
 
-namespace Piper.Core.Data.Modifiers;
+namespace Piper.Modifiers;
 
 public class PpReadFilesModifier : PpModifier
 {

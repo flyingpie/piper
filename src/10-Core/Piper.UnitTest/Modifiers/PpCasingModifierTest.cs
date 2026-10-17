@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Piper.Core.Data;
 using Piper.Modifiers;
 
-namespace Piper.Core.UnitTest.Modifiers;
+namespace Piper.UnitTest.Modifiers;
 
 [TestClass]
 public class PpCasingModifierTest

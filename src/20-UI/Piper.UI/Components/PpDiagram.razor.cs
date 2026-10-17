@@ -1,9 +1,8 @@
 using Blazor.Diagrams;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Piper.Core.Nodes;
-using Piper.Core.Nodes.Unix;
 using Piper.Nodes;
+using Piper.Nodes.Unix;
 using Radzen;
 using BD = Blazor.Diagrams.Core.Geometry;
 

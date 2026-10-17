@@ -3,7 +3,7 @@ using Dapper;
 using DuckDB.NET.Data;
 using DuckDB.NET.Native;
 using Microsoft.Extensions.Logging;
-using Piper.Core.Utils;
+using Piper.Utils;
 
 namespace Piper.Core.Data;
 

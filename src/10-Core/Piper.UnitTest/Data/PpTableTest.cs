@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Piper.Core.Data;
-using static Piper.Core.Extensions;
+using static Piper.Extensions;
 
 namespace Piper.UnitTest.Data;
 

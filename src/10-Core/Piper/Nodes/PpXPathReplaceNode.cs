@@ -1,15 +1,10 @@
 using System.Collections;
-using System.Net.Http;
-using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Piper.Core.Attributes;
-using Piper.Core.Data;
-using Piper.Core.Utils;
-using static Piper.Core.Data.PpDataType;
+using Piper.Core.Nodes;
 using static Piper.Core.Data.PpPortDirection;
 
-namespace Piper.Core.Nodes;
+namespace Piper.Nodes;
 
 public class PpXPathReplaceNode : PpNode
 {

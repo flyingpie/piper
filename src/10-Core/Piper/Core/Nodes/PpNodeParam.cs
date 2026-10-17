@@ -1,4 +1,4 @@
-namespace Piper.Core;
+namespace Piper.Core.Nodes;
 
 public enum PpParamHint
 {

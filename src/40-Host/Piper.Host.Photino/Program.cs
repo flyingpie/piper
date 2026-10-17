@@ -2,10 +2,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Photino.Blazor;
-using Piper.Core.Utils;
+using Piper.UI;
 using Piper.UI.Components.Logs;
+using Piper.Utils;
 
-namespace Piper.UI;
+namespace Piper.Host.Photino;
 
 internal static class Program
 {

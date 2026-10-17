@@ -1,18 +1,15 @@
 using System.Reflection;
-using Blazor.Diagrams;
 using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Anchors;
-using Blazor.Diagrams.Core.Controls;
-using Blazor.Diagrams.Core.Controls.Default;
 using Blazor.Diagrams.Core.Models;
-using Blazor.Diagrams.Core.Positions;
 using Microsoft.Extensions.Logging;
-using Piper.Core.Attributes;
-using Piper.Core.Data;
-using Piper.Core.Data.Modifiers;
-using Piper.Core.Utils;
+using Piper.Core;
+using Piper.Core.Modifiers;
+using Piper.Core.Nodes;
+using Piper.Utils;
+using PpNodePort = Piper.Core.Nodes.PpNodePort;
 
-namespace Piper.Core;
+namespace Piper;
 
 public static class Extensions
 {

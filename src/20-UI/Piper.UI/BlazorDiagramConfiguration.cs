@@ -11,10 +11,9 @@ using Blazor.Diagrams.Core.Routers;
 using Blazor.Diagrams.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Piper.Core;
-using Piper.Core.Nodes;
-using Piper.Core.Nodes.Unix;
 using Piper.Core.Serialization;
 using Piper.Nodes;
+using Piper.Nodes.Unix;
 using Piper.UI.Components.Controls;
 using Piper.UI.Components.Nodes;
 

@@ -2,10 +2,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Piper.Core.Data;
-using Piper.Core.Data.Modifiers;
+using Piper.Modifiers;
 using static Piper.Core.Data.PpDataType;
 
-namespace Piper.Core.UnitTest.Modifiers;
+namespace Piper.UnitTest.Modifiers;
 
 [TestClass]
 public class PpRazorModifierTest

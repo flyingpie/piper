@@ -2,7 +2,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Piper.Core.Logging;
 
-namespace Piper.Core.UnitTest;
+namespace Piper.UnitTest;
 
 public static class TestExtensions
 {

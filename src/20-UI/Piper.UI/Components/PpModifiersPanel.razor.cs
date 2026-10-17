@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Components;
-using Piper.Core.Data.Modifiers;
+using Piper.Core.Modifiers;
 using Piper.Modifiers;
 using Piper.UI.Components.Modifiers;
 using Piper.UI.Services;

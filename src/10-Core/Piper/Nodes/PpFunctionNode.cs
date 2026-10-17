@@ -1,8 +1,6 @@
-using Piper.Core.Attributes;
-using Piper.Core.Data;
-using Piper.Core.Functions;
+using Piper.Core.Nodes;
 
-namespace Piper.Core.Nodes;
+namespace Piper.Nodes;
 
 public class PpFunctionNode : PpNode
 {

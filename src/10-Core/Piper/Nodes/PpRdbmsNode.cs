@@ -1,9 +1,8 @@
 using Npgsql;
-using Piper.Core.Attributes;
-using Piper.Core.Data;
+using Piper.Core.Nodes;
 using static Piper.Core.Data.PpPortDirection;
 
-namespace Piper.Core.Nodes;
+namespace Piper.Nodes;
 
 public class PpRdbmsNode : PpNode
 {

@@ -1,12 +1,10 @@
 using System.Net.Http;
 using System.Text.Json.Nodes;
-using Piper.Core.Attributes;
-using Piper.Core.Data;
-using Piper.Core.Utils;
-using static Piper.Core.Data.PpDataType;
+using Piper.Core.Nodes;
+using Piper.Utils;
 using static Piper.Core.Data.PpPortDirection;
 
-namespace Piper.Core.Nodes;
+namespace Piper.Nodes;
 
 public class PpHttpNode : PpNode
 {

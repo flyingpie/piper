@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
-using Piper.Core.Utils;
+using Piper.Utils;
 
-namespace Piper.Core.Data.Modifiers;
+namespace Piper.Core.Modifiers;
 
 public class PpModifierStack
 {

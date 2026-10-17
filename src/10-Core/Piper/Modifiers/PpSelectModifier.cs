@@ -1,6 +1,6 @@
 using Piper.Core.Attributes;
 using Piper.Core.Data;
-using Piper.Core.Data.Modifiers;
+using Piper.Core.Modifiers;
 
 namespace Piper.Modifiers;
 

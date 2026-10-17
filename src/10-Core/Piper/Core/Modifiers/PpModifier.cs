@@ -1,6 +1,7 @@
 using Piper.Core.Logging;
+using Piper.Core.Nodes;
 
-namespace Piper.Core.Data.Modifiers;
+namespace Piper.Core.Modifiers;
 
 public abstract class PpModifier
 {

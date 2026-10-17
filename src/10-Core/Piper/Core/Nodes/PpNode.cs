@@ -1,8 +1,7 @@
 using Blazor.Diagrams.Core.Models;
-using Piper.Core.Data;
 using Piper.Core.Logging;
 
-namespace Piper.Core;
+namespace Piper.Core.Nodes;
 
 public class PpStubNode : PpNode
 {

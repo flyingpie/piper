@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace Piper.Core.Utils;
+namespace Piper.Utils;
 
 public static class Log
 {

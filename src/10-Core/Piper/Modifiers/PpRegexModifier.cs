@@ -1,3 +1,3 @@
-namespace Piper.Core.Data.Modifiers;
+namespace Piper.Modifiers;
 
 public class PpRegexModifier { }

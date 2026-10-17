@@ -1,6 +1,7 @@
 using Piper.Core;
 using Piper.Core.Attributes;
 using Piper.Core.Data;
+using Piper.Core.Nodes;
 using static Piper.Core.Data.PpPortDirection;
 
 namespace Piper.Nodes;

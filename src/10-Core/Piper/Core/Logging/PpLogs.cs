@@ -5,7 +5,7 @@ namespace Piper.Core.Logging;
 
 public class PpLogs
 {
-	private readonly ILogger _log = global::Piper.Core.Utils.Log.For<PpLogs>();
+	private readonly ILogger _log = global::Piper.Utils.Log.For<PpLogs>();
 
 	private readonly ConcurrentQueue<PpLog> _logs = [];
 

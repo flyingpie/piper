@@ -1,11 +1,10 @@
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.Scripting.Hosting;
-using Piper.Core.Attributes;
-using Piper.Core.Data;
+using Piper.Core.Nodes;
 using static Piper.Core.Data.PpPortDirection;
 
-namespace Piper.Core.Nodes;
+namespace Piper.Nodes;
 
 public class PpCSharpNode : PpNode
 {

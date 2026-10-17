@@ -1,4 +1,4 @@
-namespace Piper.Core;
+namespace Piper;
 
 public class PpGraphFile
 {
