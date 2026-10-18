@@ -3,8 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Piper.Core.Serialization;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace Piper.Utils;
 
@@ -55,24 +53,4 @@ public static class PpJson
 	public static bool LooksLikeJson(string str) => (str?.StartsWith('[') ?? false) || (str?.StartsWith('{') ?? false);
 
 	public static string SerializeToString(object? obj) => JsonSerializer.Serialize(obj, _jsonOpts);
-
-	// public static JsonNode SerializeToElement(object value)
-	// {
-	// 	JsonNode.Parse();
-	// 	// return JsonSerializer.SerializeToElement(value, _jsonOpts);
-	// }
-}
-
-public static class PpYaml
-{
-	private static readonly ISerializer _serializer = new SerializerBuilder()
-		.WithNamingConvention(new UnderscoredNamingConvention())
-		.Build();
-
-	public static string SerializeToString(object? obj) => _serializer.Serialize(obj);
-}
-
-public static class PpXml
-{
-	public static bool LooksLikeXml(string str) => str?.StartsWith('<') ?? false;
 }

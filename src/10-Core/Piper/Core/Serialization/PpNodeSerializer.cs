@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Globalization;
 using System.Reflection;
-using System.Text.Json.Nodes;
 using Blazor.Diagrams.Core.Geometry;
-using Piper.Core.Attributes;
-using Piper.Core.Data;
 using Piper.Core.Modifiers;
 using Piper.Core.Nodes;
 using Piper.Utils;
@@ -18,16 +15,7 @@ public static class PpNodeSerializer
 		var jsonGraph = SerializeGraph(graph);
 
 		return PpJson.SerializeToString(jsonGraph);
-		// return PpYaml.SerializeToString(jsonGraph);
 	}
-
-	// public static JsonNode SerializeGraphNode(PpGraph graph)
-	// {
-	// 	var jsonGraph = SerializeGraph(graph);
-	//
-	// 	return PpJson.SerializeToString(jsonGraph);
-	// 	// return PpYaml.SerializeToString(jsonGraph);
-	// }
 
 	public static List<PpJsonNode> SerializeGraph(PpGraph graph)
 	{
@@ -69,20 +57,6 @@ public static class PpNodeSerializer
 					{
 						SerializeNodePort(nodePort, jsonNode, prop, n);
 					}
-
-					// if (attrPort.Direction == PpPortDirection.In)
-					// {
-					// 	if (prop.GetValue(n) is PpNodeInput { Output.Node: not null } inPort)
-					// 	{
-					// 		jsonNode.Ports ??= new();
-					// 		jsonNode.Ports[prop.Name] = new()
-					// 		{
-					// 			//
-					// 			Link = new(inPort.Output.Node.NodeId, inPort.Output.Name),
-					// 			Mods = [],
-					// 		};
-					// 	}
-					// }
 				}
 			}
 
@@ -105,7 +79,6 @@ public static class PpNodeSerializer
 		}
 
 		// Port modifiers
-		// nodePort.Modifiers
 		jsonNode.Ports ??= new();
 		jsonNode.Ports[prop.Name] = port;
 
@@ -271,7 +244,6 @@ public static class PpNodeSerializer
 
 			foreach (var jsonPort in jsonNode.Ports ?? [])
 			{
-				// var ppNodePort = (Data.PpNodePort)ppNode.NodeProps.FirstOrDefault(p => p.Name == jsonPort.Key);
 				var ppNodePort = (Data.PpNodePort)ppNode.GetType().GetProperty(jsonPort.Key).GetValue(ppNode);
 
 				foreach (var jsonMod in jsonPort.Value.Mods ?? [])
@@ -289,9 +261,7 @@ public static class PpNodeSerializer
 						continue;
 					}
 
-					// modInst.Id = jsonMod.Id.Id;
 					modInst.Name = jsonMod.Id.Name;
-					// modInst.Position = new Point(n.Pos.X, n.Pos.Y);
 
 					// Params
 					foreach (var p in jsonMod.Params ?? [])
