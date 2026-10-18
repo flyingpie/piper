@@ -20,8 +20,4 @@ public class PpColumn(PpDataType dataType, string name)
 	public bool IsVisible { get; set; } = true;
 
 	public static implicit operator PpColumn((PpDataType Type, string Name) f) => new(f.Type, f.Name);
-
-	// public static implicit operator PpColumn((string Name) f) => new(f.Name, PpDataType.PpString, f.Value);
-	//
-	// public static implicit operator PpColumn((string Name, bool? Value) f) => new(f.Name, PpDataType.PpBool, f.Value);
 }

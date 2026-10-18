@@ -1,5 +1,3 @@
-using Piper.Core.Data;
-
 namespace Piper.Core.Attributes;
 
 /// <summary>
@@ -15,5 +13,8 @@ public sealed class PpPortAttribute(PpPortDirection direction, string name) : At
 	/// </summary>
 	public string Name { get; } = Guard.Against.NullOrWhiteSpace(name);
 
+	/// <summary>
+	/// Whether data is coming in, or going out.
+	/// </summary>
 	public PpPortDirection Direction { get; } = direction;
 }

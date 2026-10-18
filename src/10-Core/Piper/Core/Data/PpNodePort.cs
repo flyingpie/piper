@@ -1,6 +1,5 @@
 using Piper.Core.Modifiers;
 using Piper.Core.Nodes;
-using Piper.Modifiers;
 
 namespace Piper.Core.Data;
 
@@ -19,7 +18,7 @@ public abstract class PpNodePort(PpNode node, string name)
 	/// </summary>
 	public PpNode Node { get; } = Guard.Against.Null(node);
 
-	public PpModifierStack Modifiers { get; } = new();
+	public abstract PpModifierStack Modifiers { get; }
 
 	public IPpTable Table => Modifiers.Table;
 }

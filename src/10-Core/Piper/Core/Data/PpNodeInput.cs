@@ -1,3 +1,4 @@
+using Piper.Core.Modifiers;
 using Piper.Core.Nodes;
 
 namespace Piper.Core.Data;
@@ -10,7 +11,7 @@ public class PpNodeInput : PpNodePort
 	public PpNodeInput(PpNode node, string name)
 		: base(node, name)
 	{
-		Modifiers.BaseTable = () => Output?.Table ?? PpNullTable.Instance;
+		Modifiers = new(() => Output?.Table ?? PpNullTable.Instance);
 	}
 
 	/// <summary>
@@ -18,6 +19,11 @@ public class PpNodeInput : PpNodePort
 	/// </summary>
 	[MemberNotNullWhen(true, nameof(Output))]
 	public bool IsConnected => Output != null;
+
+	/// <summary>
+	/// Modifier stack taking the incoming table (if connected) as base table.
+	/// </summary>
+	public override PpModifierStack Modifiers { get; }
 
 	/// <summary>
 	/// The output that this input is connected to (null if not connected).
