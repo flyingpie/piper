@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+	<title>Piper</title>
+	<base href="/"/>
+
+	<link rel="stylesheet" href="_content/Blazorise.Icons.FontAwesome/v6/css/all.min.css"/>
+	<link rel="stylesheet" href="_content/Radzen.Blazor/css/standard-dark.css"/>
+	<link rel="stylesheet" href="_content/Z.Blazor.Diagrams/style.min.css"/>
+	<link rel="stylesheet" href="_content/Z.Blazor.Diagrams/default.styles.min.css"/>
+	<link rel="stylesheet" href="app.css"/>
+
+	<style>
+		:root {
+			--rz-base-700: #181818;
+			--rz-base-800: #151516;
+			--rz-base-900: #111111;
+		}
+
+		body {
+			background: #111111 !important;
+		}
+
+		.rz-tabview-panel {
+			height: 100%;
+			padding: .25em;
+		}
+
+		.rz-tabview-nav li a, .rz-tabview-nav li a:not([href]):not([class]) {
+			padding: .25em 1em;
+		}
+
+		/* Splitter panes usually hide scroll, but in some cases we want to scroll, like with data grids */
+		.rz-splitter-pane.scroll {
+			overflow-y: scroll;
+		}
+
+		:root {
+			--rz-icon-weight: 300;
+		}
+
+		.font-awesome {
+			--rz-icon-font-family: 'Font Awesome 6 Free'
+		}
+
+		#blazor-error-ui {
+			color-scheme: dark only;
+			background: lightyellow;
+			bottom: 0;
+			box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+			display: none;
+			left: 0;
+			padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+			position: fixed;
+			width: 100%;
+			z-index: 1000;
+		}
+
+		#blazor-error-ui .dismiss {
+			cursor: pointer;
+			position: absolute;
+			right: 0.75rem;
+			top: 0.5rem;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">Loading...</div>
+
+	<div id="blazor-error-ui">
+		An unhandled error has occurred.
+		<a href="" class="reload">Reload</a>
+		<a class="dismiss">🗙</a>
+	</div>
+
+	<script src="_content/BlazorMonaco/jsInterop.js"></script>
+	<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js"></script>
+	<script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js"></script>
+	<script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+	<script src="_content/Z.Blazor.Diagrams/script.min.js"></script>
+
+	<script src="_framework/blazor.webassembly.js"></script>
+</body>
+</html>

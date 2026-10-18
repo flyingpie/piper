@@ -23,8 +23,8 @@
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".4em" class="rz-p-0 rz-px-2">
 				<div style="flex: 1;">@graph.Name</div>
 
-				<RadzenButton class="pp-btn-load" Icon="folder_open" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="() => LoadGraphFile(graph)" />
-				<RadzenButton Icon="save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="() => SaveGraphFile(graph)" />
+				<RadzenButton class="pp-btn-load" Icon="folder_open" Variant="Variant.Outlined" Size="ButtonSize.Small" Click="async () => await LoadGraphFileAsync(graph)" />
+				<RadzenButton Icon="save" Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="async () => await SaveGraphFileAsync(graph)" />
 			</RadzenStack>
 			}
 

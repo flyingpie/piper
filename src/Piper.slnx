@@ -21,5 +21,6 @@
 	<Folder Name="/P40-Host/">
 		<Project Path="40-Host/Piper.Host.BlazorServer/Piper.Host.BlazorServer.csproj" />
 		<Project Path="40-Host/Piper.Host.Photino/Piper.Host.Photino.csproj" />
+		<Project Path="40-Host/Piper.Host.Wasm/Piper.Host.Wasm.csproj" />
 	</Folder>
 </Solution>
