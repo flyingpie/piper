@@ -7,13 +7,12 @@ using Piper.Core;
 using Piper.Core.Modifiers;
 using Piper.Core.Nodes;
 using Piper.Utils;
-using PpNodePort = Piper.Core.Nodes.PpNodePort;
 
 namespace Piper;
 
 public static class Extensions
 {
-	extension(PpNodePort port)
+	extension(PpPort port)
 	{
 		public long InCount => port.GetNodeInput?.Invoke()?.Output?.Table?.Count ?? 0;
 
@@ -73,9 +72,9 @@ public static class Extensions
 		}
 	}
 
-	public static IReadOnlyCollection<IPpNodeProperty> GetModifierProps(this PpModifier mod) => mod.GetModifierPropsInternal().ToList();
+	public static IReadOnlyCollection<IPpProperty> GetModifierProps(this PpModifier mod) => mod.GetModifierPropsInternal().ToList();
 
-	private static IEnumerable<IPpNodeProperty> GetModifierPropsInternal(this PpModifier mod)
+	private static IEnumerable<IPpProperty> GetModifierPropsInternal(this PpModifier mod)
 	{
 		var props = mod.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
@@ -85,7 +84,7 @@ public static class Extensions
 			var paramAttr = prop.GetCustomAttribute<PpParamAttribute>();
 			if (paramAttr != null)
 			{
-				yield return new PpNodeParam()
+				yield return new PpParam()
 				{
 					Name = prop.Name,
 					// Name = paramAttr.Name,
@@ -99,9 +98,9 @@ public static class Extensions
 		}
 	}
 
-	public static IReadOnlyCollection<IPpNodeProperty> GetNodeProps(this PpNode node) => node.GetNodePropsInternal().ToList();
+	public static IReadOnlyCollection<IPpProperty> GetNodeProps(this PpNode node) => node.GetNodePropsInternal().ToList();
 
-	private static IEnumerable<IPpNodeProperty> GetNodePropsInternal(this PpNode node)
+	private static IEnumerable<IPpProperty> GetNodePropsInternal(this PpNode node)
 	{
 		var props = node.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
@@ -111,7 +110,7 @@ public static class Extensions
 			var paramAttr = prop.GetCustomAttribute<PpParamAttribute>();
 			if (paramAttr != null)
 			{
-				yield return new PpNodeParam()
+				yield return new PpParam()
 				{
 					Name = prop.Name,
 					// Name = paramAttr.Name,
@@ -130,7 +129,7 @@ public static class Extensions
 			{
 				if (prop.PropertyType == typeof(PpNodeInput))
 				{
-					var pp = new PpNodePort(prop.Name, node, PortAlignment.Left)
+					var pp = new PpPort(prop.Name, node, PortAlignment.Left)
 					{
 						//
 						GetNodeInput = () => (PpNodeInput)prop.GetValue(node)!,
@@ -141,7 +140,7 @@ public static class Extensions
 				}
 				else if (prop.PropertyType == typeof(PpNodeOutput))
 				{
-					var pp = new PpNodePort(prop.Name, node, PortAlignment.Right)
+					var pp = new PpPort(prop.Name, node, PortAlignment.Right)
 					{
 						//
 						GetNodeOutput = () => (PpNodeOutput)prop.GetValue(node)!,

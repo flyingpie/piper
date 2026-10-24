@@ -3,10 +3,10 @@
 @using Piper.Core
 
 <div class="pp-field">
-	<PortRenderer @key="NodePort" Port="NodePort"/>
+	<PortRenderer @key="Port" Port="Port"/>
 
 	<!-- Input -->
-	@if (NodePort.Alignment == PortAlignment.Left)
+	@if (Port.Alignment == PortAlignment.Left)
 	{
 		<RadzenStack
 			Orientation="Orientation.Horizontal"
@@ -39,7 +39,7 @@
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
 				Click="OnClickDisconnectAll"
-				Disabled="!NodePort.IsConnected"
+				Disabled="!Port.IsConnected"
 				Icon="close"
 				Shade="Shade.Darker"
 				Size="ButtonSize.ExtraSmall"
@@ -49,15 +49,15 @@
 			<!-- Summary -->
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em" class="rz-mx-2 rz-color-base-500">
 				<RadzenIcon Icon="numbers"/>
-				<RadzenLabel Text="@(NodePort.InCount.ToString("N0"))"/>
-				<RadzenLabel Text="@NodePort.Name"/>
+				<RadzenLabel Text="@(Port.InCount.ToString("N0"))"/>
+				<RadzenLabel Text="@Port.Name"/>
 			</RadzenStack>
 
 		</RadzenStack>
 	}
 
 	<!-- Output -->
-	@if (NodePort.Alignment == PortAlignment.Right)
+	@if (Port.Alignment == PortAlignment.Right)
 	{
 		<RadzenStack
 			Orientation="Orientation.Horizontal"
@@ -69,8 +69,8 @@
 			<!-- Summary -->
 			<RadzenStack Orientation="Orientation.Horizontal" Gap=".5em" class="rz-mx-2 rz-color-base-500">
 				<RadzenIcon Icon="numbers" />
-				<RadzenLabel Text="@(NodePort.OutCount.ToString("N0"))" />
-				<RadzenLabel Text="@NodePort.Name" />
+				<RadzenLabel Text="@(Port.OutCount.ToString("N0"))" />
+				<RadzenLabel Text="@Port.Name" />
 			</RadzenStack>
 
 			<!-- Show Data -->
@@ -97,7 +97,7 @@
 			<RadzenButton
 				ButtonStyle="ButtonStyle.Light"
 				Click="OnClickDisconnectAll"
-				Disabled="!NodePort.IsConnected"
+				Disabled="!Port.IsConnected"
 				Icon="close"
 				Shade="Shade.Darker"
 				Size="ButtonSize.ExtraSmall"

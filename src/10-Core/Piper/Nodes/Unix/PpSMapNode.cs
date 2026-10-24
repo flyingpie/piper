@@ -87,20 +87,20 @@ public class PpSMapNode : PpNode
 			var match = headerRegex.Match(line);
 			if (match.Success)
 			{
-				rec = new();
-				rec.Fields["pid"] = pid;
-				foreach (Group grp in match.Groups)
-				{
-					if (grp.Index == 0)
-					{
-						continue;
-					}
-
-					rec.Fields[grp.Name] = grp.Value;
-				}
-
-				res.Add(rec);
-				continue;
+				// rec = new();
+				// rec.Fields["pid"] = pid;
+				// foreach (Group grp in match.Groups)
+				// {
+				// 	if (grp.Index == 0)
+				// 	{
+				// 		continue;
+				// 	}
+				//
+				// 	rec.Fields[grp.Name] = grp.Value;
+				// }
+				//
+				// res.Add(rec);
+				// continue;
 			}
 
 			if (rec == null)
@@ -111,7 +111,7 @@ public class PpSMapNode : PpNode
 			var match2 = propRegex.Match(line);
 			if (match2.Success)
 			{
-				rec.Fields[match2.Groups["name"].Value] = match2.Groups["val"].Value;
+				// rec.Fields[match2.Groups["name"].Value] = match2.Groups["val"].Value;
 			}
 		}
 

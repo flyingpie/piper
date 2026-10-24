@@ -1,4 +1,7 @@
-namespace Piper.Core.Nodes;
+using System.Threading.Tasks;
+using Piper.Core.Nodes;
+
+namespace Piper.UnitTest.Stubs;
 
 public class PpStubNode : PpNode
 {

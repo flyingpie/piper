@@ -1,3 +1,13 @@
+using System.Threading.Tasks;
+
 namespace Piper.UnitTest.Core.Modifiers;
 
-public class PpModifierTest { }
+[TestClass]
+public class PpModifierTest
+{
+	[TestMethod]
+	public async Task METHOD()
+	{
+		//
+	}
+}

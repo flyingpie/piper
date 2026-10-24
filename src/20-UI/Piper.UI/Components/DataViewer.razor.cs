@@ -139,8 +139,9 @@ public partial class DataViewer : ComponentBase
 
 			if (Records.Count > 0)
 			{
-				var rec = Records.First();
-				Columns = rec.Fields.Select(f => new PpColumn(f.Value.DataType, f.Key)).ToList();
+				// var rec = Records.First();
+				// Columns = rec.Fields.Select(f => new PpColumn(f.Value.DataType, f.Key)).ToList();
+				Columns = Records.First().Select(f => f.AsColumn()).ToList();
 			}
 
 			Console.WriteLine($"Data reload took {sw.Elapsed}");

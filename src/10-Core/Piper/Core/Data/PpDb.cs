@@ -10,7 +10,10 @@ namespace Piper.Core.Data;
 public sealed class PpDb : IPpDb
 {
 	private readonly ILogger _log = Log.For<PpDb>();
+
 	private readonly DuckDBConnection _conn = new("DataSource=:memory:?cache=shared");
+
+	// private readonly DuckDBConnection _conn = new("DataSource=~/Downloads/duck.db");
 	private readonly SemaphoreSlim _lock = new(1);
 
 	private bool _isOpen;

@@ -5,17 +5,17 @@ namespace Piper.Core.Nodes;
 
 public abstract class PpNode : NodeModel
 {
-	private readonly List<IPpNodeProperty> _fixedNodeProps;
+	private readonly List<IPpProperty> _fixedNodeProps;
 
 	private Action<PpNode> _onChange = _ => { };
 
-	protected readonly List<IPpNodeProperty> _dynNodeProps = [];
+	protected readonly List<IPpProperty> _dynNodeProps = [];
 
 	protected PpNode()
 	{
 		_fixedNodeProps = this.GetNodeProps().ToList();
-		NodeParams = NodeProps.OfType<PpNodeParam>().ToList();
-		NodePorts = NodeProps.OfType<PpNodePort>().ToList();
+		NodeParams = NodeProps.OfType<PpParam>().ToList();
+		NodePorts = NodeProps.OfType<PpPort>().ToList();
 		Size = new(350, 300);
 	}
 
@@ -41,11 +41,11 @@ public abstract class PpNode : NodeModel
 
 	public PpLogs Logs { get; } = new();
 
-	public IEnumerable<IPpNodeProperty> NodeProps => _fixedNodeProps.Concat(_dynNodeProps);
+	public IEnumerable<IPpProperty> NodeProps => _fixedNodeProps.Concat(_dynNodeProps);
 
-	public IReadOnlyCollection<PpNodeParam> NodeParams { get; }
+	public IReadOnlyCollection<PpParam> NodeParams { get; }
 
-	public IReadOnlyCollection<PpNodePort> NodePorts { get; }
+	public IReadOnlyCollection<PpPort> NodePorts { get; }
 
 	public void OnChange(Action<PpNode> onChange)
 	{

@@ -1,4 +1,5 @@
 using System.Dynamic;
+using Piper.Core;
 using Piper.Core.Nodes;
 using RazorEngineCore;
 using static Piper.Core.Data.PpPortDirection;
@@ -32,73 +33,73 @@ public class PpRazorNode : PpNode
 
 	protected override async Task OnExecuteAsync()
 	{
-		if (!InRecords.IsConnected)
-		{
-			Logs.Warning($"Port '{InRecords}' not connected");
-			return;
-		}
-
-		if (string.IsNullOrWhiteSpace(Template))
-		{
-			Logs.Warning($"Param '{Template}' not set");
-			return;
-		}
-
-		var engine = new RazorEngine();
-		var tpl = await engine.CompileAsync<CustomRazorTemplate>(Template);
-
-		var inTable = InRecords.Output.Table;
-
-		// var cols = inTable._columns.ToList();
-		// cols.AddRange([new(PpString, "razor")]);
-		// OutRecords.BaseTable.Columns = cols;
-		await OutRecords.BaseTable.ClearAsync();
-
-		{
-			await using var appender = await OutRecords.BaseTable.CreateAppenderAsync();
-
-			var i = 0;
-			await foreach (var recIn in inTable.QueryAllAsync())
-			{
-				Progress = ((float)i) / inTable.Count;
-
-				if (i % 1000 == 0)
-				{
-					Changed();
-				}
-
-				Logs.Info($"({i++}/{9999}) Executing Razor template");
-
-				var eo = new ExpandoObject();
-				var eoColl = (ICollection<KeyValuePair<string, object>>)eo;
-				foreach (var kv in recIn.Fields)
-				{
-					eoColl.Add(new KeyValuePair<string, object>(kv.Key, kv.Value.ValueAsString ?? string.Empty));
-				}
-				// dynamic model = eo;
-
-				// var json = PpJson.SerializeToString(recIn.Fields);
-				// var model = PpJson.Deserialize<dynamic>(json);
-
-				var res = tpl.Run(inst =>
-				{
-					inst.Rec = eo;
-				});
-
-				var recOut = new PpRecord()
-				{
-					Fields = new Dictionary<string, PpField>(recIn.Fields, StringComparer.OrdinalIgnoreCase)
-					{
-						// { "idx", $"{idx}" },
-						{ "razor", res },
-					},
-				};
-
-				appender.AddAsync(recOut);
-			}
-		}
-
-		await OutRecords.BaseTable.DoneAsync();
+		// if (!InRecords.IsConnected)
+		// {
+		// 	Logs.Warning($"Port '{InRecords}' not connected");
+		// 	return;
+		// }
+		//
+		// if (string.IsNullOrWhiteSpace(Template))
+		// {
+		// 	Logs.Warning($"Param '{Template}' not set");
+		// 	return;
+		// }
+		//
+		// var engine = new RazorEngine();
+		// var tpl = await engine.CompileAsync<CustomRazorTemplate>(Template);
+		//
+		// var inTable = InRecords.Output.Table;
+		//
+		// // var cols = inTable._columns.ToList();
+		// // cols.AddRange([new(PpString, "razor")]);
+		// // OutRecords.BaseTable.Columns = cols;
+		// await OutRecords.BaseTable.ClearAsync();
+		//
+		// {
+		// 	await using var appender = await OutRecords.BaseTable.CreateAppenderAsync();
+		//
+		// 	var i = 0;
+		// 	await foreach (var recIn in inTable.QueryAllAsync())
+		// 	{
+		// 		Progress = ((float)i) / inTable.Count;
+		//
+		// 		if (i % 1000 == 0)
+		// 		{
+		// 			Changed();
+		// 		}
+		//
+		// 		Logs.Info($"({i++}/{9999}) Executing Razor template");
+		//
+		// 		var eo = new ExpandoObject();
+		// 		var eoColl = (ICollection<KeyValuePair<string, object>>)eo;
+		// 		foreach (var kv in recIn.Fields)
+		// 		{
+		// 			eoColl.Add(new KeyValuePair<string, object>(kv.Key, kv.Value.ValueAsString ?? string.Empty));
+		// 		}
+		// 		// dynamic model = eo;
+		//
+		// 		// var json = PpJson.SerializeToString(recIn.Fields);
+		// 		// var model = PpJson.Deserialize<dynamic>(json);
+		//
+		// 		var res = tpl.Run(inst =>
+		// 		{
+		// 			inst.Rec = eo;
+		// 		});
+		//
+		// 		var recOut = new PpRecord()
+		// 		{
+		// 			Fields = new Dictionary<string, PpField>(recIn.Fields, StringComparer.OrdinalIgnoreCase)
+		// 			{
+		// 				// { "idx", $"{idx}" },
+		// 				{ "razor", res },
+		// 			},
+		// 		};
+		//
+		// 		appender.AddAsync(recOut);
+		// 	}
+		// }
+		//
+		// await OutRecords.BaseTable.DoneAsync();
 	}
 
 	// public PpRecord CreateRecord(PpRecord file, int idx, string line) =>

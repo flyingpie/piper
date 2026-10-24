@@ -42,23 +42,23 @@ public class PpWriteCsvNode : PpNode
 		{
 			await foreach (var file in inTable.QueryAllAsync())
 			{
-				Progress = ((float)i) / inTable.Count;
-
-				// Get attribute
-				var field = file.Fields.FirstOrDefault(f => f.Key?.Equals(InPathAttr, StringComparison.OrdinalIgnoreCase) ?? false);
-
-				if (string.IsNullOrWhiteSpace(field.Value.ValueAsString))
-				{
-					continue;
-				}
-
-				var wr = GetCsvWriter(field.Value.ValueAsString);
-
-				await wr.NextRecordAsync();
-				foreach (var f in file.Fields)
-				{
-					wr.WriteField(f.Value.Value);
-				}
+				// Progress = ((float)i) / inTable.Count;
+				//
+				// // Get attribute
+				// var field = file.Fields.FirstOrDefault(f => f.Key?.Equals(InPathAttr, StringComparison.OrdinalIgnoreCase) ?? false);
+				//
+				// if (string.IsNullOrWhiteSpace(field.Value.ValueAsString))
+				// {
+				// 	continue;
+				// }
+				//
+				// var wr = GetCsvWriter(field.Value.ValueAsString);
+				//
+				// await wr.NextRecordAsync();
+				// foreach (var f in file.Fields)
+				// {
+				// 	wr.WriteField(f.Value.Value);
+				// }
 			}
 		}
 		finally

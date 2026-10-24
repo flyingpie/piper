@@ -1,6 +1,7 @@
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.Scripting.Hosting;
+using Piper.Core;
 using Piper.Core.Nodes;
 using static Piper.Core.Data.PpPortDirection;
 
@@ -63,21 +64,21 @@ public class PpCSharpNode : PpNode
 
 			await foreach (var rec in InRecords.Output.Table.QueryAllAsync())
 			{
-				var ff = new Dictionary<string, PpField>(rec.Fields, StringComparer.OrdinalIgnoreCase);
-
-				var glbs = new MyGlobals() { Rec = ff };
-
-				var result = await scr.RunAsync(
-						glbs,
-						ex =>
-						{
-							Console.WriteLine($"EXCEPTION: {ex}");
-							return false;
-						}
-					)
-					.ConfigureAwait(true);
-
-				appender.AddAsync(new PpRecord() { Fields = glbs.Rec });
+				// var ff = new Dictionary<string, PpField>(rec.Fields, StringComparer.OrdinalIgnoreCase);
+				//
+				// var glbs = new MyGlobals() { Rec = ff };
+				//
+				// var result = await scr.RunAsync(
+				// 		glbs,
+				// 		ex =>
+				// 		{
+				// 			Console.WriteLine($"EXCEPTION: {ex}");
+				// 			return false;
+				// 		}
+				// 	)
+				// 	.ConfigureAwait(true);
+				//
+				// appender.AddAsync(new PpRecord() { Fields = glbs.Rec });
 			}
 		}
 

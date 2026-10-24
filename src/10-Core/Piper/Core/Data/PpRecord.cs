@@ -28,32 +28,32 @@ public class PpRecord : IEnumerable<PpField>
 
 	public PpField? this[string name]
 	{
-		get => Fields2.FirstOrDefault(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+		get => Fields.FirstOrDefault(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 	}
 
 	public static PpRecord Create(ReadOnlySpan<PpField> fields) => new(fields);
 
-	public IDictionary<string, PpField> Fields { get; set; } = new Dictionary<string, PpField>(StringComparer.OrdinalIgnoreCase);
+	// public IDictionary<string, PpField> Fields { get; set; } = new Dictionary<string, PpField>(StringComparer.OrdinalIgnoreCase);
 
-	public IReadOnlyCollection<PpField> Fields2 => _fields;
+	public IReadOnlyCollection<PpField> Fields => _fields;
 
 	private List<PpField> _fields = [];
 
 	public bool TryGetField(string name, [NotNullWhen(true)] out PpField? field)
 	{
-		field = Fields2.FirstOrDefault(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+		field = Fields.FirstOrDefault(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
 		return field != null;
 	}
 
-	public bool TryGetField(PpColumn column, [NotNullWhen(true)] out PpField? field)
-	{
-		// field = Fields2.FirstOrDefault(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-		//
-		// return field != null;
-
-		return TryGetField(column.Name, out field);
-	}
+	// public bool TryGetField(PpColumn column, [NotNullWhen(true)] out PpField? field)
+	// {
+	// 	// field = Fields2.FirstOrDefault(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+	// 	//
+	// 	// return field != null;
+	//
+	// 	return TryGetField(column.Name, out field);
+	// }
 
 	// public static PpRecord Create(params PpField[] fields) => null;
 
@@ -81,25 +81,31 @@ public class PpRecord : IEnumerable<PpField>
 	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 	// public override string ToString() => string.Join(", ", Fields);
-	public override string ToString() => $"[{string.Join(", ", Fields2)}]";
+	public override string ToString() => $"[{string.Join(", ", Fields)}]";
 
 	public PpField? GetField(string name)
 	{
-		if (!Fields.TryGetValue(name, out var field))
-		{
-			return null;
-		}
+		Guard.Against.NullOrWhiteSpace(name);
 
-		return field;
+		return Fields.FirstOrDefault(f => f.HasName(name));
+
+		// if (!Fields2.TryGetValue(name, out var field))
+		// {
+		// 	return null;
+		// }
+		//
+		// return field;
 	}
 
 	public object? GetValue(string name)
 	{
-		if (!Fields.TryGetValue(name, out var field))
-		{
-			return null;
-		}
+		return GetField(name)?.Value;
 
-		return field.ToString();
+		// if (!Fields.TryGetValue(name, out var field))
+		// {
+		// 	return null;
+		// }
+		//
+		// return field.ToString();
 	}
 }

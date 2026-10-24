@@ -1,3 +1,4 @@
+@using Piper.Core
 @using Piper.UI.Components.Nodes
 
 <RadzenStack>
@@ -15,7 +16,7 @@
 
 		foreach (var prop in SelectedNode!.NodeProps)
 		{
-			if (prop is Core.Nodes.PpNodeParam param)
+			if (prop is PpParam param)
 			{
 				<PpNodeParam Param="param" IsInNode="false" />
 			}

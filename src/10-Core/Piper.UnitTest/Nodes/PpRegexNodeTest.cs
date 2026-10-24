@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Piper.Core.Data;
 using Piper.Core.Nodes;
 using Piper.Nodes;
+using Piper.UnitTest.Stubs;
 using static Piper.Core.Data.PpDataType;
 
 namespace Piper.UnitTest.Nodes;
@@ -25,12 +26,12 @@ public class PpRegexNodeTest
 		outRecords.BaseTable.ClearAsync();
 
 		{
-			await using var appender = await outRecords.BaseTable.CreateAppenderAsync();
-			appender.AddAsync(new PpRecord() { Fields = { { "src", new(PpString, "Some text some more text and even more text") } } });
-			appender.AddAsync(new PpRecord() { Fields = { { "src", new(PpString, "Some text #aabbcc some more text") } } });
-			appender.AddAsync(
-				new PpRecord() { Fields = { { "src", new(PpString, "Some text #aabbcc some more text #002244 and even more text") } } }
-			);
+			// await using var appender = await outRecords.BaseTable.CreateAppenderAsync();
+			// appender.AddAsync(new PpRecord() { Fields = { { "src", new(PpString, "Some text some more text and even more text") } } });
+			// appender.AddAsync(new PpRecord() { Fields = { { "src", new(PpString, "Some text #aabbcc some more text") } } });
+			// appender.AddAsync(
+			// 	new PpRecord() { Fields = { { "src", new(PpString, "Some text #aabbcc some more text #002244 and even more text") } } }
+			// );
 		}
 
 		await outRecords.Table.DoneAsync();

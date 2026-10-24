@@ -67,6 +67,7 @@ public class PpRegexNode : PpNode
 		// cols1.AddRange([new(PpString, OutAttribute)]);
 		// OutMatch.BaseTable.Columns = cols1;
 		await OutMatch.BaseTable.ClearAsync();
+		await OutNoMatch.BaseTable.ClearAsync();
 
 		var regex = new Regex(InPattern ?? string.Empty, RegexOptions.Compiled);
 
@@ -77,21 +78,25 @@ public class PpRegexNode : PpNode
 			await foreach (var rec in inTable.QueryAllAsync())
 			{
 				// Get attribute
-				var field = rec.Fields.FirstOrDefault(f => f.Key?.Equals(InAttribute, StringComparison.OrdinalIgnoreCase) ?? false);
+				// var field = rec.Fields.FirstOrDefault(f => f.Key?.Equals(InAttribute, StringComparison.OrdinalIgnoreCase) ?? false);
+				if (!rec.TryGetField(InAttribute, out var field))
+				{
+					continue;
+				}
 
 				// TODO: Put in JSON struct to support multiple capture groups?
-				var matches = regex.Matches(field.Value.ValueAsString ?? string.Empty);
+				var matches = regex.Matches(field.ValueAsString ?? string.Empty);
 
 				foreach (Match match in matches)
 				{
-					rec.Fields[OutAttribute] = new(PpString, match.Value);
+					// rec.Fields[OutAttribute] = new(PpString, match.Value);
 
-					appender.AddAsync(rec);
+					appender.AddAsync(rec.With((OutAttribute, match.Value)));
 				}
 			}
 		}
 
 		await OutMatch.BaseTable.DoneAsync();
-		// await OutNoMatch.BaseTable.DoneAsync();
+		await OutNoMatch.BaseTable.DoneAsync();
 	}
 }

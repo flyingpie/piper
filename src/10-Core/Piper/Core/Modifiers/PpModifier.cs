@@ -33,7 +33,7 @@ public abstract class PpModifier
 	/// <summary>
 	/// Holds properties that the user may interact with.
 	/// </summary>
-	public IReadOnlyCollection<IPpNodeProperty> Props { get; }
+	public IReadOnlyCollection<IPpProperty> Props { get; }
 
 	/// <summary>
 	/// Table used by the modifier to store its manipulated data in (i.e., the output table).

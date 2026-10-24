@@ -7,17 +7,11 @@ namespace Piper.Core.Nodes;
 /// Subclasses BlazorDiagram's <see cref="PortModel"/>, to add sync between the diagram model and the Piper one
 /// (the one that actually executed things and is serialized).
 /// </summary>
-public class PpNodePort : PortModel, IPpNodeProperty
+public class PpPort : PortModel, IPpProperty
 {
-	private Action<PpNodePort>? _onChange;
+	private Action<PpPort>? _onChange;
 
-	public PpNodePort(
-		string name,
-		NodeModel parent,
-		PortAlignment alignment = PortAlignment.Bottom,
-		Point? position = null,
-		Size? size = null
-	)
+	public PpPort(string name, NodeModel parent, PortAlignment alignment = PortAlignment.Bottom, Point? position = null, Size? size = null)
 		: base(parent, alignment, position, size)
 	{
 		Name = Guard.Against.NullOrWhiteSpace(name);
@@ -39,7 +33,7 @@ public class PpNodePort : PortModel, IPpNodeProperty
 
 	public bool IsConnected => Links.Count > 0;
 
-	public void OnChange(Action<PpNodePort> onChange)
+	public void OnChange(Action<PpPort> onChange)
 	{
 		_onChange = onChange;
 	}
@@ -101,13 +95,13 @@ public class PpNodePort : PortModel, IPpNodeProperty
 
 		Console.WriteLine($"LINKS:{link.Links.Count}");
 
-		if (link.Source?.Model is not PpNodePort src)
+		if (link.Source?.Model is not PpPort src)
 		{
 			Console.WriteLine("No source");
 			return;
 		}
 
-		if (link?.Target?.Model is not PpNodePort dst)
+		if (link?.Target?.Model is not PpPort dst)
 		{
 			Console.WriteLine("No target");
 			return;
@@ -158,13 +152,13 @@ public class PpNodePort : PortModel, IPpNodeProperty
 
 		Console.WriteLine($"LINKS:{link.Links.Count}");
 
-		if (link.Source?.Model is not PpNodePort src)
+		if (link.Source?.Model is not PpPort src)
 		{
 			Console.WriteLine("No source");
 			return;
 		}
 
-		if (link?.Target?.Model is not PpNodePort dst)
+		if (link?.Target?.Model is not PpPort dst)
 		{
 			Console.WriteLine("No target");
 			return;

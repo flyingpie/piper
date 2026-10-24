@@ -1,4 +1,5 @@
 using Npgsql;
+using Piper.Core;
 using Piper.Core.Nodes;
 using static Piper.Core.Data.PpPortDirection;
 
@@ -160,7 +161,9 @@ public class PpRdbmsNode : PpNode
 			dict[name] = new(ToPpDataType(type), val2);
 		}
 
-		return new PpRecord() { Fields = dict };
+		return new PpRecord()
+		{ /*Fields = dict*/
+		};
 	}
 
 	public static PpDataType ToPpDataType(Type type)

@@ -56,7 +56,7 @@ public sealed class PpTable : IPpTable
 		// Mark the table to be recreated on the next operation.
 		_isInitialized = false;
 
-		await PpDb.Instance.LowLevel.ExecuteNonQueryAsync($"drop table {Name}", ct);
+		await PpDb.Instance.LowLevel.ExecuteNonQueryAsync($"drop table if exists {Name}", ct);
 
 		return this;
 	}
@@ -72,6 +72,7 @@ public sealed class PpTable : IPpTable
 	{
 		if (!_isInitialized)
 		{
+			// await InitAsync([new PpColumn(PpDataType.PpBool, "none")]);
 			throw new InvalidOperationException($"Attempting to call {nameof(DoneAsync)} on uninitialized table '{this}'.");
 		}
 
@@ -108,6 +109,8 @@ public sealed class PpTable : IPpTable
 
 		_columns.Clear();
 		_columns.AddRange(columns);
+
+		_isInitialized = true;
 
 		await DoneAsync(ct);
 	}

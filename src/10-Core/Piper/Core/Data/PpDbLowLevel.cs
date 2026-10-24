@@ -25,7 +25,8 @@ public class PpDbLowLevel(Func<Task<DuckDBCommand>> cmdFactory) : IPpDbLowLevel
 		var reader = await cmd.ExecuteReaderAsync(ct);
 		while (await reader.ReadAsync(ct))
 		{
-			var dict = new Dictionary<string, PpField>();
+			// var dict = new Dictionary<string, PpField>();
+			var fields = new List<PpField>();
 
 			for (var i = 0; i < reader.FieldCount; i++)
 			{
@@ -33,10 +34,11 @@ public class PpDbLowLevel(Func<Task<DuckDBCommand>> cmdFactory) : IPpDbLowLevel
 				var type = reader.GetFieldType(i);
 				var val2 = reader.GetValue(i);
 
-				dict[name] = new(type.ToPpDataType(), val2);
+				// dict[name] = new(type.ToPpDataType(), val2);
+				fields.Add(new(name, type.ToPpDataType(), val2));
 			}
 
-			yield return new PpRecord() { Fields = dict };
+			yield return [.. fields];
 		}
 	}
 

@@ -118,8 +118,8 @@ public class PpXPathModifier : PpModifier
 		// // await PpDb.Instance.FetchTableAsync(Table, ct);
 	}
 
-	private PpRecord CreateRecord(PpRecord file, string val) =>
-		new() { Fields = new Dictionary<string, PpField>(file.Fields, StringComparer.OrdinalIgnoreCase) { { DstFieldName, val } } };
+	// private PpRecord CreateRecord(PpRecord file, string val) =>
+	// 	new() { Fields = new Dictionary<string, PpField>(file.Fields, StringComparer.OrdinalIgnoreCase) { { DstFieldName, val } } };
 
 	public class XPathQuery
 	{

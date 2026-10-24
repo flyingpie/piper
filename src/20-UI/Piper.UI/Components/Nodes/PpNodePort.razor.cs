@@ -7,18 +7,18 @@ public partial class PpNodePort : ComponentBase
 {
 	[EditorRequired]
 	[Parameter]
-	public Core.Nodes.PpNodePort NodePort { get; set; } = null!;
+	public Core.Nodes.PpPort Port { get; set; } = null!;
 
-	private bool IsPortSelected => SelectedThingyService.Instance.IsNodePortSelected(NodePort.Port);
+	private bool IsPortSelected => SelectedThingyService.Instance.IsNodePortSelected(Port.Port);
 
 	protected override void OnParametersSet()
 	{
-		NodePort.OnChange(_ => InvokeAsync(StateHasChanged));
+		Port.OnChange(_ => InvokeAsync(StateHasChanged));
 	}
 
 	public void OnClickDisconnectAll()
 	{
-		NodePort.DisconnectAll();
+		Port.DisconnectAll();
 	}
 
 	public void OnClickModifiers()
@@ -29,14 +29,14 @@ public partial class PpNodePort : ComponentBase
 	public void OnClickShowData()
 	{
 		// Input
-		var inp = NodePort?.GetNodeInput?.Invoke();
+		var inp = Port?.GetNodeInput?.Invoke();
 		if (inp != null)
 		{
 			SelectedThingyService.Instance.SelectPort(inp);
 		}
 
 		// Output
-		var outp = NodePort?.GetNodeOutput?.Invoke();
+		var outp = Port?.GetNodeOutput?.Invoke();
 		if (outp != null)
 		{
 			SelectedThingyService.Instance.SelectPort(outp);

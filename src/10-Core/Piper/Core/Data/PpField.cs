@@ -77,6 +77,8 @@ public class PpField
 
 	public PpColumn AsColumn() => new PpColumn(DataType, Name);
 
+	public bool HasName(string name) => Name.Equals(name, StringComparison.OrdinalIgnoreCase);
+
 	// public override string ToString() => Value?.ToString() ?? "(empty)";
 	public override string ToString() => $"({Name}, \"{Value}\"::{DataType})";
 

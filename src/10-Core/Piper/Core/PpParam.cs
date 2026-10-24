@@ -1,4 +1,6 @@
-namespace Piper.Core.Nodes;
+using Piper.Core.Nodes;
+
+namespace Piper.Core;
 
 public enum PpParamHint
 {
@@ -7,7 +9,7 @@ public enum PpParamHint
 	Code,
 }
 
-public class PpNodeParam : IPpNodeProperty
+public class PpParam : IPpProperty
 {
 	public string Name { get; set; }
 

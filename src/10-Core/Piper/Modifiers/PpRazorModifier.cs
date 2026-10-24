@@ -1,4 +1,5 @@
 using System.Dynamic;
+using Piper.Core;
 using Piper.Core.Modifiers;
 using Piper.Core.Nodes;
 using RazorEngineCore;
@@ -71,7 +72,7 @@ public class PpRazorModifier : PpModifier
 	{
 		var eo = new ExpandoObject();
 		ICollection<KeyValuePair<string, object?>> eoColl = eo;
-		foreach (var kv in rec.Fields2)
+		foreach (var kv in rec.Fields)
 		{
 			eoColl.Add(new KeyValuePair<string, object?>(kv.Name, kv.Value));
 		}
