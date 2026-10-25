@@ -4,12 +4,30 @@
 		<RootNamespace>Piper.Host.Photino</RootNamespace>
 
 		<OutputType>WinExe</OutputType>
+
+		<!--
+			The hot reload source checkout, referenced directly (instead of through the NuGet package) so it can be worked on without
+			packing. Override on the command line or in a local props file if the checkout lives somewhere else.
+		-->
+		<DtrHotReloadSource Condition="'$(DtrHotReloadSource)' == ''"
+			>$(MSBuildThisFileDirectory)../../../../../sandbox/hotreload/blazor-hotreload-review/src</DtrHotReloadSource>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\10-Core\Piper\Piper.csproj" />
 		<ProjectReference Include="..\..\20-UI\Piper.UI\Piper.UI.csproj" />
 	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Debug' and Exists('$(DtrHotReloadSource)/Dtr.Blazor.HotReload.Desktop.PhotinoX/Dtr.Blazor.HotReload.Desktop.PhotinoX.csproj')">
+		<!-- Hot reload (Debug builds only): "../dev-desktop.sh", see the Dtr.Blazor.HotReload.Desktop.PhotinoX package -->
+		<ProjectReference Include="$(DtrHotReloadSource)/Dtr.Blazor.HotReload.Desktop.PhotinoX/Dtr.Blazor.HotReload.Desktop.PhotinoX.csproj" />
+	</ItemGroup>
+
+	<!-- Project references don't import the package's build targets; do it ourselves. -->
+	<Import
+		Project="$(DtrHotReloadSource)/Dtr.Blazor.HotReload/build/Dtr.Blazor.HotReload.targets"
+		Condition="'$(Configuration)' == 'Debug' and Exists('$(DtrHotReloadSource)/Dtr.Blazor.HotReload/build/Dtr.Blazor.HotReload.targets')"
+	/>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components" />

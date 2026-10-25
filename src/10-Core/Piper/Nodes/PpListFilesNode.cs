@@ -81,6 +81,14 @@ public class PpListFilesNode : PpNode
 					break;
 				}
 
+				// await appender.AddAsync(
+				// 	new PpRecord([
+				// 		//
+				// 		("rec__uuid", Guid.CreateVersion7()),
+				// 		("file", "Sup dudes"),
+				// 	])
+				// );
+
 				await appender.AddAsync(
 					new PpRecord([
 						//
