@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Dtr.Blazor.HotReload;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -7,9 +8,6 @@ using Photino.Blazor;
 using Piper.UI;
 using Piper.UI.Components.Logs;
 using Piper.Utils;
-#if HOTRELOAD
-using Dtr.Blazor.HotReload;
-#endif
 
 namespace Piper.Host.Photino;
 
@@ -35,6 +33,8 @@ internal static class Program
 		InitializeServices(app.Services);
 #endif
 
+		Log.Factory = app.Services.GetRequiredService<ILoggerFactory>();
+
 		app.MainWindow.SetLogVerbosity(0).SetSize(1920, 900).SetTitle("Piper");
 
 		app.Run();
@@ -55,8 +55,5 @@ internal static class Program
 	/// Initializes static state that depends on the services.
 	/// Kept separate (and static) so hot reload can call it again, for every new version of this assembly (and the libraries).
 	/// </summary>
-	public static void InitializeServices(IServiceProvider services)
-	{
-		Log.Factory = services.GetRequiredService<ILoggerFactory>();
-	}
+	public static void InitializeServices(IServiceProvider services) { }
 }

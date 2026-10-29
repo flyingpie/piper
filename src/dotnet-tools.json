@@ -8,6 +8,13 @@
 				"csharpier"
 			],
 			"rollForward": false
+		},
+		"dtr.blazor.hotreload.server": {
+			"version": "0.1.8",
+			"commands": [
+				"dtr-blazor-hotreload"
+			],
+			"rollForward": false
 		}
 	}
 }
