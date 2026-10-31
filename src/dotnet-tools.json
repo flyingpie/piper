@@ -9,10 +9,10 @@
 			],
 			"rollForward": false
 		},
-		"dtr.blazor.hotreload.server": {
-			"version": "0.1.8",
+		"blazorhmr.server": {
+			"version": "0.1.11",
 			"commands": [
-				"dtr-blazor-hotreload"
+				"blazor-hmr"
 			],
 			"rollForward": false
 		}

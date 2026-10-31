@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Dtr.Blazor.HotReload;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -21,17 +20,17 @@ internal static class Program
 
 		builder.RootComponents.Add<App>("app");
 
-#if HOTRELOAD
+		//#if HOTRELOAD
 		builder.UseHotReload(builder.Configuration, ConfigureServices, InitializeServices);
-#else
-		ConfigureServices(builder.Services, builder.Configuration);
-#endif
+		//#else
+		// ConfigureServices(builder.Services, builder.Configuration);
+		//#endif
 
 		await using var app = builder.Build();
 
-#if !HOTRELOAD
-		InitializeServices(app.Services);
-#endif
+		//#if !HOTRELOAD
+		// InitializeServices(app.Services);
+		//#endif
 
 		Log.Factory = app.Services.GetRequiredService<ILoggerFactory>();
 
