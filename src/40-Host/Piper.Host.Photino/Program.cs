@@ -1,6 +1,5 @@
-using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using BlazorHMR.PhotinoX;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Photino.Blazor;
@@ -20,17 +19,10 @@ internal static class Program
 
 		builder.RootComponents.Add<App>("app");
 
-		//#if HOTRELOAD
-		builder.UseHotReload(builder.Configuration, ConfigureServices, InitializeServices);
-		//#else
+		builder.UseHotReload2(ConfigureServices);
 		// ConfigureServices(builder.Services, builder.Configuration);
-		//#endif
 
 		await using var app = builder.Build();
-
-		//#if !HOTRELOAD
-		// InitializeServices(app.Services);
-		//#endif
 
 		Log.Factory = app.Services.GetRequiredService<ILoggerFactory>();
 
@@ -45,14 +37,8 @@ internal static class Program
 	/// Registers the app services.
 	/// Kept separate (and static) so hot reload can call it again, for every new version of this assembly.
 	/// </summary>
-	public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+	public static void ConfigureServices(IServiceCollection services)
 	{
 		services.AddPiper();
 	}
-
-	/// <summary>
-	/// Initializes static state that depends on the services.
-	/// Kept separate (and static) so hot reload can call it again, for every new version of this assembly (and the libraries).
-	/// </summary>
-	public static void InitializeServices(IServiceProvider services) { }
 }

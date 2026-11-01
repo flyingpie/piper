@@ -13,6 +13,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="BlazorHMR" />
+		<PackageReference Include="BlazorHMR.PhotinoX" />
 		<PackageReference Include="Microsoft.AspNetCore.Components" />
 		<PackageReference Include="PhotinoX.App" />
 		<PackageReference Include="PhotinoX.Native" />

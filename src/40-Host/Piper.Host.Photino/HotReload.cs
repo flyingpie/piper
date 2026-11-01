@@ -1,14 +1,13 @@
 using System;
-using BlazorHMR;
-using BlazorHMR.State;
+using BlazorHMR.Blazor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Photino.Blazor;
 
-namespace Piper.Host.Photino;
+namespace BlazorHMR.PhotinoX;
 
-public static class HotReloadPhotinoXBuilderExtensions
+public static class HotReloadExtensions
 {
 	/// <summary>
 	/// Enables hot reload for the PhotinoX Blazor app that <paramref name="configureServices"/> belongs to.
@@ -35,15 +34,13 @@ public static class HotReloadPhotinoXBuilderExtensions
 	/// have been built, e.g. <c>Log.Setup(...)</c>. Hot reloaded libraries start out with fresh static state, so this is called for every new
 	/// generation, and whenever the page (re)attaches. The app itself only needs to call it for non-hot-reload builds.
 	/// </param>
-	public static PhotinoBlazorAppBuilder UseHotReload(
+	public static PhotinoBlazorAppBuilder UseHotReload2(
 		this PhotinoBlazorAppBuilder builder,
-		IConfiguration configuration,
-		Action<IServiceCollection, IConfiguration> configureServices,
+		Action<IServiceCollection> configureServices,
 		Action<IServiceProvider>? initializeServices = null
 	)
 	{
 		ArgumentNullException.ThrowIfNull(builder);
-		ArgumentNullException.ThrowIfNull(configuration);
 		ArgumentNullException.ThrowIfNull(configureServices);
 
 		// Capture the app assembly and the method identity now: every new generation looks up the same method there.
@@ -56,15 +53,15 @@ public static class HotReloadPhotinoXBuilderExtensions
 			);
 		}
 
-		if (method.GetParameters() is not [{ ParameterType: var servicesType }, { ParameterType: var configType }])
+		if (method.GetParameters() is not [{ ParameterType: var servicesType }])
 		{
 			throw new ArgumentException(
-				$"The service configuration needs two parameters ({nameof(IServiceCollection)}, {nameof(IConfiguration)}).",
+				$"The service configuration needs parameters ({nameof(IServiceCollection)}).",
 				nameof(configureServices)
 			);
 		}
 
-		if (servicesType != typeof(IServiceCollection) || configType != typeof(IConfiguration))
+		if (servicesType != typeof(IServiceCollection))
 		{
 			throw new ArgumentException(
 				$"The service configuration needs two parameters ({nameof(IServiceCollection)}, {nameof(IConfiguration)}).",
@@ -93,20 +90,7 @@ public static class HotReloadPhotinoXBuilderExtensions
 			throw new InvalidOperationException("No root components were found, call UseHotReload() after adding the root components.");
 		}
 
-		var runtime = new HotReloadRuntime(
-			new AppEntryPoint(
-				method.DeclaringType.FullName!,
-				method.Name,
-				[typeof(IConfiguration)],
-				[configuration],
-				initializeServices?.Method.Name
-			),
-			appAssembly,
-			HotReloadOptions.FromConfiguration(configuration) with
-			{
-				// ScriptModulePath = "./_content/BlazorHMR.Desktop.PhotinoX/hotreload.js",
-			}
-		);
+		var runtime = new HotReloadRuntime(new AppEntryPoint(method.DeclaringType.FullName!, method.Name), appAssembly);
 
 		// Available from both the host tier and every app generation (instances are forwarded as-is).
 		builder.Services.AddSingleton(runtime);

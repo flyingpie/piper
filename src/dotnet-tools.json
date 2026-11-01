@@ -10,7 +10,7 @@
 			"rollForward": false
 		},
 		"blazorhmr.server": {
-			"version": "0.1.11",
+			"version": "0.1.14",
 			"commands": [
 				"blazor-hmr"
 			],
