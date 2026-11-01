@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using BlazorHMR.PhotinoX;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Photino.Blazor;
@@ -19,7 +20,7 @@ internal static class Program
 
 		builder.RootComponents.Add<App>("app");
 
-		builder.UseHotReload2(ConfigureServices);
+		builder.UseHotReload(ConfigureServices);
 		// ConfigureServices(builder.Services, builder.Configuration);
 
 		await using var app = builder.Build();

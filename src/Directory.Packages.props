@@ -35,6 +35,8 @@
 		<PackageVersion Include="BlazorHMR" Version="0.1.14" />
 		<PackageVersion Include="BlazorHMR.PhotinoX" Version="0.1.14" />
 		<PackageVersion Include="Blazorise.Icons.FontAwesome" Version="2.4.0" />
+		<PackageVersion Include="BlazorHMR" Version="0.1.14" />
+		<PackageVersion Include="BlazorHMR.PhotinoX" Version="0.1.14" />
 		<PackageVersion Include="BlazorMonaco" Version="3.5.0" />
 		<PackageVersion Include="PhotinoX.App" Version="5.3.5" />
 		<PackageVersion Include="PhotinoX.Blazor" Version="5.3.5" />

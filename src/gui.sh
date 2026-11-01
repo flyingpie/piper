@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euxo pipefail
+
 # ./src/dev-desktop.sh "$@"
 
 command dotnet tool restore
